@@ -28,6 +28,11 @@
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             android:layout_marginTop="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:maxLines="2"
+            android:gravity="center_horizontal"
+            android:ellipsize="end"
             android:text="My App Name"/>
 
         <TextView
@@ -36,7 +41,25 @@
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
             android:layout_marginTop="2dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:maxLines="2"
+            android:gravity="center_horizontal"
+            android:ellipsize="end"
             android:text="com.app.package.name"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorTertiary"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:maxLines="2"
+            android:gravity="center_horizontal"
+            android:ellipsize="end"
+            android:text="2.3.1"/>
 
     </LinearLayout>
 
@@ -53,7 +76,7 @@
             android:contentDescription="Udostępnij"
             android:padding="16dp"
             android:scaleType="centerInside"
-            android:background="?android:attr/selectableItemBackground"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
             app:srcCompat="@drawable/ic_share_action_24dp"/>
@@ -66,7 +89,7 @@
             android:scaleType="centerInside"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:background="?android:attr/selectableItemBackground"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
             app:srcCompat="@drawable/ic_info_outline_action"/>
@@ -79,7 +102,7 @@
             android:scaleType="centerInside"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:background="?android:attr/selectableItemBackground"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
             app:srcCompat="@drawable/ic_launch_action"/>
@@ -89,7 +112,151 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Properties"
+            android:textColor="?attr/colorAccent"
+            android:textSize="14sp"
+            android:textAllCaps="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vesrion code"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12234234"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp"
+                android:layout_marginTop="2dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SDK"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Min: 16, Target: 28"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp"
+                android:layout_marginTop="2dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Signature"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0F:44:E3:22:67:44:33:98:99:67:AA:22"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp"
+                android:layout_marginTop="2dp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="More info"
+            android:textColor="?attr/colorAccent"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Metadata (1)"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:drawableEnd="@drawable/ic_chevron_right"
+            android:drawableRight="@drawable/ic_chevron_right"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Activities (5)"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:drawableEnd="@drawable/ic_chevron_right"
+            android:drawableRight="@drawable/ic_chevron_right"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Services (2)"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:drawableEnd="@drawable/ic_chevron_right"
+            android:drawableRight="@drawable/ic_chevron_right"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Content Providers (3)"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:drawableEnd="@drawable/ic_chevron_right"
+            android:drawableRight="@drawable/ic_chevron_right"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Receivers (7)"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:drawableEnd="@drawable/ic_chevron_right"
+            android:drawableRight="@drawable/ic_chevron_right"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 
