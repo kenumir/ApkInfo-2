@@ -96,6 +96,20 @@
                     app:srcCompat="@drawable/ic_share_action_24dp"/>
 
                 <ImageView
+                    android:id="@+id/actionCopy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="Copy"
+                    android:padding="16dp"
+                    android:scaleType="centerInside"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:srcCompat="@drawable/ic_content_copy"/>
+
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="Info"
