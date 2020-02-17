@@ -80,13 +80,14 @@ class ApplicationsRepository(ctx: Context) {
 
     fun getApplicationDetailsInfo(packageName: String): ApplicationDetailsInfo {
         val result = ApplicationDetailsInfo()
-        pkg?.let { it ->
-            val pi = it.getPackageInfo(packageName, 0)
-            val launcher = it.getLaunchIntentForPackage(packageName)
-            val activityList = it.queryIntentActivities(launcher, 0)
-            activityList.let { ait ->
-                val info = ait[0]
-                info.activityInfo?.loadLabel(it)
+        pkg?.let { pit ->
+            val pi = pit.getPackageInfo(packageName, 0)
+            pit.getLaunchIntentForPackage(packageName)?.let {
+                val activityList = pit.queryIntentActivities(it, 0)
+                activityList.let { ait ->
+                    val info = ait[0]
+                    info.activityInfo?.loadLabel(pit)
+                }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 result.sdkMin = pi.applicationInfo.minSdkVersion
