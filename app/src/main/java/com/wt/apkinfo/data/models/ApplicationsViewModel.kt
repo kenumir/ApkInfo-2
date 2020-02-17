@@ -21,10 +21,9 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
     private val appRepository: ApplicationsRepository = ApplicationsRepository(application)
 
     private var packageReceiver: BroadcastReceiver? = null
-    private val context: Context
+    private val context: Context = application.applicationContext
 
     init {
-        context = application.applicationContext
         exec.execute { data.postValue(appRepository.getAppList(null)) }
         val intentFilter = IntentFilter()
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED)

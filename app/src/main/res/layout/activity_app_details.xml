@@ -45,7 +45,7 @@
                     android:maxLines="2"
                     android:gravity="center_horizontal"
                     android:ellipsize="end"
-                    android:text="My App Name"/>
+                    tools:text="My App Name"/>
 
                 <TextView
                     android:id="@+id/appPackage"
@@ -59,7 +59,7 @@
                     android:maxLines="2"
                     android:gravity="center_horizontal"
                     android:ellipsize="end"
-                    android:text="com.app.package.name"/>
+                    tools:text="com.app.package.name"/>
 
                 <TextView
                     android:id="@+id/appVersionName"
@@ -73,7 +73,7 @@
                     android:maxLines="2"
                     android:gravity="center_horizontal"
                     android:ellipsize="end"
-                    android:text="2.3.1"/>
+                    tools:text="2.3.1"/>
 
             </LinearLayout>
 

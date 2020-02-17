@@ -7,20 +7,18 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.util.Log
+import com.wt.apkinfo.data.ApplicationDetailsInfo
 import com.wt.apkinfo.data.ApplicationEntryInfo
 
 
 class ApplicationsRepository(ctx: Context) {
 
-    private var pkg: PackageManager?
-
-    init {
-        try {
-            pkg = ctx.applicationContext.packageManager
-        } catch (e: Exception) {
-            pkg = null
-        }
+    private var pkg: PackageManager? = try {
+        ctx.applicationContext.packageManager
+    } catch (e: Exception) {
+        null
     }
 
     @SuppressLint("DefaultLocale")
@@ -39,7 +37,7 @@ class ApplicationsRepository(ctx: Context) {
             if (launcher != null) {
                 val activityList = pkg?.queryIntentActivities(launcher, 0)
                 activityList?.let {
-                    val info = it.get(0)
+                    val info = it[0]
                     appName = pkg?.let { it1 -> info.activityInfo?.loadLabel(it1) }.toString()
                     appIcon = info.activityInfo?.loadIcon(pkg)
 
@@ -78,6 +76,25 @@ class ApplicationsRepository(ctx: Context) {
             }
         }
         return results.sortedWith(compareBy { it2 -> it2.name })
+    }
+
+    fun getApplicationDetailsInfo(packageName: String): ApplicationDetailsInfo {
+        val result = ApplicationDetailsInfo()
+        pkg?.let { it ->
+            val pi = it.getPackageInfo(packageName, 0)
+            val launcher = it.getLaunchIntentForPackage(packageName)
+            val activityList = it.queryIntentActivities(launcher, 0)
+            activityList.let { ait ->
+                val info = ait[0]
+                info.activityInfo?.loadLabel(it)
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                result.sdkMin = pi.applicationInfo.minSdkVersion
+            }
+            result.sdkTarget = pi.applicationInfo.targetSdkVersion
+            //result.name = it.getD
+        }
+        return result
     }
 
 }
