@@ -83,3 +83,16 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+
+.gradle
+/local.properties
+.DS_Store
+.bak
+/build
+/captures
+/release_certificate
+
+# Android Studio
+*.iml
+.idea

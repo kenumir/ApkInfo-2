@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
+
+    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+        android:id="@+id/searchEdit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:minWidth="250dp"
+        android:lines="1"
+        android:maxLines="1"
+        android:background="@null"
+        android:textColor="@color/white"
+        android:inputType="text"
+        android:imeOptions="actionSearch"
+        android:drawableLeft="@drawable/ic_search_suggest"
+        android:drawableStart="@drawable/ic_search_suggest"
+        android:drawablePadding="8dp"/>
+
+    <ImageView
+        android:id="@+id/clearBtn"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="centerInside"
+        android:contentDescription="@string/clear"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_clear_white_24dp"/>
+
+</LinearLayout>

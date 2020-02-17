@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Apk Info</string>
+
+    <string name="loading">Loading…</string>
+    <string name="clear">Clear</string>
+    <string name="search">Search</string>
+    <string name="about">About</string>
+    <string name="app_details">App Details</string>
+</resources>

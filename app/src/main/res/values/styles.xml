@@ -1,0 +1,31 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="StartTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/start_bg</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- Toolbar -->
+    <style name="AppToolbarStyle" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="materialThemeOverlay">@style/AppToolbarStyle_Toolbar</item>
+        <item name="popupTheme">@style/ThemeOverlay.MaterialComponents.Light</item>
+    </style>
+    <style name="AppToolbarStyle_Toolbar" parent="">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+    <style name="AppToolbarStyle_Overlay" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+        <item name="colorSurface">?android:attr/textColorPrimaryInverse</item>
+    </style>
+
+</resources>
