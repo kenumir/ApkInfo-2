@@ -28,4 +28,50 @@
         <item name="colorSurface">?android:attr/textColorPrimaryInverse</item>
     </style>
 
+    <!-- lists elements -->
+    <style name="List_Header">
+        <item name="android:textColor">?attr/colorAccent</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:layout_marginTop">@dimen/list_vertical_margin</item>
+        <item name="android:layout_marginLeft">@dimen/list_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/list_horizontal_margin</item>
+    </style>
+    <style name="List_DoubleItem_Box">
+        <item name="android:paddingLeft">@dimen/list_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/list_horizontal_margin</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:minHeight">@dimen/list_double_item_height</item>
+    </style>
+    <style name="List_DoubleItem_Key">
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginTop">16dp</item>
+    </style>
+    <style name="List_DoubleItem_Value">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+    </style>
+    <style name="List_SingleItem">
+        <item name="android:paddingLeft">@dimen/list_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/list_horizontal_margin</item>
+        <item name="android:minHeight">@dimen/list_single_item_height</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="drawableRightCompat">@drawable/ic_chevron_right</item>
+    </style>
+
 </resources>
