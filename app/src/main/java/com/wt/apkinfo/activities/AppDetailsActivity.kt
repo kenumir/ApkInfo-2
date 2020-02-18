@@ -6,10 +6,13 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.list.listItems
 import com.wt.apkinfo.R
 import com.wt.apkinfo.data.ApplicationDetailsInfo
 import com.wt.apkinfo.data.ApplicationEntryInfo
@@ -50,6 +53,26 @@ class AppDetailsActivity : AppCompatActivity() {
                 )
                 Toast.makeText(applicationContext, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
             }
+            data.meta?.let {
+                val myItems: ArrayList<CharSequence> = ArrayList(it.size)
+                it.forEach { myItems.add(it) }
+                moreMeta.text = resources.getString(R.string.details_metadata, it.size)
+                moreMeta.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreMeta.setOnClickListener {
+                    MaterialDialog(this).show {
+                        title(0, "Meta")
+                        listItems(items = myItems)
+                    }
+                }
+            }
+            data.activities?.let {
+                moreActivities.text = resources.getString(R.string.details_activities, it.size)
+                moreActivities.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreActivities.setOnClickListener {
+
+                }
+            }
+
         })
         pkg?.let {
             model.fetchInfo(pkg)
@@ -58,6 +81,11 @@ class AppDetailsActivity : AppCompatActivity() {
         }
 
         toolbar.setTitle(R.string.app_details)
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
+        toolbar.navigationContentDescription = resources.getString(R.string.back)
     }
 
     override fun finish() {

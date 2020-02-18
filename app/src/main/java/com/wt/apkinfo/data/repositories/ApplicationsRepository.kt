@@ -114,6 +114,23 @@ class ApplicationsRepository(ctx: Context) {
                 }
                 result.timeInstall = pi.firstInstallTime
                 result.timeUpdate = pi.lastUpdateTime
+
+
+
+                pit.getPackageInfo(packageName, PackageManager.GET_META_DATA).applicationInfo.metaData?.let{
+                    val keys = it.keySet()
+                    for(key in keys) {
+                        result.meta?.add(key + "\n" + it[key].toString())
+                    }
+                }
+
+                pit.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES).activities?.let{
+                    for(ai in it) {
+                        result.activities?.add(ai.name + "\n" + ai.loadLabel(pit).toString())
+                    }
+                }
+
+
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
             }

@@ -23,13 +23,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:layout_marginTop="@dimen/list_vertical_margin">
 
                 <ImageView
                     android:id="@+id/appLogo"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
-                    android:scaleType="centerInside"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:scaleType="fitCenter"
                     android:importantForAccessibility="no"
                     app:srcCompat="@mipmap/ic_launcher"/>
 
@@ -39,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="16sp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/list_vertical_margin"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:maxLines="2"
@@ -251,15 +252,19 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/List_SingleItem"
+                android:id="@+id/moreMeta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Metadata (1)"/>
+                android:visibility="gone"
+                tools:text="Metadata (1)"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/List_SingleItem"
+                android:id="@+id/moreActivities"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Activities (1)"/>
+                android:visibility="gone"
+                tools:text="Activities (1)"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/List_SingleItem"
