@@ -1,5 +1,6 @@
 package com.wt.apkinfo.data
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
 
 class ApplicationDetailsInfo(
@@ -14,7 +15,19 @@ class ApplicationDetailsInfo(
     var timeInstall: Long = 0,
     var timeUpdate: Long = 0,
     var icon: Drawable? = null,
-    var meta: ArrayList<String>? = ArrayList(),
-    var activities: ArrayList<String>? = ArrayList()
+    var launcherIntent: Intent? = null,
+    var meta: ArrayList<String> = ArrayList(),
+    var activities: ArrayList<String> = ArrayList(),
+    var services: ArrayList<String> = ArrayList(),
+    var providers: ArrayList<String> = ArrayList(),
+    var receivers: ArrayList<String> = ArrayList(),
+    var directories: ArrayList<String> = ArrayList(),
+    var permissions: ArrayList<String> = ArrayList(),
+    var sharedLibraries: ArrayList<String> = ArrayList(),
+    var nativeLibraries: ArrayList<String> = ArrayList(),
+
+    var isSystemApp: Boolean = false,
+    var isDebuggable: Boolean = false,
+    var isLargeHeap: Boolean = false
 ) {
 }

@@ -1,32 +1,28 @@
 package com.wt.apkinfo.activities
 
-import android.R.attr.label
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.animation.Animator
+import android.content.*
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.list.listItems
+import com.afollestad.materialdialogs.list.customListAdapter
 import com.wt.apkinfo.R
 import com.wt.apkinfo.data.ApplicationDetailsInfo
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.data.models.ApplicationDetailsViewModel
 import com.wt.apkinfo.proto.DateTime
+import com.wt.apkinfo.proto.PropertiesDialogAdapter
 import kotlinx.android.synthetic.main.activity_app_details.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
 
 
 class AppDetailsActivity : AppCompatActivity() {
-
-    //private var toolbar: MaterialToolbar? = null
-    //private var appLogo: ImageView? = null
-    //private var appInfo: ApplicationEntryInfo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,16 +32,26 @@ class AppDetailsActivity : AppCompatActivity() {
         val pkg = intent.getStringExtra("pkg")
         val model = ViewModelProvider(this).get<ApplicationDetailsViewModel>(ApplicationDetailsViewModel::class.java)
         model.getData().observe(this, Observer<ApplicationDetailsInfo> { data ->
+            val longPress = View.OnLongClickListener {
+                Toast.makeText(this, it.contentDescription, Toast.LENGTH_LONG).show()
+                false
+            }
+
             appName.text = data.name
             appPackage.text = data.pkg
             appVersionName.text = data.versionName
             appVersionCode.text = data.versionCode.toString()
             appLogo.setImageDrawable(data.icon)
-            appSdkInfo.text = "Min: ${data.sdkMin}, Target: ${data.sdkTarget}"
+            appSdkInfo.text = resources.getString(R.string.details_sdk, data.sdkMin, data.sdkTarget)
             appSignature.text = data.signature
-            appTime.text = "Install: " + DateTime.formatFull(data.timeInstall) +
-                    "\nUpdate: " + DateTime.formatFull(data.timeUpdate)
+            appTime.text = resources.getString(R.string.details_time, DateTime.formatFull(data.timeInstall), DateTime.formatFull(data.timeUpdate))
             appInstallerPackage.text = data.installerPackage
+
+            actionShare.setOnLongClickListener(longPress)
+            actionCopy.setOnLongClickListener(longPress)
+            actionInfo.setOnLongClickListener(longPress)
+            actionRun.setOnLongClickListener(longPress)
+
             actionCopy.setOnClickListener {
                 copyToClipboard(
                     "Name: ${data.name.toString()}\nPackage: ${data.pkg.toString()}\nSignature: ${data.signature.toString()}\n" +
@@ -53,31 +59,144 @@ class AppDetailsActivity : AppCompatActivity() {
                 )
                 Toast.makeText(applicationContext, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
             }
-            data.meta?.let {
-                val myItems: ArrayList<CharSequence> = ArrayList(it.size)
-                it.forEach { myItems.add(it) }
-                moreMeta.text = resources.getString(R.string.details_metadata, it.size)
-                moreMeta.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
-                moreMeta.setOnClickListener {
-                    MaterialDialog(this).show {
-                        title(0, "Meta")
-                        listItems(items = myItems)
+            actionInfo.setOnClickListener {
+                try {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .setData(Uri.parse("package:${data.pkg}"))
+                    startActivity(intent)
+                } catch (e: ActivityNotFoundException) {
+                    startActivity(Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS))
+                }
+            }
+            actionRun.setOnClickListener {_ ->
+                data.launcherIntent?.let {
+                    try {
+                        startActivity(it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                    } catch (e: ActivityNotFoundException) {
+                        // ignore
                     }
                 }
             }
-            data.activities?.let {
-                moreActivities.text = resources.getString(R.string.details_activities, it.size)
-                moreActivities.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
-                moreActivities.setOnClickListener {
-
+            data.meta.let {
+                val title = resources.getString(R.string.details_metadata, it.size)
+                moreMeta.text = title
+                moreMeta.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreMeta.setOnClickListener { _ ->
+                    MaterialDialog(this).show {
+                        title(0, title)
+                        customListAdapter(PropertiesDialogAdapter(it))
+                    }
                 }
             }
+            data.activities.let {
+                val title = resources.getString(R.string.details_activities, it.size)
+                moreActivities.text = title
+                moreActivities.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreActivities.setOnClickListener { _ ->
+                    MaterialDialog(this).show {
+                        title(0, title)
+                        customListAdapter(PropertiesDialogAdapter(it))
+                    }
+                }
+            }
+            data.services.let {
+                val title = resources.getString(R.string.details_services, it.size)
+                moreServices.text = title
+                moreServices.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreServices.setOnClickListener { _ ->
+                    MaterialDialog(this).show {
+                        title(0, title)
+                        customListAdapter(PropertiesDialogAdapter(it))
+                    }
+                }
+            }
+            data.providers.let {
+                val title = resources.getString(R.string.details_providers, it.size)
+                moreProviders.text = title
+                moreProviders.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreProviders.setOnClickListener { _ ->
+                    MaterialDialog(this).show {
+                        title(0, title)
+                        customListAdapter(PropertiesDialogAdapter(it))
+                    }
+                }
+            }
+            data.receivers.let {
+                val title = resources.getString(R.string.details_receivers, it.size)
+                moreReceivers.text = title
+                moreReceivers.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreReceivers.setOnClickListener { _ ->
+                    MaterialDialog(this).show {
+                        title(0, title)
+                        customListAdapter(PropertiesDialogAdapter(it))
+                    }
+                }
+            }
+            data.directories.let {
+                val title = resources.getString(R.string.details_directories, it.size)
+                moreDirectories.text = title
+                moreDirectories.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreDirectories.setOnClickListener { _ ->
+                    MaterialDialog(this).show {
+                        title(0, title)
+                        customListAdapter(PropertiesDialogAdapter(it))
+                    }
+                }
+            }
+            data.permissions.let {
+                val title = resources.getString(R.string.details_permissions, it.size)
+                morePermissions.text = title
+                morePermissions.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                morePermissions.setOnClickListener { _ ->
+                    MaterialDialog(this).show {
+                        title(0, title)
+                        customListAdapter(PropertiesDialogAdapter(it))
+                    }
+                }
+            }
+            data.sharedLibraries.let {
+                val title = resources.getString(R.string.details_shared_libraries, it.size)
+                moreSharedLibraries.text = title
+                moreSharedLibraries.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreSharedLibraries.setOnClickListener { _ ->
+                    MaterialDialog(this).show {
+                        title(0, title)
+                        customListAdapter(PropertiesDialogAdapter(it))
+                    }
+                }
+            }
+            data.nativeLibraries.let {
+                val title = resources.getString(R.string.details_native_libraries, it.size)
+                moreNativeLibraries.text = title
+                moreNativeLibraries.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreNativeLibraries.setOnClickListener { _ ->
+                    MaterialDialog(this).show {
+                        title(0, title)
+                        customListAdapter(PropertiesDialogAdapter(it))
+                    }
+                }
+            }
+            loader.alpha = 1f
+            loader.animate()
+                .setDuration(250)
+                .alpha(0f)
+                .setListener(object : Animator.AnimatorListener{
+                    override fun onAnimationRepeat(animation: Animator?) { }
+                    override fun onAnimationEnd(animation: Animator?) {
+                        loader.visibility = View.GONE
+                    }
+                    override fun onAnimationCancel(animation: Animator?) { }
+                    override fun onAnimationStart(animation: Animator?) { }
+                })
+                .start()
 
         })
         pkg?.let {
             model.fetchInfo(pkg)
         } ?: run {
             // no package name
+            finish()
         }
 
         toolbar.setTitle(R.string.app_details)

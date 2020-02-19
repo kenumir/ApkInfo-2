@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,7 +12,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,8 +32,7 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:scaleType="fitCenter"
-                    android:importantForAccessibility="no"
-                    app:srcCompat="@mipmap/ic_launcher"/>
+                    android:importantForAccessibility="no"/>
 
                 <TextView
                     android:id="@+id/appName"
@@ -86,9 +86,10 @@
                 android:layout_marginTop="@dimen/list_vertical_margin">
 
                 <ImageView
+                    android:id="@+id/actionShare"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="Udostępnij"
+                    android:contentDescription="@string/share"
                     android:padding="16dp"
                     android:scaleType="centerInside"
                     android:background="?attr/selectableItemBackgroundBorderless"
@@ -100,7 +101,7 @@
                     android:id="@+id/actionCopy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="Copy"
+                    android:contentDescription="@string/copy"
                     android:padding="16dp"
                     android:scaleType="centerInside"
                     android:layout_marginStart="16dp"
@@ -111,9 +112,10 @@
                     app:srcCompat="@drawable/ic_content_copy"/>
 
                 <ImageView
+                    android:id="@+id/actionInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="Info"
+                    android:contentDescription="@string/app_system_details"
                     android:padding="16dp"
                     android:scaleType="centerInside"
                     android:layout_marginStart="16dp"
@@ -124,9 +126,10 @@
                     app:srcCompat="@drawable/ic_info_outline_action"/>
 
                 <ImageView
+                    android:id="@+id/actionRun"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="Launch"
+                    android:contentDescription="@string/launch"
                     android:padding="16dp"
                     android:scaleType="centerInside"
                     android:layout_marginStart="16dp"
@@ -142,7 +145,7 @@
                 style="@style/List_Header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Properties"/>
+                android:text="@string/properties"/>
 
             <LinearLayout
                 style="@style/List_DoubleItem_Box"
@@ -153,7 +156,7 @@
                     style="@style/List_DoubleItem_Key"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Version code"/>
+                    android:text="@string/version_code"/>
 
                 <TextView
                     style="@style/List_DoubleItem_Value"
@@ -173,7 +176,7 @@
                     style="@style/List_DoubleItem_Key"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SDK"/>
+                    android:text="@string/sdk"/>
 
                 <TextView
                     style="@style/List_DoubleItem_Value"
@@ -193,7 +196,7 @@
                     style="@style/List_DoubleItem_Key"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Signature"/>
+                    android:text="@string/signature"/>
 
                 <TextView
                     style="@style/List_DoubleItem_Value"
@@ -213,7 +216,7 @@
                     style="@style/List_DoubleItem_Key"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Time"/>
+                    android:text="@string/time"/>
 
                 <TextView
                     style="@style/List_DoubleItem_Value"
@@ -233,7 +236,7 @@
                     style="@style/List_DoubleItem_Key"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Installer Package"/>
+                    android:text="@string/installer_package"/>
 
                 <TextView
                     style="@style/List_DoubleItem_Value"
@@ -248,7 +251,7 @@
                 style="@style/List_Header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="More info"/>
+                android:text="@string/more_info"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/List_SingleItem"
@@ -260,6 +263,14 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/List_SingleItem"
+                android:id="@+id/morePermissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:text="Permissions (1)"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/List_SingleItem"
                 android:id="@+id/moreActivities"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -268,27 +279,45 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/List_SingleItem"
+                android:id="@+id/moreServices"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Services (1)"/>
+                tools:text="Services (1)"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/List_SingleItem"
+                android:id="@+id/moreProviders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Content Providers (1)"/>
+                tools:text="Content Providers (1)"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/List_SingleItem"
+                android:id="@+id/moreReceivers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Receivers (1)"/>
+                tools:text="Receivers (1)"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/List_SingleItem"
+                android:id="@+id/moreDirectories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="App Directories"/>
+                tools:text="Directories (3)"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/List_SingleItem"
+                android:id="@+id/moreSharedLibraries"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Shared Libs (3)"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/List_SingleItem"
+                android:id="@+id/moreNativeLibraries"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Native Libs (3)"/>
 
             <View
                 android:layout_width="match_parent"
@@ -298,4 +327,20 @@
 
     </ScrollView>
 
-</LinearLayout>
+    <FrameLayout
+        android:id="@+id/loader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="?android:colorBackground"
+        tools:visibility="gone">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+</RelativeLayout>

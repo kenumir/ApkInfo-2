@@ -2,16 +2,22 @@ package com.wt.apkinfo.data.repositories
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.util.Log
+import com.wt.apkinfo.R
 import com.wt.apkinfo.data.ApplicationDetailsInfo
 import com.wt.apkinfo.data.ApplicationEntryInfo
+import com.wt.apkinfo.proto.StringUtil
+import java.io.File
 import java.security.MessageDigest
 
 
 class ApplicationsRepository(ctx: Context) {
 
+    private var res = ctx.resources
     private var pkg: PackageManager? = try {
         ctx.applicationContext.packageManager
     } catch (e: Exception) {
@@ -80,7 +86,14 @@ class ApplicationsRepository(ctx: Context) {
         pkg?.let { pit ->
             try {
                 val pi = pit.getPackageInfo(packageName, 0)
-                pit.getLaunchIntentForPackage(packageName)?.let {
+                val appInfo = pit.getApplicationInfo(packageName, 0)
+
+                result.isSystemApp = appInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
+                result.isDebuggable = appInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+                result.isLargeHeap = appInfo.flags and ApplicationInfo.FLAG_LARGE_HEAP != 0
+
+                result.launcherIntent = pit.getLaunchIntentForPackage(packageName)
+                result.launcherIntent?.let {
                     val activityList = pit.queryIntentActivities(it, 0)
                     activityList.let { ait ->
                         val info = ait[0]
@@ -93,7 +106,13 @@ class ApplicationsRepository(ctx: Context) {
                 }
                 result.sdkTarget = pi.applicationInfo.targetSdkVersion
                 result.pkg = packageName
-                result.installerPackage = pit.getInstallerPackageName(packageName)
+
+                pit.getInstallerPackageName(packageName)?.let {
+                    result.installerPackage = if (it.isEmpty()) { res.getString(R.string.not_set) } else { it }
+                } ?: run {
+                    result.installerPackage = res.getString(R.string.not_set)
+                }
+
                 result.versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     pi.longVersionCode.toInt()
                 } else {
@@ -114,28 +133,77 @@ class ApplicationsRepository(ctx: Context) {
                 }
                 result.timeInstall = pi.firstInstallTime
                 result.timeUpdate = pi.lastUpdateTime
+                result.directories.add(res.getString(R.string.data_directory) + "\n" + pi.applicationInfo.dataDir)
+                result.directories.add(res.getString(R.string.native_lib_directory) + "\n" + pi.applicationInfo.nativeLibraryDir)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    result.directories.add(res.getString(R.string.protected_data_directory) + "\n" + pi.applicationInfo.deviceProtectedDataDir)
+                }
 
-
+                pi.applicationInfo.nativeLibraryDir?.let {
+                    if (it.isNotEmpty()) {
+                        File(pi.applicationInfo.nativeLibraryDir).listFiles()?.forEach { itf ->
+                            result.nativeLibraries.add(StringUtil.formatFileSize(itf.length()) + "\n" + itf.absolutePath)
+                        }
+                    }
+                }
 
                 pit.getPackageInfo(packageName, PackageManager.GET_META_DATA).applicationInfo.metaData?.let{
                     val keys = it.keySet()
                     for(key in keys) {
-                        result.meta?.add(key + "\n" + it[key].toString())
+                        result.meta.add(key + "\n" + it[key].toString())
                     }
                 }
 
                 pit.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES).activities?.let{
                     for(ai in it) {
-                        result.activities?.add(ai.name + "\n" + ai.loadLabel(pit).toString())
+                        result.activities.add(ai.name + "\n" + ai.loadLabel(pit).toString())
                     }
                 }
 
+                pit.getPackageInfo(packageName, PackageManager.GET_SERVICES).services?.let{
+                    for(ai in it) {
+                        result.activities.add(ai.name + "\n" + ai.loadLabel(pit).toString())
+                    }
+                }
+
+                pit.getPackageInfo(packageName, PackageManager.GET_PROVIDERS).providers?.let{
+                    for(ai in it) {
+                        result.providers.add(ai.name + "\n" + ai.loadLabel(pit).toString() + "\n" + ai.authority)
+                    }
+                }
+
+                pit.getPackageInfo(packageName, PackageManager.GET_RECEIVERS).receivers?.let{
+                    for(ai in it) {
+                        result.receivers.add(ai.name + "\n" + ai.loadLabel(pit).toString())
+                    }
+                }
+
+                pit.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS or PackageManager.GET_URI_PERMISSION_PATTERNS).permissions?.let{
+                    for(ai in it) {
+                        val label = ai.loadLabel(pit).toString()
+                        val perm = ai.name
+                        if (perm == label) {
+                            result.permissions.add(perm)
+                        } else {
+                            result.permissions.add(label + "\n" + perm)
+                        }
+                    }
+                }
+                pit.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS or PackageManager.GET_URI_PERMISSION_PATTERNS).requestedPermissions?.let{
+                    for(ai in it) {
+                        result.permissions.add(ai)
+                    }
+                }
+
+                pit.getApplicationInfo(packageName, PackageManager.GET_SHARED_LIBRARY_FILES).sharedLibraryFiles?.let{
+                    for(ai in it) {
+                        result.sharedLibraries.add(StringUtil.formatFileSize(File(ai).length()) + "\n" + ai)
+                    }
+                }
 
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
             }
-
-            //pit.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
         }
         return result
     }
