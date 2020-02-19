@@ -8,10 +8,12 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.Log
 import com.wt.apkinfo.R
+import com.wt.apkinfo.data.ApkFileEntryInfo
 import com.wt.apkinfo.data.ApplicationDetailsInfo
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.proto.StringUtil
 import java.io.File
+import java.io.FilenameFilter
 import java.security.MessageDigest
 
 
@@ -22,6 +24,26 @@ class ApplicationsRepository(ctx: Context) {
         ctx.applicationContext.packageManager
     } catch (e: Exception) {
         null
+    }
+
+    fun getApkFiles(pkgName: String): List<ApkFileEntryInfo> {
+        val results: ArrayList<ApkFileEntryInfo> = ArrayList()
+        pkg?.let{ pit ->
+            val appInfo = pit.getApplicationInfo(pkgName, 0)
+            val apk = File(appInfo.publicSourceDir)
+            apk.parent?.let {
+                File(it).listFiles(object : FilenameFilter {
+                    override fun accept(dir: File?, name: String?): Boolean {
+                        return name?.endsWith(".apk")!!
+                    }
+                })?.forEach {itf ->
+                    results.add(ApkFileEntryInfo.fromFile(itf))
+                }
+            } ?: run {
+                results.add(ApkFileEntryInfo(apk.name, apk.absolutePath, apk.length()))
+            }
+        }
+        return results
     }
 
     @SuppressLint("DefaultLocale")

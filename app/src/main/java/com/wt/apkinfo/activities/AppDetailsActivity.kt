@@ -26,7 +26,7 @@ class AppDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        overridePendingTransition(0, 0)
+        //overridePendingTransition(0, 0)
         setContentView(R.layout.activity_app_details)
 
         val pkg = intent.getStringExtra("pkg")
@@ -52,6 +52,9 @@ class AppDetailsActivity : AppCompatActivity() {
             actionInfo.setOnLongClickListener(longPress)
             actionRun.setOnLongClickListener(longPress)
 
+            actionShare.setOnClickListener {
+                ApkListActivity.show(this, data.pkg)
+            }
             actionCopy.setOnClickListener {
                 copyToClipboard(
                     "Name: ${data.name.toString()}\nPackage: ${data.pkg.toString()}\nSignature: ${data.signature.toString()}\n" +
@@ -209,7 +212,7 @@ class AppDetailsActivity : AppCompatActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(0, 0)
+        //overridePendingTransition(0, 0)
     }
 
     private fun copyToClipboard(text: String) {
