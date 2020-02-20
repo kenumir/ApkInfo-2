@@ -72,7 +72,7 @@ class AppDetailsActivity : AppCompatActivity() {
                     startActivity(Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS))
                 }
             }
-            actionRun.setOnClickListener {_ ->
+            actionRun.setOnClickListener { _ ->
                 data.launcherIntent?.let {
                     try {
                         startActivity(it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))

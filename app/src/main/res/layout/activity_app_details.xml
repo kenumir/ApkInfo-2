@@ -26,12 +26,30 @@
                 android:gravity="center"
                 android:layout_marginTop="@dimen/list_vertical_margin">
 
-                <ImageView
-                    android:id="@+id/appLogo"
+                <RelativeLayout
                     android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:scaleType="fitCenter"
-                    android:importantForAccessibility="no"/>
+                    android:layout_height="80dp">
+
+                    <ImageView
+                        android:id="@+id/appLogo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:importantForAccessibility="no"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SYSTEM"
+                        android:textSize="8dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:textColor="@color/white"
+                        android:padding="2dp"
+                        android:background="@color/colorPrimary"/>
+
+                </RelativeLayout>
+
 
                 <TextView
                     android:id="@+id/appName"
@@ -94,7 +112,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:focusable="true"
-                    android:tint="?android:attr/textColorPrimary"
+                    app:tint="?android:attr/textColorPrimary"
                     app:srcCompat="@drawable/ic_share_action_24dp"/>
 
                 <ImageView
@@ -109,7 +127,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:focusable="true"
-                    android:tint="?android:attr/textColorPrimary"
+                    app:tint="?android:attr/textColorPrimary"
                     app:srcCompat="@drawable/ic_content_copy"/>
 
                 <ImageView
@@ -124,7 +142,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:focusable="true"
-                    android:tint="?android:attr/textColorPrimary"
+                    app:tint="?android:attr/textColorPrimary"
                     app:srcCompat="@drawable/ic_info_outline_action"/>
 
                 <ImageView
@@ -139,7 +157,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:focusable="true"
-                    android:tint="?android:attr/textColorPrimary"
+                    app:tint="?android:attr/textColorPrimary"
                     app:srcCompat="@drawable/ic_launch_action"/>
 
             </LinearLayout>

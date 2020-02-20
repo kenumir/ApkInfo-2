@@ -2,6 +2,7 @@ package com.wt.apkinfo.fragments
 
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,12 +16,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.crashlytics.android.Crashlytics
 import com.google.android.material.appbar.MaterialToolbar
 import com.wt.apkinfo.R
 import com.wt.apkinfo.activities.AppDetailsActivity
@@ -93,25 +96,36 @@ class AppListFragment : Fragment() {
         val searchView = inflater.inflate(R.layout.layout_search, toolbar, false)
         val clearBtn = searchView.findViewById<ImageView>(R.id.clearBtn)
         searchEdit = searchView.findViewById(R.id.searchEdit)
-        searchEdit?.setText(searchQuery)
-        searchEdit?.setOnEditorActionListener(OnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                model.search(searchEdit?.text.toString())
-                return@OnEditorActionListener true
-            }
-            false
-        })
-        searchEdit?.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                clearBtn.visibility = if (p0.toString().isNotEmpty()) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
+        searchEdit?.let {
+            it.setText(searchQuery)
+            it.setOnEditorActionListener(OnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    model.search(it.text.toString())
+                    return@OnEditorActionListener true
                 }
+                false
+            })
+            it.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(p0: Editable?) {
+                    clearBtn.visibility = if (p0.toString().isNotEmpty()) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
+                }
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+            })
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                it.setCompoundDrawablesWithIntrinsicBounds(
+                    ContextCompat.getDrawable(
+                        it.context,
+                        R.drawable.ic_search_suggest
+                    ), null, null, null
+                )
             }
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
-        })
+        }
+
         clearBtn.setOnClickListener {
             searchEdit?.setText("")
             model.search("")
@@ -145,7 +159,8 @@ class AppListFragment : Fragment() {
 
         toolbar.menu.add(R.string.about)
             .setOnMenuItemClickListener {
-
+                Crashlytics.logException(RuntimeException("Test Error"))
+                Crashlytics.getInstance().crash();
                 true
             }
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)

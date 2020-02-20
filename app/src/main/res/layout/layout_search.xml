@@ -18,8 +18,6 @@
         android:textColor="@color/white"
         android:inputType="text"
         android:imeOptions="actionSearch"
-        android:drawableLeft="@drawable/ic_search_suggest"
-        android:drawableStart="@drawable/ic_search_suggest"
         android:drawablePadding="8dp"/>
 
     <ImageView
