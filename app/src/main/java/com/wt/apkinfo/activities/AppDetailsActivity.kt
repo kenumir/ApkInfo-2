@@ -189,6 +189,16 @@ class AppDetailsActivity : AppCompatActivity() {
                     }
                 }
             }
+            moreOtherProperties.setOnClickListener { _ ->
+                val props = ArrayList<String>()
+                props.add(resources.getString(R.string.details_property_large_heap) + "\n" + data.isLargeHeap.toString())
+                props.add(resources.getString(R.string.details_property_hw_accelerated) + "\n" + data.isHwAccelerated.toString())
+                props.add(resources.getString(R.string.details_property_rtl_supported) + "\n" + data.isSupportRtl.toString())
+                MaterialDialog(this).show {
+                    title(R.string.details_other_properties)
+                    customListAdapter(PropertiesDialogAdapter(props))
+                }
+            }
             loader.alpha = 1f
             loader.animate()
                 .setDuration(250)

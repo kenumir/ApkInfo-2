@@ -28,6 +28,8 @@ class ApplicationDetailsInfo(
 
     var isSystemApp: Boolean = false,
     var isDebuggable: Boolean = false,
-    var isLargeHeap: Boolean = false
+    var isLargeHeap: Boolean = false,
+    var isSupportRtl: Boolean = false,
+    var isHwAccelerated: Boolean = false
 ) {
 }

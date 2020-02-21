@@ -113,6 +113,12 @@ class ApplicationsRepository(ctx: Context) {
                 result.isSystemApp = appInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
                 result.isDebuggable = appInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
                 result.isLargeHeap = appInfo.flags and ApplicationInfo.FLAG_LARGE_HEAP != 0
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    result.isSupportRtl = appInfo.flags and ApplicationInfo.FLAG_SUPPORTS_RTL != 0
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    result.isHwAccelerated = appInfo.flags and ApplicationInfo.FLAG_HARDWARE_ACCELERATED != 0
+                }
 
                 result.launcherIntent = pit.getLaunchIntentForPackage(packageName)
                 result.launcherIntent?.let {

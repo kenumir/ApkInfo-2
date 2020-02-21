@@ -35,6 +35,10 @@
     <string name="details_native_libraries">Native Libraries (%d)</string>
     <string name="details_time">Install: %1$s\nUpdate: %2$s</string>
     <string name="details_sdk">Min: %1$d, Target: %2$d</string>
+    <string name="details_other_properties">Other properties</string>
+    <string name="details_property_large_heap">Large Heap</string>
+    <string name="details_property_hw_accelerated">Hardware Accelerated</string>
+    <string name="details_property_rtl_supported">Support RTL</string>
 
     <string name="data_directory">Data directory</string>
     <string name="native_lib_directory">Native library directory</string>

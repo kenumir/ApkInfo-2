@@ -56,6 +56,7 @@ class AppListFragment : Fragment() {
     })
     private var searchEdit: AppCompatAutoCompleteTextView? = null
     private lateinit var model: ApplicationsViewModel
+    private var searchMenu: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,7 +132,7 @@ class AppListFragment : Fragment() {
             model.search("")
         }
 
-        val searchMenu = toolbar.menu.add(R.string.search)
+        searchMenu = toolbar.menu.add(R.string.search)
             .setIcon(R.drawable.ic_search_white_24dp)
             .setActionView(searchView)
             .setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
@@ -150,10 +151,10 @@ class AppListFragment : Fragment() {
                 }
 
             })
-        searchMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW)
+        searchMenu?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW)
         searchQuery?.let {
             if (it.isNotEmpty()) {
-                searchMenu.expandActionView()
+                searchMenu?.expandActionView()
             }
         }
 
@@ -169,6 +170,17 @@ class AppListFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(SAVE_SEARCH_QUERY, searchEdit?.text.toString())
         super.onSaveInstanceState(outState)
+    }
+
+    public fun onBackAction(): Boolean {
+        searchEdit?.let {
+            if (it.text.toString().isNotEmpty()) {
+                searchMenu?.collapseActionView()
+                return true;
+            }
+            return false
+        }
+        return false
     }
 
     private fun showKeyboard() {

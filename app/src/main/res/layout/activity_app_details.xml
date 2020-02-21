@@ -349,6 +349,13 @@
                 android:layout_height="wrap_content"
                 tools:text="Native Libs (3)"/>
 
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/List_SingleItem"
+                android:id="@+id/moreOtherProperties"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/details_other_properties" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/list_bottom_margin" />
