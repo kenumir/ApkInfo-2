@@ -21,6 +21,8 @@
     <string name="installer_package">Installer Package</string>
     <string name="more_info">More info</string>
     <string name="not_set">Not set</string>
+    <string name="app_type_system">System</string>
+    <string name="app_type_debug">Debug</string>
 
     <string name="details_metadata">Metadata (%d)</string>
     <string name="details_activities">Activities (%d)</string>

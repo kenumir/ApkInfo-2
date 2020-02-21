@@ -27,26 +27,35 @@
                 android:layout_marginTop="@dimen/list_vertical_margin">
 
                 <RelativeLayout
-                    android:layout_width="80dp"
-                    android:layout_height="80dp">
+                    android:layout_width="88dp"
+                    android:layout_height="88dp">
 
                     <ImageView
                         android:id="@+id/appLogo"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
                         android:scaleType="fitCenter"
+                        android:layout_centerInParent="true"
                         android:importantForAccessibility="no"/>
 
                     <TextView
+                        android:id="@+id/appTypeInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SYSTEM"
+                        android:text="@string/app_type_system"
+                        android:textAllCaps="true"
                         android:textSize="8dp"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
                         android:textColor="@color/white"
-                        android:padding="2dp"
-                        android:background="@color/colorPrimary"/>
+                        android:paddingTop="1dp"
+                        android:paddingBottom="1dp"
+                        android:paddingRight="4dp"
+                        android:paddingLeft="4dp"
+                        android:background="@drawable/app_type_label_bg"
+                        android:visibility="gone"
+                        tools:ignore="SpUsage" />
 
                 </RelativeLayout>
 

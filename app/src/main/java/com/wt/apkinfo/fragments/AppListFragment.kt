@@ -159,8 +159,7 @@ class AppListFragment : Fragment() {
 
         toolbar.menu.add(R.string.about)
             .setOnMenuItemClickListener {
-                Crashlytics.logException(RuntimeException("Test Error"))
-                Crashlytics.getInstance().crash();
+
                 true
             }
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)

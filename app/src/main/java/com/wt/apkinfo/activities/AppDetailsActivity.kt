@@ -46,6 +46,15 @@ class AppDetailsActivity : AppCompatActivity() {
             appSignature.text = data.signature
             appTime.text = resources.getString(R.string.details_time, DateTime.formatFull(data.timeInstall), DateTime.formatFull(data.timeUpdate))
             appInstallerPackage.text = data.installerPackage
+            if (data.isDebuggable) {
+                appTypeInfo.visibility = View.VISIBLE
+                appTypeInfo.setText(R.string.app_type_debug)
+            } else if (data.isSystemApp) {
+                appTypeInfo.visibility = View.VISIBLE
+                appTypeInfo.setText(R.string.app_type_system)
+            } else {
+                appTypeInfo.visibility = View.GONE
+            }
 
             actionShare.setOnLongClickListener(longPress)
             actionCopy.setOnLongClickListener(longPress)
