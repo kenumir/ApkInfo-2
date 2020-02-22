@@ -15,6 +15,7 @@ import com.afollestad.materialdialogs.list.customListAdapter
 import com.wt.apkinfo.R
 import com.wt.apkinfo.data.ApplicationDetailsInfo
 import com.wt.apkinfo.data.ApplicationEntryInfo
+import com.wt.apkinfo.data.images.ImageLoader
 import com.wt.apkinfo.data.models.ApplicationDetailsViewModel
 import com.wt.apkinfo.proto.DateTime
 import com.wt.apkinfo.proto.PropertiesDialogAdapter
@@ -41,7 +42,6 @@ class AppDetailsActivity : AppCompatActivity() {
             appPackage.text = data.pkg
             appVersionName.text = data.versionName
             appVersionCode.text = data.versionCode.toString()
-            appLogo.setImageDrawable(data.icon)
             appSdkInfo.text = resources.getString(R.string.details_sdk, data.sdkMin, data.sdkTarget)
             appSignature.text = data.signature
             appTime.text = resources.getString(R.string.details_time, DateTime.formatFull(data.timeInstall), DateTime.formatFull(data.timeUpdate))
@@ -55,6 +55,7 @@ class AppDetailsActivity : AppCompatActivity() {
             } else {
                 appTypeInfo.visibility = View.GONE
             }
+            ImageLoader.get(appLogo.context).load(data.icon, appLogo)
 
             actionShare.setOnLongClickListener(longPress)
             actionCopy.setOnLongClickListener(longPress)

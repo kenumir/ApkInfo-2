@@ -23,13 +23,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crashlytics.android.Crashlytics
+import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.material.appbar.MaterialToolbar
+import com.wt.apkinfo.BuildConfig
 import com.wt.apkinfo.R
 import com.wt.apkinfo.activities.AppDetailsActivity
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.data.models.ApplicationsViewModel
 import com.wt.apkinfo.proto.AppListAdapter
+import com.wt.apkinfo.proto.IntentHelper
 import com.wt.apkinfo.proto.OnAppListItemClick
 
 
@@ -160,6 +162,19 @@ class AppListFragment : Fragment() {
 
         toolbar.menu.add(R.string.about)
             .setOnMenuItemClickListener {
+                context?.let {
+                    MaterialDialog(it).show {
+                        title(R.string.about_app)
+                        message(text = resources.getString(
+                            R.string.about_desc,
+                            BuildConfig.VERSION_NAME
+                        ))
+                        positiveButton(R.string.label_ok)
+                        negativeButton(R.string.about_open) {
+                            IntentHelper.openInBrowser(context, "https://twitter.com/kenumir")
+                        }
+                    }
+                }
 
                 true
             }

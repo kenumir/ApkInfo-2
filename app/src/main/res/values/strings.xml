@@ -23,6 +23,7 @@
     <string name="not_set">Not set</string>
     <string name="app_type_system">System</string>
     <string name="app_type_debug">Debug</string>
+    <string name="about_app">About app</string>
 
     <string name="details_metadata">Metadata (%d)</string>
     <string name="details_activities">Activities (%d)</string>

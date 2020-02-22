@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.wt.apkinfo.R
 import com.wt.apkinfo.data.ApplicationEntryInfo
+import com.wt.apkinfo.data.images.ImageLoader
 
 class AppViewHolder(itemView: View, mOnAppListItemClick: OnAppListItemClick?) : RecyclerView.ViewHolder(itemView) {
 
@@ -25,7 +26,8 @@ class AppViewHolder(itemView: View, mOnAppListItemClick: OnAppListItemClick?) : 
         data?.let {
             text1.text = data.name
             text2.text = data.pkg
-            icon.setImageDrawable(data.icon)
+            ImageLoader.get(icon.context).load(data.icon, icon)
+            //icon.setImageDrawable(data.icon)
         }
     }
 

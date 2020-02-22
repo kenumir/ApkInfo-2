@@ -45,7 +45,7 @@ ext.libraries = [
         ],
     ],
     squareup: [
-        picasso:              'com.squareup.picasso:picasso:2.5.2',
+        picasso:              'com.squareup.picasso:picasso:2.5.2', // its small and sufficient
     ],
     material_dialogs:         'com.afollestad.material-dialogs:core:3.3.0',
     crashlytics:              'com.crashlytics.sdk.android:crashlytics:2.10.1'

@@ -14,7 +14,7 @@ class ApplicationDetailsInfo(
     var sdkTarget: Int = 0,
     var timeInstall: Long = 0,
     var timeUpdate: Long = 0,
-    var icon: Drawable? = null,
+    var icon: String? = null,
     var launcherIntent: Intent? = null,
     var meta: ArrayList<String> = ArrayList(),
     var activities: ArrayList<String> = ArrayList(),
