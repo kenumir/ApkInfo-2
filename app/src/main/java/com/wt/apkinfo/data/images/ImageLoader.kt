@@ -8,7 +8,7 @@ class ImageLoader private constructor(ctx: Context) {
 
     companion object : SingletonHolder<ImageLoader, Context>(::ImageLoader)
 
-    private val impl: ImageLoading = PicassoImpl(ctx)
+    private val impl: ImageLoading = PicassoImpl(ctx.applicationContext)
 
     fun load(url: String?, img: ImageView) {
         impl.load(url, img)

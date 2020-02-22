@@ -34,6 +34,8 @@ dependencies {
     implementation libraries.androidx.recyclerview
     implementation libraries.androidx.constraintlayout
 
+    implementation libraries.android.installreferrer
+
     implementation libraries.google.material
     implementation libraries.google.firebase.analytics
 
