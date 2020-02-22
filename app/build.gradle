@@ -18,7 +18,17 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles  getDefaultProguardFile('proguard-android-optimize.txt'),
+                'proguard-rules.pro',
+                'proguard/proguard-rules.pro',
+                'proguard/otto.pro',
+                'proguard/retrofit.pro',
+                'proguard/okio.pro',
+                'proguard/crashlytics.pro',
+                'proguard/support_design.pro',
+                'proguard/support_v7.pro',
+                'proguard/picasso.pro',
+                'proguard/android.pro'
         }
     }
 }
