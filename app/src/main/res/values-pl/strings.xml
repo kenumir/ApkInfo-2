@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Apk Info</string>
+
+    <string name="loading">Ładowanie…</string>
+    <string name="clear">Wyczyść</string>
+    <string name="search">Szukaj</string>
+    <string name="about">Info</string>
+    <string name="app_details">Szczegóły aplikacji</string>
+    <string name="apk_list">Pliki APK</string>
+    <string name="copied_to_clipboard">Kopiuj do schowka</string>
+    <string name="back">Powrót</string>
+    <string name="share">Udostępnij</string>
+    <string name="copy">Kopiuj</string>
+    <string name="app_system_details">Szczegóły Systemowe</string>
+    <string name="launch">Uruchom</string>
+    <string name="properties">Właściwości</string>
+    <string name="version_code">Kod wersji</string>
+    <string name="sdk">SDK</string>
+    <string name="signature">Sygnatura</string>
+    <string name="time">Czas</string>
+    <string name="installer_package">Installer Package</string>
+    <string name="more_info">Więcej info</string>
+    <string name="not_set">Nie ustawiono</string>
+    <string name="app_type_system">System</string>
+    <string name="app_type_debug">Debug</string>
+    <string name="about_app">O aplikacji</string>
+
+    <string name="details_metadata">Metadane (%d)</string>
+    <string name="details_activities">Activities (%d)</string>
+    <string name="details_services">Usługi (%d)</string>
+    <string name="details_providers">Providers (%d)</string>
+    <string name="details_receivers">Receivers (%d)</string>
+    <string name="details_directories">Katalogi (%d)</string>
+    <string name="details_permissions">Uprawnienia (%d)</string>
+    <string name="details_shared_libraries">Biblioteki Współdzielone (%d)</string>
+    <string name="details_native_libraries">Biblioteki Natywne (%d)</string>
+    <string name="details_time">Instalacja: %1$s\nAktualizacja: %2$s</string>
+    <string name="details_sdk">Min: %1$d, Docelowe: %2$d</string>
+    <string name="details_other_properties">Inne właściwości</string>
+    <string name="details_property_large_heap">Large Heap</string>
+    <string name="details_property_hw_accelerated">Hardware Accelerated</string>
+    <string name="details_property_rtl_supported">Support RTL</string>
+
+    <string name="data_directory">Katalog danych</string>
+    <string name="native_lib_directory">Katalog bibliotek natywnych</string>
+    <string name="protected_data_directory">Katalog `protected data`</string>
+</resources>
