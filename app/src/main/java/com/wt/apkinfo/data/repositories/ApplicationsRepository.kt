@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import android.os.Build
-import android.util.Log
 import com.wt.apkinfo.R
 import com.wt.apkinfo.data.ApkFileEntryInfo
 import com.wt.apkinfo.data.ApplicationDetailsInfo

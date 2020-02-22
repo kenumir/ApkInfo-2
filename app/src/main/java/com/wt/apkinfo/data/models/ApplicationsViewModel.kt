@@ -9,9 +9,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.data.repositories.ApplicationsRepository
-import java.util.*
 import java.util.concurrent.Executors
-import kotlin.collections.ArrayList
 import androidx.lifecycle.MutableLiveData as MutableLiveData1
 
 class ApplicationsViewModel(application: Application) : AndroidViewModel(application) {

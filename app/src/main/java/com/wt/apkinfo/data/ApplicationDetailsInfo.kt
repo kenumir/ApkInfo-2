@@ -1,7 +1,6 @@
 package com.wt.apkinfo.data
 
 import android.content.Intent
-import android.graphics.drawable.Drawable
 
 class ApplicationDetailsInfo(
     var pkg: String? = null,

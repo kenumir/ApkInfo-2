@@ -1,7 +1,7 @@
 package com.wt.apkinfo.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.wt.apkinfo.R
 import com.wt.apkinfo.fragments.AppListFragment
 
