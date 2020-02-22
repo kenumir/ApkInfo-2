@@ -1,0 +1,36 @@
+<resources>
+    <string name="loading">Caricamento in corso…</string>
+    <string name="clear">Chiaro</string>
+    <string name="search">Ricerca</string>
+    <string name="about">Di</string>
+    <string name="app_details">Dettagli app</string>
+    <string name="apk_list">File APK</string>
+    <string name="copied_to_clipboard">Copiato negli appunti</string>
+    <string name="back">Indietro</string>
+    <string name="share">Condividere</string>
+    <string name="copy">copia</string>
+    <string name="app_system_details">Dettagli di sistema</string>
+    <string name="launch">Lanciare</string>
+    <string name="properties">Proprietà</string>
+    <string name="version_code">Codice versione</string>
+    <string name="signature">Firma</string>
+    <string name="time">Tempo</string>
+    <string name="installer_package">Pacchetto di installazione</string>
+    <string name="more_info">Ulteriori informazioni</string>
+    <string name="not_set">Non impostato</string>
+    <string name="app_type_system">Sistema</string>
+    <string name="app_type_debug">mettere a punto</string>
+    <string name="about_app">Informazioni sull\'app</string>
+    <string name="details_metadata">Metadati (%d)</string>
+    <string name="details_services">Servizi (%d)</string>
+    <string name="details_directories">Directory (%d)</string>
+    <string name="details_permissions">Autorizzazioni (%d)</string>
+    <string name="details_shared_libraries">Librerie condivise (%d)</string>
+    <string name="details_native_libraries">Librerie native (%d)</string>
+    <string name="details_time">Installa: %1$s\nAggiorna: %2$s</string>
+    <string name="details_sdk">Min: %1$d, Target: %2$d</string>
+    <string name="details_other_properties">Altre proprietà</string>
+    <string name="data_directory">Directory dei dati</string>
+    <string name="native_lib_directory">Directory della libreria nativa</string>
+    <string name="protected_data_directory">Directory di dati protetta</string>
+</resources>

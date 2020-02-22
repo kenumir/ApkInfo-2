@@ -1,0 +1,36 @@
+<resources>
+    <string name="loading">载入中…</string>
+    <string name="clear">明确</string>
+    <string name="search">搜索</string>
+    <string name="about">关于</string>
+    <string name="app_details">应用详情</string>
+    <string name="apk_list">APK文件</string>
+    <string name="copied_to_clipboard">复制到剪贴板</string>
+    <string name="back">背部</string>
+    <string name="share">分享</string>
+    <string name="copy">复制</string>
+    <string name="app_system_details">系统详情</string>
+    <string name="launch">发射</string>
+    <string name="properties">物产</string>
+    <string name="version_code">版本码</string>
+    <string name="signature">签名</string>
+    <string name="time">时间</string>
+    <string name="installer_package">安装程序包</string>
+    <string name="more_info">更多信息</string>
+    <string name="not_set">没有设置</string>
+    <string name="app_type_system">系统</string>
+    <string name="app_type_debug">除错</string>
+    <string name="about_app">关于应用</string>
+    <string name="details_metadata">元数据（％d）</string>
+    <string name="details_services">服务（％d）</string>
+    <string name="details_directories">目录（％d）</string>
+    <string name="details_permissions">权限（％d）</string>
+    <string name="details_shared_libraries">共享库（％d）</string>
+    <string name="details_native_libraries">本地库（％d）</string>
+    <string name="details_time">安装 ：％1$s\n更新：％2$s</string>
+    <string name="details_sdk">最低 ：％1$d， 目标：％2$d</string>
+    <string name="details_other_properties">其他性质</string>
+    <string name="data_directory">资料目录</string>
+    <string name="native_lib_directory">本机库目录</string>
+    <string name="protected_data_directory">受保护的数据目录</string>
+</resources>

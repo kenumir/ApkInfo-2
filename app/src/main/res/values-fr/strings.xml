@@ -1,0 +1,36 @@
+<resources>
+    <string name="loading">Chargement…</string>
+    <string name="clear">Clair</string>
+    <string name="search">Chercher</string>
+    <string name="about">Sur</string>
+    <string name="app_details">Détails de l\'application</string>
+    <string name="apk_list">Fichiers APK</string>
+    <string name="copied_to_clipboard">Copié dans le presse-papier</string>
+    <string name="back">Retour</string>
+    <string name="share">Partager</string>
+    <string name="copy">Copie</string>
+    <string name="app_system_details">Détails du système</string>
+    <string name="launch">lancement</string>
+    <string name="properties">Propriétés</string>
+    <string name="version_code">Code de version</string>
+    <string name="signature">Signature</string>
+    <string name="time">Temps</string>
+    <string name="installer_package">Package d\'installation</string>
+    <string name="more_info">Plus d\'informations</string>
+    <string name="not_set">Pas encore défini</string>
+    <string name="app_type_system">Système</string>
+    <string name="app_type_debug">Déboguer</string>
+    <string name="about_app">À propos de l\'application</string>
+    <string name="details_metadata">Métadonnées (%d)</string>
+    <string name="details_services">Services (%d)</string>
+    <string name="details_directories">Répertoires (%d)</string>
+    <string name="details_permissions">Autorisations (%d)</string>
+    <string name="details_shared_libraries">Bibliothèques partagées (%d)</string>
+    <string name="details_native_libraries">Bibliothèques natives (%d)</string>
+    <string name="details_time">Installer: %1$s\nMettre à jour: %2$s</string>
+    <string name="details_sdk">Min: %1$d, Cible: %2$d</string>
+    <string name="details_other_properties">Autres propriétés</string>
+    <string name="data_directory">Répertoire de données</string>
+    <string name="native_lib_directory">Répertoire de la bibliothèque native</string>
+    <string name="protected_data_directory">Répertoire de données protégées</string>
+</resources>

@@ -1,0 +1,36 @@
+<resources>
+    <string name="loading">Cargando…</string>
+    <string name="clear">Claro</string>
+    <string name="search">Buscar</string>
+    <string name="about">Acerca de</string>
+    <string name="app_details">Detalles de la aplicación</string>
+    <string name="apk_list">Archivos APK</string>
+    <string name="copied_to_clipboard">Copiado al portapapeles</string>
+    <string name="back">atrás</string>
+    <string name="share">Compartir</string>
+    <string name="copy">Copiar</string>
+    <string name="app_system_details">Detalles del sistema</string>
+    <string name="launch">Lanzamiento</string>
+    <string name="properties">Propiedades</string>
+    <string name="version_code">Código de versión</string>
+    <string name="signature">Firma</string>
+    <string name="time">Hora</string>
+    <string name="installer_package">Paquete instalador</string>
+    <string name="more_info">Más información</string>
+    <string name="not_set">No establecido</string>
+    <string name="app_type_system">Sistema</string>
+    <string name="app_type_debug">Depurar</string>
+    <string name="about_app">Acerca de la aplicación</string>
+    <string name="details_metadata">Metadatos (%d)</string>
+    <string name="details_services">Servicios (%d)</string>
+    <string name="details_directories">Directorios (%d)</string>
+    <string name="details_permissions">Permisos (%d)</string>
+    <string name="details_shared_libraries">Bibliotecas compartidas (%d)</string>
+    <string name="details_native_libraries">Bibliotecas nativas (%d)</string>
+    <string name="details_time">Instalar: %1$s\nActualizar: %2$s</string>
+    <string name="details_sdk">Mín: %1$d, Objetivo: %2$d</string>
+    <string name="details_other_properties">Otras propiedades</string>
+    <string name="data_directory">Directorio de datos</string>
+    <string name="native_lib_directory">Directorio de bibliotecas nativas</string>
+    <string name="protected_data_directory">Directorio de datos protegidos</string>
+</resources>

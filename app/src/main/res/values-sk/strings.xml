@@ -1,0 +1,36 @@
+<resources>
+    <string name="loading">Načítava…</string>
+    <string name="clear">jasný</string>
+    <string name="search">Vyhľadávanie</string>
+    <string name="about">o</string>
+    <string name="app_details">Podrobnosti o aplikácii</string>
+    <string name="apk_list">Súbory APK</string>
+    <string name="copied_to_clipboard">Skopírované do schránky</string>
+    <string name="back">späť</string>
+    <string name="share">zdieľam</string>
+    <string name="copy">kópie</string>
+    <string name="app_system_details">Detaily systému</string>
+    <string name="launch">odpálenie</string>
+    <string name="properties">vlastnosti</string>
+    <string name="version_code">Kód verzie</string>
+    <string name="signature">podpis</string>
+    <string name="time">čas</string>
+    <string name="installer_package">Inštalačný balík</string>
+    <string name="more_info">Viac informácií</string>
+    <string name="not_set">Nie je nastavené</string>
+    <string name="app_type_system">systém</string>
+    <string name="app_type_debug">ladiť</string>
+    <string name="about_app">O aplikácii</string>
+    <string name="details_metadata">Metadáta (%d)</string>
+    <string name="details_services">Služby (%d)</string>
+    <string name="details_directories">Adresáre (%d)</string>
+    <string name="details_permissions">Povolenia (%d)</string>
+    <string name="details_shared_libraries">Zdieľané knižnice (%d)</string>
+    <string name="details_native_libraries">Natívne knižnice (%d)</string>
+    <string name="details_time">Inštalácia: %1$s\nAktualizácia: %2$s</string>
+    <string name="details_sdk">Min: %1$d, Cieľ: %2$d</string>
+    <string name="details_other_properties">Ďalšie vlastnosti</string>
+    <string name="data_directory">Dátový adresár</string>
+    <string name="native_lib_directory">Natívne adresár knižnice</string>
+    <string name="protected_data_directory">Zoznam chránených údajov</string>
+</resources>

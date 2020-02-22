@@ -1,0 +1,36 @@
+<resources>
+    <string name="loading">Загрузка…</string>
+    <string name="clear">ясно</string>
+    <string name="search">Поиск</string>
+    <string name="about">Около</string>
+    <string name="app_details">Детали приложения</string>
+    <string name="apk_list">APK файлы</string>
+    <string name="copied_to_clipboard">Скопировано в буфер обмена</string>
+    <string name="back">назад</string>
+    <string name="share">Поделиться</string>
+    <string name="copy">копия</string>
+    <string name="app_system_details">Сведения о системе</string>
+    <string name="launch">запуск</string>
+    <string name="properties">свойства</string>
+    <string name="version_code">Код версии</string>
+    <string name="signature">Подпись</string>
+    <string name="time">Время</string>
+    <string name="installer_package">Пакет установщика</string>
+    <string name="more_info">Больше информации</string>
+    <string name="not_set">Не установлено</string>
+    <string name="app_type_system">система</string>
+    <string name="app_type_debug">отлаживать</string>
+    <string name="about_app">О приложении</string>
+    <string name="details_metadata">Метаданные (%d)</string>
+    <string name="details_services">Услуги (%d)</string>
+    <string name="details_directories">Справочники (%d)</string>
+    <string name="details_permissions">Разрешения (%d)</string>
+    <string name="details_shared_libraries">Общие библиотеки (%d)</string>
+    <string name="details_native_libraries">Собственные библиотеки (%d)</string>
+    <string name="details_time">Установка: %1$s\nОбновить: %2$s</string>
+    <string name="details_sdk">Мин: %1$d, цель: %2$d</string>
+    <string name="details_other_properties">Другие свойства</string>
+    <string name="data_directory">Каталог данных</string>
+    <string name="native_lib_directory">Каталог родной библиотеки</string>
+    <string name="protected_data_directory">Защищенный каталог данных</string>
+</resources>

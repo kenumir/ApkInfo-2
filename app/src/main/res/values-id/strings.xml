@@ -1,0 +1,36 @@
+<resources>
+    <string name="loading">Memuat…</string>
+    <string name="clear">Bersih</string>
+    <string name="search">Cari</string>
+    <string name="about">Tentang</string>
+    <string name="app_details">Detail Aplikasi</string>
+    <string name="apk_list">File APK</string>
+    <string name="copied_to_clipboard">Disalin ke papan klip</string>
+    <string name="back">Kembali</string>
+    <string name="share">Bagikan</string>
+    <string name="copy">Salinan</string>
+    <string name="app_system_details">Detail Sistem</string>
+    <string name="launch">Meluncurkan</string>
+    <string name="properties">Properti</string>
+    <string name="version_code">Kode versi</string>
+    <string name="signature">Tanda tangan</string>
+    <string name="time">Waktu</string>
+    <string name="installer_package">Paket Pemasang</string>
+    <string name="more_info">Info lebih lanjut</string>
+    <string name="not_set">Tidak diatur</string>
+    <string name="app_type_system">Sistem</string>
+    <string name="app_type_debug">Debug</string>
+    <string name="about_app">Tentang aplikasi</string>
+    <string name="details_metadata">Metadata (%d)</string>
+    <string name="details_services">Layanan (%d)</string>
+    <string name="details_directories">Direktori (%d)</string>
+    <string name="details_permissions">Izin (%d)</string>
+    <string name="details_shared_libraries">Perpustakaan yang Dibagi (%d)</string>
+    <string name="details_native_libraries">Perpustakaan Asli (%d)</string>
+    <string name="details_time">Pasang: %1$s\nPerbarui: %2$s</string>
+    <string name="details_sdk">Min: %1$d, Target: %2$d</string>
+    <string name="details_other_properties">Properti lainnya</string>
+    <string name="data_directory">Direktori data</string>
+    <string name="native_lib_directory">Direktori perpustakaan asli</string>
+    <string name="protected_data_directory">Direktori data yang dilindungi</string>
+</resources>

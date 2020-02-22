@@ -1,0 +1,36 @@
+<resources>
+    <string name="loading">लोड हो रहा है…</string>
+    <string name="clear">स्पष्ट</string>
+    <string name="search">खोज</string>
+    <string name="about">के बारे में</string>
+    <string name="app_details">ऐप का विवरण</string>
+    <string name="apk_list">एपीके फाइलें</string>
+    <string name="copied_to_clipboard">क्लिपबोर्ड पर नकल</string>
+    <string name="back">वापस</string>
+    <string name="share">शेयर</string>
+    <string name="copy">प्रतिलिपि</string>
+    <string name="app_system_details">सिस्टम विवरण</string>
+    <string name="launch">प्रक्षेपण</string>
+    <string name="properties">गुण</string>
+    <string name="version_code">वर्जन कोड</string>
+    <string name="signature">हस्ताक्षर</string>
+    <string name="time">समय</string>
+    <string name="installer_package">इंस्टॉलर पैकेज</string>
+    <string name="more_info">और जानकारी</string>
+    <string name="not_set">सेट नहीं</string>
+    <string name="app_type_system">प्रणाली</string>
+    <string name="app_type_debug">डिबग</string>
+    <string name="about_app">ऐप के बारे में</string>
+    <string name="details_metadata">मेटाडेटा (%d)</string>
+    <string name="details_services">सेवाएँ (%d)</string>
+    <string name="details_directories">निर्देशिकाएँ (%d)</string>
+    <string name="details_permissions">अनुमतियाँ (%d)</string>
+    <string name="details_shared_libraries">साझा पुस्तकालय (%d)</string>
+    <string name="details_native_libraries">मूल पुस्तकालय (%d)</string>
+    <string name="details_time">इंस्टॉल करें: %1$s\nUpdate: %2$s</string>
+    <string name="details_sdk">न्यूनतम: %1$d, लक्ष्य: %2$d</string>
+    <string name="details_other_properties">अन्य गुण</string>
+    <string name="data_directory">डेटा निर्देशिका</string>
+    <string name="native_lib_directory">मूल पुस्तकालय निर्देशिका</string>
+    <string name="protected_data_directory">संरक्षित डेटा निर्देशिका</string>
+</resources>

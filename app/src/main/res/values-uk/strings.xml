@@ -1,0 +1,36 @@
+<resources>
+    <string name="loading">Завантаження…</string>
+    <string name="clear">Ясно</string>
+    <string name="search">Пошук</string>
+    <string name="about">Про</string>
+    <string name="app_details">Деталі додатків</string>
+    <string name="apk_list">APK файли</string>
+    <string name="copied_to_clipboard">Скопійовано у буфер обміну</string>
+    <string name="back">Назад</string>
+    <string name="share">Поділитися</string>
+    <string name="copy">Скопіювати</string>
+    <string name="app_system_details">Деталі системи</string>
+    <string name="launch">Запуск</string>
+    <string name="properties">Властивості</string>
+    <string name="version_code">Код версії</string>
+    <string name="signature">Підпис</string>
+    <string name="time">Час</string>
+    <string name="installer_package">Пакет встановлення</string>
+    <string name="more_info">Більше інформації</string>
+    <string name="not_set">Не встановлено</string>
+    <string name="app_type_system">Система</string>
+    <string name="app_type_debug">Відлагоджувати</string>
+    <string name="about_app">Про додаток</string>
+    <string name="details_metadata">Метадані (%d)</string>
+    <string name="details_services">Послуги (%d)</string>
+    <string name="details_directories">Каталоги (%d)</string>
+    <string name="details_permissions">Дозволи (%d)</string>
+    <string name="details_shared_libraries">Спільні бібліотеки (%d)</string>
+    <string name="details_native_libraries">Рідні бібліотеки (%d)</string>
+    <string name="details_time">Встановити: %1$s\nОновлення: %2$s</string>
+    <string name="details_sdk">Мінімум: %1$d, ціль: %2$d</string>
+    <string name="details_other_properties">Інші властивості</string>
+    <string name="data_directory">Каталог даних</string>
+    <string name="native_lib_directory">Довідник рідної бібліотеки</string>
+    <string name="protected_data_directory">Захищений каталог даних</string>
+</resources>

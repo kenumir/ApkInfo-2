@@ -3,4 +3,13 @@
     <string name="about_desc" translatable="false">Apk Info v%s\nAuthor: Michał (Kenumir) Szwarc\nContact: https://twitter.com/kenumir</string>
     <string name="about_open" translatable="false">\@kenumir</string>
     <string name="label_ok" translatable="false">OK</string>
+
+    <string name="sdk" translatable="false">SDK</string>
+    <string name="details_activities" translatable="false">Activities (%d)</string>
+    <string name="details_providers" translatable="false">Providers (%d)</string>
+    <string name="details_receivers" translatable="false">Receivers (%d)</string>
+    <string name="details_property_large_heap" translatable="false">Large Heap</string>
+    <string name="details_property_hw_accelerated" translatable="false">Hardware Accelerated</string>
+    <string name="details_property_rtl_supported" translatable="false">Support RTL</string>
+    <string name="app_name" translatable="false">Apk Info</string>
 </resources>

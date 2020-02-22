@@ -1,0 +1,36 @@
+<resources>
+    <string name="loading">Carregando…</string>
+    <string name="clear">Claro</string>
+    <string name="search">Procurar</string>
+    <string name="about">Sobre</string>
+    <string name="app_details">Detalhes da aplicação</string>
+    <string name="apk_list">Arquivos APK</string>
+    <string name="copied_to_clipboard">Copiado para a área de transferência</string>
+    <string name="back">Costas</string>
+    <string name="share">Compartilhar</string>
+    <string name="copy">cópia de</string>
+    <string name="app_system_details">Detalhes do sistema</string>
+    <string name="launch">Lançamento</string>
+    <string name="properties">Propriedades</string>
+    <string name="version_code">Código da versão</string>
+    <string name="signature">Assinatura</string>
+    <string name="time">Tempo</string>
+    <string name="installer_package">Pacote Instalador</string>
+    <string name="more_info">Mais informações</string>
+    <string name="not_set">Não configurado</string>
+    <string name="app_type_system">Sistema</string>
+    <string name="app_type_debug">Depurar</string>
+    <string name="about_app">Sobre o aplicativo</string>
+    <string name="details_metadata">Metadados (%d)</string>
+    <string name="details_services">Serviços (%d)</string>
+    <string name="details_directories">Diretórios (%d)</string>
+    <string name="details_permissions">Permissões (%d)</string>
+    <string name="details_shared_libraries">Bibliotecas compartilhadas (%d)</string>
+    <string name="details_native_libraries">Bibliotecas nativas (%d)</string>
+    <string name="details_time">Instalação: %1$s\nAtualização: %2$s</string>
+    <string name="details_sdk">Mín: %1$d, Meta: %2$d</string>
+    <string name="details_other_properties">Outras propriedades</string>
+    <string name="data_directory">Diretório de dados</string>
+    <string name="native_lib_directory">Diretório de biblioteca nativa</string>
+    <string name="protected_data_directory">Diretório de dados protegido</string>
+</resources>
