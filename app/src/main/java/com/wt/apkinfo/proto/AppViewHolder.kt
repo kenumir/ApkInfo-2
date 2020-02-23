@@ -23,11 +23,11 @@ class AppViewHolder(itemView: View, mOnAppListItemClick: OnAppListItemClick?) : 
 
     fun update(data: ApplicationEntryInfo?) {
         mApplicationEntryInfo = data
+        icon.setImageBitmap(null)
         data?.let {
-            text1.text = data.name
-            text2.text = data.pkg
-            ImageLoader.get(icon.context).load(data.icon, icon)
-            //icon.setImageDrawable(data.icon)
+            text1.text = it.name
+            text2.text = it.pkg
+            ImageLoader.get(icon.context).load(it.icon, icon)
         }
     }
 

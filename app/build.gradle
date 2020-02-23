@@ -15,7 +15,20 @@ android {
         versionName "2.0.1"
         vectorDrawables.useSupportLibrary = true
     }
+
+    signingConfigs {
+        debugKeystore {
+            storeFile file("../debug_certificate/debug_cert.jks")
+            storePassword "android"
+            keyAlias "debug_certificate"
+            keyPassword "android"
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debugKeystore
+        }
         release {
             minifyEnabled false
             proguardFiles  getDefaultProguardFile('proguard-android-optimize.txt'),
