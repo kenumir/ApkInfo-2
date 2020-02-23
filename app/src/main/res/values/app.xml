@@ -12,4 +12,5 @@
     <string name="details_property_hw_accelerated" translatable="false">Hardware Accelerated</string>
     <string name="details_property_rtl_supported" translatable="false">Support RTL</string>
     <string name="app_name" translatable="false">Apk Info</string>
+    <string name="app_list" translatable="false">Applications list</string>
 </resources>
