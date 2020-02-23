@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.customListAdapter
+import com.crashlytics.android.Crashlytics
 import com.wt.apkinfo.R
 import com.wt.apkinfo.data.ApplicationDetailsInfo
 import com.wt.apkinfo.data.ApplicationEntryInfo
@@ -78,7 +79,8 @@ class AppDetailsActivity : AppCompatActivity() {
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .setData(Uri.parse("package:${data.pkg}"))
                     startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
                     startActivity(Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS))
                 }
             }
@@ -86,8 +88,8 @@ class AppDetailsActivity : AppCompatActivity() {
                 data.launcherIntent?.let {
                     try {
                         startActivity(it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                    } catch (e: ActivityNotFoundException) {
-                        // ignore
+                    } catch (e: Exception) {
+                        Crashlytics.logException(e)
                     }
                 }
             }

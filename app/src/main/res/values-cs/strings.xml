@@ -27,7 +27,7 @@
     <string name="details_permissions">Oprávnění (%d)</string>
     <string name="details_shared_libraries">Sdílené knihovny (%d)</string>
     <string name="details_native_libraries">Nativní knihovny (%d)</string>
-    <string name="details_time">Instalace: %1$s\nAktualizace: %2$</string>
+    <string name="details_time">Instalace: %1$s\nAktualizace: %2$s</string>
     <string name="details_sdk">Min: %1$d, Cíl: %2$d</string>
     <string name="details_other_properties">Další vlastnosti</string>
     <string name="data_directory">Datový adresář</string>

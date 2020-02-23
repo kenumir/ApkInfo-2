@@ -27,8 +27,8 @@
     <string name="details_permissions">अनुमतियाँ (%d)</string>
     <string name="details_shared_libraries">साझा पुस्तकालय (%d)</string>
     <string name="details_native_libraries">मूल पुस्तकालय (%d)</string>
-    <string name="details_time">इंस्टॉल करें: %1$s\nUpdate: %2$s</string>
-    <string name="details_sdk">न्यूनतम: %1$d, लक्ष्य: %2$d</string>
+    <string name="details_time">इंस्टॉल करें:  %1$s\nUpdate: %2$s</string>
+    <string name="details_sdk">न्यूनतम:  %1$d, लक्ष्य: %2$d</string>
     <string name="details_other_properties">अन्य गुण</string>
     <string name="data_directory">डेटा निर्देशिका</string>
     <string name="native_lib_directory">मूल पुस्तकालय निर्देशिका</string>
