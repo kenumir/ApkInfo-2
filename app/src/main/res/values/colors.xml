@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#C22E00</color>
     <color name="colorAccent">#002DC2</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="ic_launcher_new_background">#FF3D00</color>
+    <color name="white_50">#80FFFFFF</color>
+    <color name="ic_launcher_new_background">@color/colorPrimary</color>
 </resources>
