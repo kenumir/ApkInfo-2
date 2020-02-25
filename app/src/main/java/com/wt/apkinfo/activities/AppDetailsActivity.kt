@@ -31,7 +31,6 @@ class AppDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //overridePendingTransition(0, 0)
         setContentView(R.layout.activity_app_details)
 
         val pkg = intent.getStringExtra("pkg")

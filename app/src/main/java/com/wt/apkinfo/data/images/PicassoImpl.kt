@@ -10,7 +10,7 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Request
 import com.squareup.picasso.RequestHandler
 
-class PicassoImpl(val ctx: Context) : ImageLoading {
+class PicassoImpl(ctx: Context) : ImageLoading {
 
     private val mPicasso: Picasso
 
