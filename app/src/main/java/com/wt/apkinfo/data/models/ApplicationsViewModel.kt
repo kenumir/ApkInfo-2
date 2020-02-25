@@ -14,7 +14,7 @@ import androidx.lifecycle.MutableLiveData as MutableLiveData1
 
 class ApplicationsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val data = MutableLiveData1<List<ApplicationEntryInfo>>()
+    private val data = MutableLiveData1<List<ApplicationEntryInfo?>>()
     private val exec = Executors.newCachedThreadPool()
     private val appRepository: ApplicationsRepository = ApplicationsRepository(application)
 
@@ -39,11 +39,12 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
         context.registerReceiver(packageReceiver, intentFilter)
     }
 
-    fun getData() : MutableLiveData1<List<ApplicationEntryInfo>> {
+    fun getData() : MutableLiveData1<List<ApplicationEntryInfo?>> {
         return data;
     }
 
     fun search(query: String?) {
+        data.value = ArrayList(listOf(null))
         exec.execute { data.postValue(appRepository.getAppList(query)) }
     }
 

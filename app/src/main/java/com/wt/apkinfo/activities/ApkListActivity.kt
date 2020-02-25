@@ -24,7 +24,6 @@ class ApkListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //overridePendingTransition(0, 0)
         setContentView(R.layout.activity_apk_list)
 
         val pkg = intent.getStringExtra("pkg")

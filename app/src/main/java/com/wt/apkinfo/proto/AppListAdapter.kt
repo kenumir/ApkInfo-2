@@ -9,7 +9,7 @@ import com.wt.apkinfo.data.ApplicationEntryInfo
 
 class AppListAdapter(val mOnAppListItemClick: OnAppListItemClick) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var items: List<ApplicationEntryInfo?> = ArrayList<ApplicationEntryInfo>()
+    private var items: List<ApplicationEntryInfo?> = ArrayList()
 
     init {
         setHasStableIds(true)
@@ -26,7 +26,7 @@ class AppListAdapter(val mOnAppListItemClick: OnAppListItemClick) : RecyclerView
 
     override fun getItemId(position: Int): Long {
         return if (position == 0 && items[position] == null) {
-            0 //Long.MAX_VALUE
+            0
         } else {
             val hash = items[position]?.pkg + "-" + items[position]?.name
             hash.hashCode().toLong()
@@ -45,6 +45,7 @@ class AppListAdapter(val mOnAppListItemClick: OnAppListItemClick) : RecyclerView
         return items.size
     }
 
+    @Suppress("ControlFlowWithEmptyBody")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is AppViewHolder) {
             val h: AppViewHolder = holder
@@ -54,12 +55,10 @@ class AppListAdapter(val mOnAppListItemClick: OnAppListItemClick) : RecyclerView
         }
     }
 
-    fun swapData(newData: List<ApplicationEntryInfo>) {
+    fun swapData(newData: List<ApplicationEntryInfo?>) {
         val result = DiffUtil.calculateDiff(AppListAdapterDiff(items, newData))
         items = newData
         result.dispatchUpdatesTo(this)
-        //items = newData
-        //notifyDataSetChanged()
     }
 
 }

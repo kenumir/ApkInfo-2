@@ -69,7 +69,7 @@ class AppListFragment : Fragment() {
 
         model = ViewModelProvider(this).get<ApplicationsViewModel>(ApplicationsViewModel::class.java)
         model.getData()
-            .observe(this, Observer<List<ApplicationEntryInfo>> { results ->
+            .observe(this, Observer<List<ApplicationEntryInfo?>> { results ->
                 adapter.swapData(results)
             })
     }
@@ -130,8 +130,12 @@ class AppListFragment : Fragment() {
         }
 
         clearBtn.setOnClickListener {
-            searchEdit?.setText("")
+            searchEdit?.let {
+                it.setText("")
+                it.requestFocus()
+            }
             model.search("")
+            showKeyboard()
         }
 
         searchMenu = toolbar.menu.add(R.string.search)
