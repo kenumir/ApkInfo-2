@@ -33,4 +33,5 @@
     <string name="data_directory">Katalog danych</string>
     <string name="native_lib_directory">Katalog bibliotek natywnych</string>
     <string name="protected_data_directory">Katalog `protected data`</string>
+    <string name="app_run_error">Błąd uruchomienia: %s</string>
 </resources>

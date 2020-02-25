@@ -1,7 +1,10 @@
 package com.wt.apkinfo.activities
 
 import android.animation.Animator
-import android.content.*
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -84,13 +87,17 @@ class AppDetailsActivity : AppCompatActivity() {
                     startActivity(Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS))
                 }
             }
-            actionRun.setOnClickListener { _ ->
+            actionRun.setOnClickListener { ar ->
                 data.launcherIntent?.let {
+                    ar.visibility = View.VISIBLE
                     try {
                         startActivity(it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                     } catch (e: Exception) {
                         Crashlytics.logException(e)
+                        Toast.makeText(this, resources.getString(R.string.app_run_error, e.message), Toast.LENGTH_LONG).show()
                     }
+                } ?: run {
+                    ar.visibility = View.GONE
                 }
             }
             data.meta.let {

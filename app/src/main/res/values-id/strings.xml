@@ -33,4 +33,5 @@
     <string name="data_directory">Direktori data</string>
     <string name="native_lib_directory">Direktori perpustakaan asli</string>
     <string name="protected_data_directory">Direktori data yang dilindungi</string>
+    <string name="app_run_error">Jalankan kesalahan: %s</string>
 </resources>

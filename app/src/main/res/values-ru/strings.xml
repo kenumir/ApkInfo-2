@@ -33,4 +33,5 @@
     <string name="data_directory">Каталог данных</string>
     <string name="native_lib_directory">Каталог родной библиотеки</string>
     <string name="protected_data_directory">Защищенный каталог данных</string>
+    <string name="app_run_error">Ошибка запуска: %s</string>
 </resources>

@@ -33,4 +33,5 @@
     <string name="data_directory">资料目录</string>
     <string name="native_lib_directory">本机库目录</string>
     <string name="protected_data_directory">受保护的数据目录</string>
+    <string name="app_run_error">运行错误: %s</string>
 </resources>

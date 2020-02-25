@@ -33,4 +33,5 @@
     <string name="data_directory">Каталог даних</string>
     <string name="native_lib_directory">Довідник рідної бібліотеки</string>
     <string name="protected_data_directory">Захищений каталог даних</string>
+    <string name="app_run_error">Помилка запуску: %s</string>
 </resources>

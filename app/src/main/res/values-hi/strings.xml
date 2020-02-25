@@ -33,4 +33,5 @@
     <string name="data_directory">डेटा निर्देशिका</string>
     <string name="native_lib_directory">मूल पुस्तकालय निर्देशिका</string>
     <string name="protected_data_directory">संरक्षित डेटा निर्देशिका</string>
+    <string name="app_run_error">रन त्रुटि: %s</string>
 </resources>

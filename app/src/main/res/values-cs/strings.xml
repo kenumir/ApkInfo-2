@@ -33,4 +33,5 @@
     <string name="data_directory">Datový adresář</string>
     <string name="native_lib_directory">Nativní adresář knihovny</string>
     <string name="protected_data_directory">Chráněný datový adresář</string>
+    <string name="app_run_error">Chyba spuštění: %s</string>
 </resources>

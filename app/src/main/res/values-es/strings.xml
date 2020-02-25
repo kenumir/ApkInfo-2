@@ -33,4 +33,5 @@
     <string name="data_directory">Directorio de datos</string>
     <string name="native_lib_directory">Directorio de bibliotecas nativas</string>
     <string name="protected_data_directory">Directorio de datos protegidos</string>
+    <string name="app_run_error">Ejecutar error: %s</string>
 </resources>

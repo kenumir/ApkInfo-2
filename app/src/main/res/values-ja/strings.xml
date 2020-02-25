@@ -33,4 +33,5 @@
     <string name="data_directory">データディレクトリ</string>
     <string name="native_lib_directory">ネイティブライブラリディレクトリ</string>
     <string name="protected_data_directory">保護されたデータディレクトリ</string>
+    <string name="app_run_error">実行エラー: %s</string>
 </resources>
