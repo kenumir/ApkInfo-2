@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
+import com.crashlytics.android.Crashlytics
 import com.wt.apkinfo.R
 import com.wt.apkinfo.data.ApkFileEntryInfo
 import com.wt.apkinfo.data.ApplicationDetailsInfo
@@ -26,18 +27,23 @@ class ApplicationsRepository(ctx: Context) {
     fun getApkFiles(pkgName: String): List<ApkFileEntryInfo> {
         val results: ArrayList<ApkFileEntryInfo> = ArrayList()
         pkg?.let{ pit ->
-            val appInfo = pit.getApplicationInfo(pkgName, 0)
-            val apk = File(appInfo.publicSourceDir)
-            apk.parent?.let {
-                File(it).listFiles(object : FilenameFilter {
-                    override fun accept(dir: File?, name: String?): Boolean {
-                        return name?.endsWith(".apk")!!
+            Crashlytics.log("ApplicationsRepository.getApkFiles: pkgName=$pkgName")
+            try {
+                val appInfo = pit.getApplicationInfo(pkgName, 0)
+                val apk = File(appInfo.publicSourceDir)
+                apk.parent?.let {
+                    File(it).listFiles(object : FilenameFilter {
+                        override fun accept(dir: File?, name: String?): Boolean {
+                            return name?.endsWith(".apk")!!
+                        }
+                    })?.forEach { itf ->
+                        results.add(ApkFileEntryInfo.fromFile(itf))
                     }
-                })?.forEach {itf ->
-                    results.add(ApkFileEntryInfo.fromFile(itf))
+                } ?: run {
+                    results.add(ApkFileEntryInfo(apk.name, apk.absolutePath, apk.length()))
                 }
-            } ?: run {
-                results.add(ApkFileEntryInfo(apk.name, apk.absolutePath, apk.length()))
+            } catch (e: Exception) {
+                Crashlytics.logException(e)
             }
         }
         return results
