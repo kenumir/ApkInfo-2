@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Build
 import android.os.StrictMode
 import androidx.appcompat.app.AppCompatDelegate
+import com.crashlytics.android.Crashlytics
 import com.wt.userinfo.UserInfo
 
 class App : Application() {
@@ -20,6 +21,7 @@ class App : Application() {
             )
         }
         super.onCreate()
+        Crashlytics.setString("Build For Market", BuildConfig.BUILD_FOR_MARKET)
         if (Build.VERSION.SDK_INT >= 29) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         } else {

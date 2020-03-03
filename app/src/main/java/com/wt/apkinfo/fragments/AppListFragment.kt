@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -52,7 +51,6 @@ class AppListFragment : Fragment() {
     private var recycler: RecyclerView? = null
     private var adapter: AppListAdapter = AppListAdapter(object : OnAppListItemClick {
         override fun onItemClick(item: ApplicationEntryInfo?) {
-            Log.i("tests", "item click=$item")
             activity?.let { AppDetailsActivity.show(it, item) }
         }
     })
@@ -67,9 +65,9 @@ class AppListFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
 
-        model = ViewModelProvider(this).get<ApplicationsViewModel>(ApplicationsViewModel::class.java)
+        model = ViewModelProvider(this).get(ApplicationsViewModel::class.java)
         model.getData()
-            .observe(this, Observer<List<ApplicationEntryInfo?>> { results ->
+            .observe(this, Observer { results ->
                 adapter.swapData(results)
             })
     }
@@ -191,11 +189,11 @@ class AppListFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
-    public fun onBackAction(): Boolean {
+    fun onBackAction(): Boolean {
         searchEdit?.let {
             if (it.text.toString().isNotEmpty()) {
                 searchMenu?.collapseActionView()
-                return true;
+                return true
             }
             return false
         }

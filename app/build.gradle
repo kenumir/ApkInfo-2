@@ -30,7 +30,8 @@ android {
             signingConfig signingConfigs.debugKeystore
         }
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles  getDefaultProguardFile('proguard-android-optimize.txt'),
                 'proguard-rules.pro',
                 'proguard/proguard-rules.pro',
@@ -43,7 +44,38 @@ android {
                 'proguard/picasso.pro',
                 'proguard/android.pro'
         }
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = outputFileName.replace("app-", "ApkInfo-" + defaultConfig.versionName + "-").replace(".apk", "-[" + defaultConfig.versionCode + "].apk")
+            }
+        }
     }
+
+    bundle {
+        language {
+            enableSplit = true
+        }
+        density {
+            enableSplit = true
+        }
+        abi {
+            enableSplit = true
+        }
+    }
+
+    flavorDimensions "market"
+
+    productFlavors {
+        googlePlayStore {
+            buildConfigField "String", "BUILD_FOR_MARKET", "\"google\""
+        }
+        huaweiAppGallery {
+            buildConfigField "String", "BUILD_FOR_MARKET", "\"huawei\""
+        }
+    }
+    //compileOptions {
+    //    sourceCompatibility = 1.8
+    //}
 }
 
 dependencies {
