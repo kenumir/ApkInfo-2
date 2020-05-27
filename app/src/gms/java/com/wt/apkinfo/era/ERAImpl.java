@@ -28,7 +28,11 @@ public class ERAImpl {
 	}
 
 	public static void log(String s) {
-
+		try {
+			FirebaseCrashlytics.getInstance().log(s);
+		} catch (Exception ee) {
+			// ignore
+		}
 	}
 
 }
