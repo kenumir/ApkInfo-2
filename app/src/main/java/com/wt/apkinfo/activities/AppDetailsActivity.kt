@@ -15,12 +15,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.customListAdapter
-import com.crashlytics.android.Crashlytics
 import com.wt.apkinfo.R
 import com.wt.apkinfo.data.ApplicationDetailsInfo
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.data.images.ImageLoader
 import com.wt.apkinfo.data.models.ApplicationDetailsViewModel
+import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.proto.DateTime
 import com.wt.apkinfo.proto.PropertiesDialogAdapter
 import kotlinx.android.synthetic.main.activity_app_details.*
@@ -82,7 +82,7 @@ class AppDetailsActivity : AppCompatActivity() {
                         .setData(Uri.parse("package:${data.pkg}"))
                     startActivity(intent)
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    ERA.logException(e)
                     startActivity(Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS))
                 }
             }
@@ -92,7 +92,7 @@ class AppDetailsActivity : AppCompatActivity() {
                     try {
                         startActivity(it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                     } catch (e: Exception) {
-                        Crashlytics.logException(e)
+                        ERA.logException(e)
                         Toast.makeText(this, resources.getString(R.string.app_run_error, e.message), Toast.LENGTH_LONG).show()
                     }
                 } ?: run {

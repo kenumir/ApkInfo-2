@@ -5,11 +5,11 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
-import com.crashlytics.android.Crashlytics
 import com.wt.apkinfo.R
 import com.wt.apkinfo.data.ApkFileEntryInfo
 import com.wt.apkinfo.data.ApplicationDetailsInfo
 import com.wt.apkinfo.data.ApplicationEntryInfo
+import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.proto.StringUtil
 import java.io.File
 import java.io.FilenameFilter
@@ -27,7 +27,7 @@ class ApplicationsRepository(ctx: Context) {
     fun getApkFiles(pkgName: String): List<ApkFileEntryInfo> {
         val results: ArrayList<ApkFileEntryInfo> = ArrayList()
         pkg?.let{ pit ->
-            Crashlytics.log("ApplicationsRepository.getApkFiles: pkgName=$pkgName")
+            ERA.log("ApplicationsRepository.getApkFiles: pkgName=$pkgName")
             try {
                 val appInfo = pit.getApplicationInfo(pkgName, 0)
                 val apk = File(appInfo.publicSourceDir)
@@ -43,7 +43,7 @@ class ApplicationsRepository(ctx: Context) {
                     results.add(ApkFileEntryInfo(apk.name, apk.absolutePath, apk.length()))
                 }
             } catch (e: Exception) {
-                Crashlytics.logException(e)
+                ERA.logException(e)
             }
         }
         return results
@@ -101,7 +101,7 @@ class ApplicationsRepository(ctx: Context) {
                 }
             }
         } catch (e: Exception) {
-            Crashlytics.logException(e)
+            ERA.logException(e)
         }
         return results.sortedWith(compareBy { it2 -> it2.name })
     }

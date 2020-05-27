@@ -181,6 +181,14 @@ class AppListFragment : Fragment() {
                 true
             }
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+
+        if (BuildConfig.DEBUG) {
+            toolbar.menu.add("Test error").setOnMenuItemClickListener {
+                //ERA.testError(activity)
+                throw RuntimeException("Test error")
+                true
+            }
+        }
         return view
     }
 

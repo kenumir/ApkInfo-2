@@ -6,9 +6,9 @@ import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
-import com.crashlytics.android.Crashlytics
 import com.wt.apkinfo.App
 import com.wt.apkinfo.R
+import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.fragments.AppListFragment
 
 class MainActivity : AppCompatActivity(), InstallReferrerStateListener {
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity(), InstallReferrerStateListener {
                 try {
                     mReferrerClient?.startConnection(this)
                 } catch (e: Exception) {
-                    Crashlytics.logException(e)
+                    ERA.logException(e)
                 }
             }
         }
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), InstallReferrerStateListener {
                     it.endConnection()
                 }
             } catch (e: RemoteException) {
-                Crashlytics.logException(e)
+                ERA.logException(e)
             }
         }
     }
