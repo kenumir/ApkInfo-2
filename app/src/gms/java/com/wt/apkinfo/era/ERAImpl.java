@@ -2,13 +2,17 @@ package com.wt.apkinfo.era;
 
 import android.content.Context;
 
-import com.crashlytics.android.Crashlytics;
-import com.wt.apkinfo.BuildConfig;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 
 public class ERAImpl {
 
 	public static void setString(String key, String value) {
-		Crashlytics.setString(key, value);
+		try {
+			FirebaseCrashlytics.getInstance().setCustomKey(key, value);
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	public static void testError(Context ctx) {
@@ -16,7 +20,11 @@ public class ERAImpl {
 	}
 
 	public static void logException(Throwable e) {
-		Crashlytics.logException(e);
+		try {
+			FirebaseCrashlytics.getInstance().recordException(e);
+		} catch (Exception ee) {
+			// ignore
+		}
 	}
 
 	public static void log(String s) {

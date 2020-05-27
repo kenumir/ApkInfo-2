@@ -46,12 +46,12 @@ ext.libraries = [
     google: [
         material:             'com.google.android.material:material:1.1.0',
         firebase: [
-            analytics:        'com.google.firebase:firebase-analytics:17.2.2'
+            analytics:        'com.google.firebase:firebase-analytics:17.4.2',
+            crashlytics:      'com.google.firebase:firebase-crashlytics:17.0.0'
         ],
     ],
     squareup: [
         picasso:              'com.squareup.picasso:picasso:2.5.2', // its small and sufficient
     ],
-    material_dialogs:         'com.afollestad.material-dialogs:core:3.3.0',
-    crashlytics:              'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    material_dialogs:         'com.afollestad.material-dialogs:core:3.3.0'
 ]

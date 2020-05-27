@@ -97,11 +97,11 @@ dependencies {
 
     implementation libraries.google.material
     gmsImplementation libraries.google.firebase.analytics
+    gmsImplementation libraries.google.firebase.crashlytics
 
     implementation libraries.squareup.picasso
 
     implementation libraries.material_dialogs
-    gmsImplementation libraries.crashlytics
     implementation libraries.kotlin
 
     implementation project(':module_user_info')
