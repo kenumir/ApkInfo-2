@@ -93,3 +93,6 @@ lint/tmp/
 # Android Studio
 *.iml
 .idea
+
+
+/app/src/hms/agconnect-services.json
