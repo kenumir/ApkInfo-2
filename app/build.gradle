@@ -6,7 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 //} else {
 //    // nothing for now
 //}
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 29
