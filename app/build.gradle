@@ -60,10 +60,10 @@ android {
             enableSplit = false
         }
         density {
-            enableSplit = false
+            enableSplit = true
         }
         abi {
-            enableSplit = false
+            enableSplit = true
         }
     }
 

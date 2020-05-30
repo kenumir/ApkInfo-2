@@ -169,6 +169,7 @@ class ApplicationsRepository(ctx: Context) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     result.directories.add(res.getString(R.string.protected_data_directory) + "\n" + pi.applicationInfo.deviceProtectedDataDir)
                 }
+                result.directories.add(res.getString(R.string.apk_directory) + "\n" + pi.applicationInfo.publicSourceDir)
 
                 pi.applicationInfo.nativeLibraryDir?.let {
                     if (it.isNotEmpty()) {
