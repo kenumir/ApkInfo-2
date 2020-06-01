@@ -15,8 +15,8 @@ android {
         applicationId "com.wt.apkinfo"
         minSdkVersion 17
         targetSdkVersion 29
-        versionCode 108
-        versionName "2.0.8"
+        versionCode 109
+        versionName "2.0.9"
         vectorDrawables.useSupportLibrary = true
     }
 
