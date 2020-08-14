@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import com.wt.apkinfo.BuildConfig
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.data.repositories.ApplicationsRepository
 import java.util.concurrent.Executors
@@ -20,6 +21,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
 
     private var packageReceiver: BroadcastReceiver? = null
     private val context: Context = application.applicationContext
+    private var lastSearchQuery: String? = null
 
     init {
         exec.execute { data.postValue(appRepository.getAppList(null)) }
@@ -32,8 +34,10 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
         intentFilter.addDataScheme("package")
         packageReceiver = object : BroadcastReceiver() {
             override fun onReceive(p0: Context?, p1: Intent?) {
-                Log.i("tests", "ACTION_PACKAGE_: " + p1?.action)
-                exec.execute { data.postValue(appRepository.getAppList(null)) }
+                if (BuildConfig.DEBUG) {
+                    Log.i("tests", "ACTION_PACKAGE_: " + p1?.action)
+                }
+                exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery)) }
             }
         }
         context.registerReceiver(packageReceiver, intentFilter)
@@ -44,6 +48,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun search(query: String?) {
+        lastSearchQuery = query
         data.value = ArrayList(listOf(null))
         exec.execute { data.postValue(appRepository.getAppList(query)) }
     }

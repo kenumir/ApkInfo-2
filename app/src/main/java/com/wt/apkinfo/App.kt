@@ -27,7 +27,9 @@ class App : Application() {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
         }
-        mUserInfo = UserInfo.setup(this, BuildConfig.VERSION_NAME)
+        mUserInfo = UserInfo.setup(this, BuildConfig.VERSION_NAME) {
+            ERA.logException(it)
+        }
     }
 
     fun getUserInfo(): UserInfo {
