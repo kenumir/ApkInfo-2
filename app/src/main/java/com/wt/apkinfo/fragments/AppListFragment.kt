@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -161,6 +162,16 @@ class AppListFragment : Fragment() {
                 searchMenu?.expandActionView()
             }
         }
+
+        toolbar.menu.add("Show all apps")
+            .setCheckable(true)
+            .setOnMenuItemClickListener {
+                it.isChecked = !it.isChecked
+                Log.i("tests", "c=" + it.isChecked)
+                model.showAllApps(it.isChecked)
+                true
+            }
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
         toolbar.menu.add(R.string.about)
             .setOnMenuItemClickListener {

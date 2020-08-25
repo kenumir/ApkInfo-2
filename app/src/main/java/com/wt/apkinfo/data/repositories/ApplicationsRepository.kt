@@ -14,6 +14,8 @@ import com.wt.apkinfo.proto.StringUtil
 import java.io.File
 import java.io.FilenameFilter
 import java.security.MessageDigest
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ApplicationsRepository(ctx: Context) {
 
@@ -50,11 +52,37 @@ class ApplicationsRepository(ctx: Context) {
     }
 
     @SuppressLint("DefaultLocale")
-    fun getAppList(query: String?): List<ApplicationEntryInfo> {
+    fun getAppList(query: String?, showAllApps: Boolean): List<ApplicationEntryInfo> {
         val results: ArrayList<ApplicationEntryInfo> = ArrayList()
         var id = 0L
         try {
+            //pkg?.getInstalledPackages(0)?.forEach { it ->
+            //    val launcher = pkg?.getLaunchIntentForPackage(it.packageName)
+            //    val info = pkg?.getApplicationInfo(it.packageName, 0)
+            //    val name =  pkg?.getApplicationLabel(info)
+            //    Log.i("tests", "pkg=${it.packageName}, launcher=$launcher, name=$name")
+            //}
+
+            //if (showAllApps) {
+            //    pkg?.getInstalledPackages(0)?.forEach { it ->
+            //        getItemInfo(it.packageName, query, id)?.let{ r ->
+            //            results.add(r)
+            //            id++
+            //        }
+            //    }
+            //} else {
+            //    pkg?.getInstalledApplications(0)?.forEach { it ->
+            //        getItemInfo(it.packageName, query, id)?.let{ r ->
+            //            results.add(r)
+            //            id++
+            //        }
+            //    }
+            //}
+
+
             pkg?.getInstalledApplications(0)?.forEach { it ->
+            //pkg?.getInstalledPackages(0)?.forEach { it ->
+            //list?.{ it ->
                 val launcher = pkg?.getLaunchIntentForPackage(it.packageName)
                 var appName: String? = null
                 val appIcon = "app://${it.packageName}"
@@ -67,7 +95,14 @@ class ApplicationsRepository(ctx: Context) {
                         appName = pkg?.let { it1 -> info.activityInfo?.loadLabel(it1) }.toString()
                     }
                 } else {
-                    appName = ""
+                    //if (showAllApps) {
+                        val info = pkg?.getApplicationInfo(it.packageName, 0)
+                        info?.let {
+                            appName = pkg?.getApplicationLabel(it).toString()
+                        } ?: run {
+                            appName = ""
+                        }
+                   // }
                 }
 
                 id++
@@ -100,10 +135,62 @@ class ApplicationsRepository(ctx: Context) {
                     }
                 }
             }
+
+
         } catch (e: Exception) {
             ERA.logException(e)
         }
         return results.sortedWith(compareBy { it2 -> it2.name })
+    }
+
+    private fun getItemInfo(packageName: String, query: String?, id: Long) : ApplicationEntryInfo? {
+        var res : ApplicationEntryInfo? = null
+        val launcher = pkg?.getLaunchIntentForPackage(packageName)
+        var appName: String? = null
+        val appIcon = "app://${packageName}"
+
+        if (launcher != null) {
+            val activityList = pkg?.queryIntentActivities(launcher, 0)
+            activityList?.let {
+                val info = it[0]
+                appName = pkg?.let { it1 -> info.activityInfo?.loadLabel(it1) }.toString()
+            }
+        } else {
+            val info = pkg?.getApplicationInfo(packageName, 0)
+            info?.let {
+                appName = pkg?.getApplicationLabel(it).toString()
+            } ?: run {
+                appName = ""
+            }
+        }
+
+        if (appName?.isEmpty()!!) {
+            //Log.w("tests", "No default activity for package `$pkgName`")
+        } else {
+            if (query == null || query.isEmpty()) {
+                res = ApplicationEntryInfo(
+                    id,
+                    packageName,
+                    appName,
+                    appIcon
+                )
+
+
+            } else {
+                if (packageName.toLowerCase(Locale.getDefault()).contains(query.toLowerCase(Locale.getDefault())) || appName?.toLowerCase(Locale.getDefault())?.contains(
+                        query.toLowerCase(Locale.getDefault())
+                    )!!
+                ) {
+                    res =  ApplicationEntryInfo(
+                        id,
+                        packageName,
+                        appName,
+                        appIcon
+                    )
+                }
+            }
+        }
+        return res
     }
 
     fun getApplicationDetailsInfo(packageName: String): ApplicationDetailsInfo {
@@ -200,7 +287,9 @@ class ApplicationsRepository(ctx: Context) {
 
                 pit.getPackageInfo(packageName, PackageManager.GET_PROVIDERS).providers?.let{
                     for(ai in it) {
-                        result.providers.add(ai.name + "\n" + ai.loadLabel(pit).toString() + "\n" + ai.authority)
+                        result.providers.add(
+                            ai.name + "\n" + ai.loadLabel(pit).toString() + "\n" + ai.authority
+                        )
                     }
                 }
 
@@ -210,7 +299,10 @@ class ApplicationsRepository(ctx: Context) {
                     }
                 }
 
-                pit.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS or PackageManager.GET_URI_PERMISSION_PATTERNS).permissions?.let{
+                pit.getPackageInfo(
+                    packageName,
+                    PackageManager.GET_PERMISSIONS or PackageManager.GET_URI_PERMISSION_PATTERNS
+                ).permissions?.let{
                     for(ai in it) {
                         val label = ai.loadLabel(pit).toString()
                         val perm = ai.name
@@ -221,7 +313,10 @@ class ApplicationsRepository(ctx: Context) {
                         }
                     }
                 }
-                pit.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS or PackageManager.GET_URI_PERMISSION_PATTERNS).requestedPermissions?.let{
+                pit.getPackageInfo(
+                    packageName,
+                    PackageManager.GET_PERMISSIONS or PackageManager.GET_URI_PERMISSION_PATTERNS
+                ).requestedPermissions?.let{
                     for(ai in it) {
                         result.permissions.add(ai)
                     }

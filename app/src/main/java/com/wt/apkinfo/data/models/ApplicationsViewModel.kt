@@ -22,9 +22,10 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
     private var packageReceiver: BroadcastReceiver? = null
     private val context: Context = application.applicationContext
     private var lastSearchQuery: String? = null
+    private var showAllApps = false
 
     init {
-        exec.execute { data.postValue(appRepository.getAppList(null)) }
+        exec.execute { data.postValue(appRepository.getAppList(null, showAllApps)) }
         val intentFilter = IntentFilter()
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED)
         intentFilter.addAction(Intent.ACTION_PACKAGE_CHANGED)
@@ -37,7 +38,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
                 if (BuildConfig.DEBUG) {
                     Log.i("tests", "ACTION_PACKAGE_: " + p1?.action)
                 }
-                exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery)) }
+                exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery, showAllApps)) }
             }
         }
         context.registerReceiver(packageReceiver, intentFilter)
@@ -50,7 +51,13 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
     fun search(query: String?) {
         lastSearchQuery = query
         data.value = ArrayList(listOf(null))
-        exec.execute { data.postValue(appRepository.getAppList(query)) }
+        exec.execute { data.postValue(appRepository.getAppList(query, showAllApps)) }
+    }
+
+    fun showAllApps(b: Boolean) {
+        showAllApps = b
+        data.value = ArrayList(listOf(null))
+        exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery, showAllApps)) }
     }
 
     override fun onCleared() {
