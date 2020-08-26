@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -18,7 +17,6 @@ import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -68,7 +66,7 @@ class AppListFragment : Fragment() {
 
         model = ViewModelProvider(this).get(ApplicationsViewModel::class.java)
         model.getData()
-            .observe(this, Observer { results ->
+            .observe(this, { results ->
                 adapter.swapData(results)
             })
     }
@@ -163,11 +161,10 @@ class AppListFragment : Fragment() {
             }
         }
 
-        toolbar.menu.add("Show all apps")
+        toolbar.menu.add(R.string.show_all_apps)
             .setCheckable(true)
             .setOnMenuItemClickListener {
                 it.isChecked = !it.isChecked
-                Log.i("tests", "c=" + it.isChecked)
                 model.showAllApps(it.isChecked)
                 true
             }
@@ -197,7 +194,6 @@ class AppListFragment : Fragment() {
             toolbar.menu.add("Test error").setOnMenuItemClickListener {
                 //ERA.testError(activity)
                 throw RuntimeException("Test error")
-                true
             }
         }
         return view

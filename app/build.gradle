@@ -18,6 +18,7 @@ android {
         versionCode 111
         versionName "2.1.1"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -86,6 +87,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // multidex
+    implementation 'androidx.multidex:multidex:2.0.1'
+    androidTestImplementation 'androidx.multidex:multidex:2.0.1'
+    androidTestImplementation 'androidx.multidex:multidex-instrumentation:2.0.0'
 
     implementation libraries.androidx.core_ktx
     implementation libraries.androidx.appcompat

@@ -11,12 +11,12 @@ import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.customListAdapter
+import com.wt.apkinfo.BuildConfig
 import com.wt.apkinfo.R
-import com.wt.apkinfo.data.ApplicationDetailsInfo
+import com.wt.apkinfo.app.AppBuildType
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.data.images.ImageLoader
 import com.wt.apkinfo.data.models.ApplicationDetailsViewModel
@@ -34,8 +34,10 @@ class AppDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_app_details)
 
         val pkg = intent.getStringExtra("pkg")
-        val model = ViewModelProvider(this).get<ApplicationDetailsViewModel>(ApplicationDetailsViewModel::class.java)
-        model.getData().observe(this, Observer<ApplicationDetailsInfo> { data ->
+        val model = ViewModelProvider(this).get(
+            ApplicationDetailsViewModel::class.java
+        )
+        model.getData().observe(this, { data ->
             val longPress = View.OnLongClickListener {
                 Toast.makeText(this, it.contentDescription, Toast.LENGTH_LONG).show()
                 false
@@ -47,7 +49,11 @@ class AppDetailsActivity : AppCompatActivity() {
             appVersionCode.text = data.versionCode.toString()
             appSdkInfo.text = resources.getString(R.string.details_sdk, data.sdkMin, data.sdkTarget)
             appSignature.text = data.signature
-            appTime.text = resources.getString(R.string.details_time, DateTime.formatFull(data.timeInstall), DateTime.formatFull(data.timeUpdate))
+            appTime.text = resources.getString(
+                R.string.details_time, DateTime.formatFull(data.timeInstall), DateTime.formatFull(
+                    data.timeUpdate
+                )
+            )
             appInstallerPackage.text = data.installerPackage
             if (data.isDebuggable) {
                 appTypeInfo.visibility = View.VISIBLE
@@ -58,6 +64,7 @@ class AppDetailsActivity : AppCompatActivity() {
             } else {
                 appTypeInfo.visibility = View.GONE
             }
+            actionRun.visibility = if (data.launcherIntent == null) View.GONE else View.VISIBLE
             ImageLoader.get(appLogo.context).load(data.icon, appLogo)
 
             actionShare.setOnLongClickListener(longPress)
@@ -73,7 +80,8 @@ class AppDetailsActivity : AppCompatActivity() {
                     "Name: ${data.name.toString()}\nPackage: ${data.pkg.toString()}\nSignature: ${data.signature.toString()}\n" +
                             "Version name: ${data.versionName.toString()}\n Version Code: ${data.versionCode}"
                 )
-                Toast.makeText(applicationContext, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, R.string.copied_to_clipboard, Toast.LENGTH_SHORT)
+                    .show()
             }
             actionInfo.setOnClickListener {
                 try {
@@ -93,7 +101,11 @@ class AppDetailsActivity : AppCompatActivity() {
                         startActivity(it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                     } catch (e: Exception) {
                         ERA.logException(e)
-                        Toast.makeText(this, resources.getString(R.string.app_run_error, e.message), Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this,
+                            resources.getString(R.string.app_run_error, e.message),
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 } ?: run {
                     ar.visibility = View.GONE
@@ -102,7 +114,11 @@ class AppDetailsActivity : AppCompatActivity() {
             data.meta.let {
                 val title = resources.getString(R.string.details_metadata, it.size)
                 moreMeta.text = title
-                moreMeta.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreMeta.visibility = if (it.size > 0) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
                 moreMeta.setOnClickListener { _ ->
                     MaterialDialog(this).show {
                         title(0, title)
@@ -113,7 +129,11 @@ class AppDetailsActivity : AppCompatActivity() {
             data.activities.let {
                 val title = resources.getString(R.string.details_activities, it.size)
                 moreActivities.text = title
-                moreActivities.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreActivities.visibility = if (it.size > 0) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
                 moreActivities.setOnClickListener { _ ->
                     MaterialDialog(this).show {
                         title(0, title)
@@ -124,7 +144,11 @@ class AppDetailsActivity : AppCompatActivity() {
             data.services.let {
                 val title = resources.getString(R.string.details_services, it.size)
                 moreServices.text = title
-                moreServices.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreServices.visibility = if (it.size > 0) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
                 moreServices.setOnClickListener { _ ->
                     MaterialDialog(this).show {
                         title(0, title)
@@ -135,7 +159,11 @@ class AppDetailsActivity : AppCompatActivity() {
             data.providers.let {
                 val title = resources.getString(R.string.details_providers, it.size)
                 moreProviders.text = title
-                moreProviders.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreProviders.visibility = if (it.size > 0) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
                 moreProviders.setOnClickListener { _ ->
                     MaterialDialog(this).show {
                         title(0, title)
@@ -146,7 +174,11 @@ class AppDetailsActivity : AppCompatActivity() {
             data.receivers.let {
                 val title = resources.getString(R.string.details_receivers, it.size)
                 moreReceivers.text = title
-                moreReceivers.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreReceivers.visibility = if (it.size > 0) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
                 moreReceivers.setOnClickListener { _ ->
                     MaterialDialog(this).show {
                         title(0, title)
@@ -157,7 +189,11 @@ class AppDetailsActivity : AppCompatActivity() {
             data.directories.let {
                 val title = resources.getString(R.string.details_directories, it.size)
                 moreDirectories.text = title
-                moreDirectories.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreDirectories.visibility = if (it.size > 0) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
                 moreDirectories.setOnClickListener { _ ->
                     MaterialDialog(this).show {
                         title(0, title)
@@ -168,7 +204,11 @@ class AppDetailsActivity : AppCompatActivity() {
             data.permissions.let {
                 val title = resources.getString(R.string.details_permissions, it.size)
                 morePermissions.text = title
-                morePermissions.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                morePermissions.visibility = if (it.size > 0) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
                 morePermissions.setOnClickListener { _ ->
                     MaterialDialog(this).show {
                         title(0, title)
@@ -179,7 +219,11 @@ class AppDetailsActivity : AppCompatActivity() {
             data.sharedLibraries.let {
                 val title = resources.getString(R.string.details_shared_libraries, it.size)
                 moreSharedLibraries.text = title
-                moreSharedLibraries.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreSharedLibraries.visibility = if (it.size > 0) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
                 moreSharedLibraries.setOnClickListener { _ ->
                     MaterialDialog(this).show {
                         title(0, title)
@@ -190,7 +234,11 @@ class AppDetailsActivity : AppCompatActivity() {
             data.nativeLibraries.let {
                 val title = resources.getString(R.string.details_native_libraries, it.size)
                 moreNativeLibraries.text = title
-                moreNativeLibraries.visibility = if (it.size > 0) { View.VISIBLE } else { View.GONE }
+                moreNativeLibraries.visibility = if (it.size > 0) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
                 moreNativeLibraries.setOnClickListener { _ ->
                     MaterialDialog(this).show {
                         title(0, title)
@@ -212,13 +260,14 @@ class AppDetailsActivity : AppCompatActivity() {
             loader.animate()
                 .setDuration(250)
                 .alpha(0f)
-                .setListener(object : Animator.AnimatorListener{
-                    override fun onAnimationRepeat(animation: Animator?) { }
+                .setListener(object : Animator.AnimatorListener {
+                    override fun onAnimationRepeat(animation: Animator?) {}
                     override fun onAnimationEnd(animation: Animator?) {
                         loader.visibility = View.GONE
                     }
-                    override fun onAnimationCancel(animation: Animator?) { }
-                    override fun onAnimationStart(animation: Animator?) { }
+
+                    override fun onAnimationCancel(animation: Animator?) {}
+                    override fun onAnimationStart(animation: Animator?) {}
                 })
                 .start()
 
@@ -236,6 +285,52 @@ class AppDetailsActivity : AppCompatActivity() {
             finish()
         }
         toolbar.navigationContentDescription = resources.getString(R.string.back)
+
+        toolbar.menu.add(R.string.find_in_market).setOnMenuItemClickListener {
+            if (AppBuildType.HUAWEI == BuildConfig.BUILD_FOR_MARKET) {
+                val hwAppId = "101754683"
+                try {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("appmarket://details?id=$pkg")
+                        )
+                    )
+                } catch (e1: java.lang.Exception) {
+                    try {
+                        startActivity(
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://appgallery.cloud.huawei.com/marketshare/app/C$hwAppId")
+                            )
+                        )
+                    } catch (e2: java.lang.Exception) {
+                        ERA.logException(java.lang.Exception("No App Gallery and WebBrowser"))
+                    }
+                }
+            } else {
+                try {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("market://details?id=$pkg")
+                        ).setPackage("com.android.vending")
+                    )
+                } catch (e: java.lang.Exception) {
+                    try {
+                        startActivity(
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://play.google.com/store/apps/details?id=$pkg")
+                            )
+                        )
+                    } catch (e2: java.lang.Exception) {
+                        ERA.logException(java.lang.Exception("No Play Store app and WebBrowser"))
+                    }
+                }
+            }
+            true
+        }
     }
 
     override fun finish() {

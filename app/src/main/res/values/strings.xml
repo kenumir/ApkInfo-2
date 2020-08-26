@@ -35,4 +35,6 @@
     <string name="native_lib_directory">Native library directory</string>
     <string name="protected_data_directory">Protected data directory</string>
     <string name="app_run_error">Run error: %s</string>
+    <string name="find_in_market">Find in Market</string>
+    <string name="show_all_apps">Show all apps</string>
 </resources>

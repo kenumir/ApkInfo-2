@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
+import android.text.TextUtils
 import com.wt.apkinfo.R
 import com.wt.apkinfo.data.ApkFileEntryInfo
 import com.wt.apkinfo.data.ApplicationDetailsInfo
@@ -14,8 +15,6 @@ import com.wt.apkinfo.proto.StringUtil
 import java.io.File
 import java.io.FilenameFilter
 import java.security.MessageDigest
-import java.util.*
-import kotlin.collections.ArrayList
 
 class ApplicationsRepository(ctx: Context) {
 
@@ -56,57 +55,34 @@ class ApplicationsRepository(ctx: Context) {
         val results: ArrayList<ApplicationEntryInfo> = ArrayList()
         var id = 0L
         try {
-            //pkg?.getInstalledPackages(0)?.forEach { it ->
-            //    val launcher = pkg?.getLaunchIntentForPackage(it.packageName)
-            //    val info = pkg?.getApplicationInfo(it.packageName, 0)
-            //    val name =  pkg?.getApplicationLabel(info)
-            //    Log.i("tests", "pkg=${it.packageName}, launcher=$launcher, name=$name")
-            //}
-
-            //if (showAllApps) {
-            //    pkg?.getInstalledPackages(0)?.forEach { it ->
-            //        getItemInfo(it.packageName, query, id)?.let{ r ->
-            //            results.add(r)
-            //            id++
-            //        }
-            //    }
-            //} else {
-            //    pkg?.getInstalledApplications(0)?.forEach { it ->
-            //        getItemInfo(it.packageName, query, id)?.let{ r ->
-            //            results.add(r)
-            //            id++
-            //        }
-            //    }
-            //}
-
-
-            pkg?.getInstalledApplications(0)?.forEach { it ->
-            //pkg?.getInstalledPackages(0)?.forEach { it ->
-            //list?.{ it ->
+            //pkg?.getInstalledApplications(0)?.forEach { it ->
+            pkg?.getInstalledPackages(0)?.forEach { it ->
                 val launcher = pkg?.getLaunchIntentForPackage(it.packageName)
                 var appName: String? = null
                 val appIcon = "app://${it.packageName}"
                 val pkgName = it.packageName
 
-                if (launcher != null) {
+                launcher?.let {
                     val activityList = pkg?.queryIntentActivities(launcher, 0)
                     activityList?.let {
                         val info = it[0]
                         appName = pkg?.let { it1 -> info.activityInfo?.loadLabel(it1) }.toString()
                     }
-                } else {
-                    //if (showAllApps) {
+                } ?: run {
+                    if (showAllApps) {
                         val info = pkg?.getApplicationInfo(it.packageName, 0)
                         info?.let {
                             appName = pkg?.getApplicationLabel(it).toString()
                         } ?: run {
                             appName = ""
                         }
-                   // }
+                    } else {
+                        appName = ""
+                    }
                 }
 
                 id++
-                if (appName?.isEmpty()!!) {
+                if (TextUtils.isEmpty(appName)) {
                     //Log.w("tests", "No default activity for package `$pkgName`")
                 } else {
                     if (query == null || query.isEmpty()) {
@@ -143,56 +119,8 @@ class ApplicationsRepository(ctx: Context) {
         return results.sortedWith(compareBy { it2 -> it2.name })
     }
 
-    private fun getItemInfo(packageName: String, query: String?, id: Long) : ApplicationEntryInfo? {
-        var res : ApplicationEntryInfo? = null
-        val launcher = pkg?.getLaunchIntentForPackage(packageName)
-        var appName: String? = null
-        val appIcon = "app://${packageName}"
-
-        if (launcher != null) {
-            val activityList = pkg?.queryIntentActivities(launcher, 0)
-            activityList?.let {
-                val info = it[0]
-                appName = pkg?.let { it1 -> info.activityInfo?.loadLabel(it1) }.toString()
-            }
-        } else {
-            val info = pkg?.getApplicationInfo(packageName, 0)
-            info?.let {
-                appName = pkg?.getApplicationLabel(it).toString()
-            } ?: run {
-                appName = ""
-            }
-        }
-
-        if (appName?.isEmpty()!!) {
-            //Log.w("tests", "No default activity for package `$pkgName`")
-        } else {
-            if (query == null || query.isEmpty()) {
-                res = ApplicationEntryInfo(
-                    id,
-                    packageName,
-                    appName,
-                    appIcon
-                )
-
-
-            } else {
-                if (packageName.toLowerCase(Locale.getDefault()).contains(query.toLowerCase(Locale.getDefault())) || appName?.toLowerCase(Locale.getDefault())?.contains(
-                        query.toLowerCase(Locale.getDefault())
-                    )!!
-                ) {
-                    res =  ApplicationEntryInfo(
-                        id,
-                        packageName,
-                        appName,
-                        appIcon
-                    )
-                }
-            }
-        }
-        return res
-    }
-
+    @Suppress("DEPRECATION")
+    @SuppressLint("PackageManagerGetSignatures")
     fun getApplicationDetailsInfo(packageName: String): ApplicationDetailsInfo {
         val result = ApplicationDetailsInfo()
         pkg?.let { pit ->

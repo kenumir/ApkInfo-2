@@ -45,7 +45,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun getData() : MutableLiveData1<List<ApplicationEntryInfo?>> {
-        return data;
+        return data
     }
 
     fun search(query: String?) {
