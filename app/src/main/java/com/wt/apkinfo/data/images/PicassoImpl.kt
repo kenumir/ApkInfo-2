@@ -4,11 +4,14 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.widget.ImageView
 import com.squareup.picasso.LruCache
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Request
 import com.squareup.picasso.RequestHandler
+import com.wt.apkinfo.BuildConfig
+import java.io.IOException
 
 class PicassoImpl(ctx: Context) : ImageLoading {
 
@@ -18,7 +21,7 @@ class PicassoImpl(ctx: Context) : ImageLoading {
         val pm = ctx.applicationContext.packageManager
         mPicasso = Picasso.Builder(ctx)
             .memoryCache(LruCache(ctx))
-            .addRequestHandler(object : RequestHandler(){
+            .addRequestHandler(object : RequestHandler() {
                 override fun canHandleRequest(data: Request?): Boolean {
                     data?.let { it1 ->
                         it1.uri?.let { it2 ->
@@ -27,6 +30,7 @@ class PicassoImpl(ctx: Context) : ImageLoading {
                     }
                     return false
                 }
+
                 override fun load(request: Request?, networkPolicy: Int): Result? {
                     try {
                         request?.let { it1 ->
@@ -46,7 +50,10 @@ class PicassoImpl(ctx: Context) : ImageLoading {
                             }
                         }
                     } catch (e: Exception) {
-                        e.printStackTrace()
+                        if (BuildConfig.DEBUG) {
+                            Log.e("apkinfo", "PicassoImpl: load error=$e", e)
+                        }
+                        throw IOException(e)
                     }
                     return null
                 }

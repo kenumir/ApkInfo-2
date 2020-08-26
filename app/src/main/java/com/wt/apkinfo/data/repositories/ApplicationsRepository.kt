@@ -82,9 +82,7 @@ class ApplicationsRepository(ctx: Context) {
                 }
 
                 id++
-                if (TextUtils.isEmpty(appName)) {
-                    //Log.w("tests", "No default activity for package `$pkgName`")
-                } else {
+                if (!TextUtils.isEmpty(appName)) {
                     if (query == null || query.isEmpty()) {
                         results.add(
                             ApplicationEntryInfo(
@@ -111,8 +109,6 @@ class ApplicationsRepository(ctx: Context) {
                     }
                 }
             }
-
-
         } catch (e: Exception) {
             ERA.logException(e)
         }
