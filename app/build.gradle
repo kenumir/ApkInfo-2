@@ -6,6 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 //} else {
 //    // nothing for now
 //}
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
@@ -125,6 +126,6 @@ dependencies {
 if (getGradle().getStartParameter().getTaskRequests().toString().contains("Hms")) {
     apply plugin: 'com.huawei.agconnect'
 }
-apply plugin: 'com.google.gms.google-services'
+
 
 //apply plugin: 'com.google.gms.google-services'
