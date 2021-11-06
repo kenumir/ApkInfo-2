@@ -11,10 +11,13 @@ import com.wt.apkinfo.data.ApkFileEntryInfo
 import com.wt.apkinfo.data.ApplicationDetailsInfo
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.era.ERA
+import com.wt.apkinfo.proto.ListSortOrder
 import com.wt.apkinfo.proto.StringUtil
 import java.io.File
 import java.io.FilenameFilter
 import java.security.MessageDigest
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ApplicationsRepository(ctx: Context) {
 
@@ -51,7 +54,7 @@ class ApplicationsRepository(ctx: Context) {
     }
 
     @SuppressLint("DefaultLocale")
-    fun getAppList(query: String?, showAllApps: Boolean): List<ApplicationEntryInfo> {
+    fun getAppList(query: String?, showAllApps: Boolean, sortOrder: ListSortOrder): List<ApplicationEntryInfo> {
         val results: ArrayList<ApplicationEntryInfo> = ArrayList()
         var id = 0L
         try {
@@ -61,6 +64,7 @@ class ApplicationsRepository(ctx: Context) {
                 var appName: String? = null
                 val appIcon = "app://${it.packageName}"
                 val pkgName = it.packageName
+                val date = it.lastUpdateTime
 
                 launcher?.let {
                     val activityList = pkg?.queryIntentActivities(launcher, 0)
@@ -89,12 +93,16 @@ class ApplicationsRepository(ctx: Context) {
                                 id,
                                 pkgName,
                                 appName,
-                                appIcon
+                                appIcon,
+                                date
                             )
                         )
                     } else {
-                        if (pkgName.toLowerCase().contains(query.toLowerCase()) || appName?.toLowerCase()?.contains(
-                                query.toLowerCase()
+                        if (pkgName.lowercase(Locale.getDefault()).contains(query.lowercase(Locale.getDefault())) || appName?.lowercase(
+                                Locale.getDefault()
+                            )
+                                ?.contains(
+                                    query.lowercase(Locale.getDefault())
                             )!!
                         ) {
                             results.add(
@@ -102,7 +110,8 @@ class ApplicationsRepository(ctx: Context) {
                                     id,
                                     pkgName,
                                     appName,
-                                    appIcon
+                                    appIcon,
+                                    date
                                 )
                             )
                         }
@@ -112,7 +121,22 @@ class ApplicationsRepository(ctx: Context) {
         } catch (e: Exception) {
             ERA.logException(e)
         }
-        return results.sortedWith(compareBy { it2 -> it2.name })
+        return when (sortOrder) {
+            ListSortOrder.PACKAGE -> {
+                results
+                    .sortedWith(compareBy { it2 -> it2.pkg })
+            }
+            ListSortOrder.DATE -> {
+                results
+                    .sortedWith(compareByDescending { it2 -> it2.date })
+                    .sortedWith(compareBy { it2 -> it2.name })
+            }
+            else -> {
+                results
+                    .sortedWith(compareBy { it2 -> it2.name })
+            }
+        }
+        //return results.sortedWith(compareBy { it2 -> it2.name })
     }
 
     @Suppress("DEPRECATION")
@@ -127,9 +151,7 @@ class ApplicationsRepository(ctx: Context) {
                 result.isSystemApp = appInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
                 result.isDebuggable = appInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
                 result.isLargeHeap = appInfo.flags and ApplicationInfo.FLAG_LARGE_HEAP != 0
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    result.isSupportRtl = appInfo.flags and ApplicationInfo.FLAG_SUPPORTS_RTL != 0
-                }
+                result.isSupportRtl = appInfo.flags and ApplicationInfo.FLAG_SUPPORTS_RTL != 0
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     result.isHwAccelerated = appInfo.flags and ApplicationInfo.FLAG_HARDWARE_ACCELERATED != 0
                 }

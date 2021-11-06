@@ -7,9 +7,12 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import com.wt.apkinfo.App
 import com.wt.apkinfo.BuildConfig
 import com.wt.apkinfo.data.ApplicationEntryInfo
+import com.wt.apkinfo.data.Prefs
 import com.wt.apkinfo.data.repositories.ApplicationsRepository
+import com.wt.apkinfo.proto.ListSortOrder
 import java.util.concurrent.Executors
 import androidx.lifecycle.MutableLiveData as MutableLiveData1
 
@@ -20,12 +23,12 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
     private val appRepository: ApplicationsRepository = ApplicationsRepository(application)
 
     private var packageReceiver: BroadcastReceiver? = null
-    private val context: Context = application.applicationContext
     private var lastSearchQuery: String? = null
-    private var showAllApps = false
+    private var showAllApps = Prefs(application).allApps == 1
+    private var sortOrder: ListSortOrder = Prefs(application).listSortOrder
 
     init {
-        exec.execute { data.postValue(appRepository.getAppList(null, showAllApps)) }
+        exec.execute { data.postValue(appRepository.getAppList(null, showAllApps, sortOrder)) }
         val intentFilter = IntentFilter()
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED)
         intentFilter.addAction(Intent.ACTION_PACKAGE_CHANGED)
@@ -38,10 +41,11 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
                 if (BuildConfig.DEBUG) {
                     Log.i("tests", "ACTION_PACKAGE_: " + p1?.action)
                 }
-                exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery, showAllApps)) }
+                exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery, showAllApps, sortOrder)) }
             }
         }
-        context.registerReceiver(packageReceiver, intentFilter)
+        application.registerReceiver(packageReceiver, intentFilter)
+
     }
 
     fun getData() : MutableLiveData1<List<ApplicationEntryInfo?>> {
@@ -51,16 +55,22 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
     fun search(query: String?) {
         lastSearchQuery = query
         data.value = ArrayList(listOf(null))
-        exec.execute { data.postValue(appRepository.getAppList(query, showAllApps)) }
+        exec.execute { data.postValue(appRepository.getAppList(query, showAllApps, sortOrder)) }
     }
 
     fun showAllApps(b: Boolean) {
         showAllApps = b
         data.value = ArrayList(listOf(null))
-        exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery, showAllApps)) }
+        exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery, showAllApps, sortOrder)) }
+    }
+
+    fun showSortOrder(b: ListSortOrder) {
+        sortOrder = b
+        data.value = ArrayList(listOf(null))
+        exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery, showAllApps, sortOrder)) }
     }
 
     override fun onCleared() {
-        context.unregisterReceiver(packageReceiver)
+        getApplication<App>().unregisterReceiver(packageReceiver)
     }
 }

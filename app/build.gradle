@@ -9,14 +9,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         applicationId "com.wt.apkinfo"
         minSdkVersion 17
-        targetSdkVersion 29
-        versionCode 111
-        versionName "2.1.1"
+        targetSdkVersion 30
+        versionCode 112
+        versionName "2.1.2"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
     }
@@ -111,6 +111,8 @@ dependencies {
 
     implementation libraries.material_dialogs
     implementation libraries.kotlin
+
+    implementation 'com.afollestad.material-dialogs:core:3.3.0'
 
     implementation project(':module_user_info')
 

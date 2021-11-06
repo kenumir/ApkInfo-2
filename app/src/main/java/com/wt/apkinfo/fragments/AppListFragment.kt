@@ -1,6 +1,7 @@
 package com.wt.apkinfo.fragments
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -22,14 +23,17 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.google.android.material.appbar.MaterialToolbar
 import com.wt.apkinfo.BuildConfig
 import com.wt.apkinfo.R
 import com.wt.apkinfo.activities.AppDetailsActivity
 import com.wt.apkinfo.data.ApplicationEntryInfo
+import com.wt.apkinfo.data.Prefs
 import com.wt.apkinfo.data.models.ApplicationsViewModel
 import com.wt.apkinfo.proto.AppListAdapter
 import com.wt.apkinfo.proto.IntentHelper
+import com.wt.apkinfo.proto.ListSortOrder
 import com.wt.apkinfo.proto.OnAppListItemClick
 
 
@@ -71,6 +75,7 @@ class AppListFragment : Fragment() {
             })
     }
 
+    @SuppressLint("CheckResult")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -163,9 +168,46 @@ class AppListFragment : Fragment() {
 
         toolbar.menu.add(R.string.show_all_apps)
             .setCheckable(true)
+            .setChecked(
+                activity?.let { a ->
+                    Prefs(a).allApps == 1
+                } ?: run {
+                    false
+                }
+            )
             .setOnMenuItemClickListener {
                 it.isChecked = !it.isChecked
                 model.showAllApps(it.isChecked)
+                activity?.let { a ->
+                    Prefs(a).allApps = if (it.isChecked) 1 else 0
+                }
+                true
+            }
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+
+        toolbar.menu.add(R.string.sort)
+            .setOnMenuItemClickListener {
+                activity?.let {
+                    val selPos = when(Prefs(it).listSortOrder) {
+                        ListSortOrder.DATE -> 1
+                        ListSortOrder.PACKAGE -> 2
+                        else -> 0
+                    }
+                    MaterialDialog(it).show {
+                        title(R.string.sort)
+                        listItemsSingleChoice(R.array.sort_orders, initialSelection = selPos) { _, index, _ ->
+                            // Invoked when the user selects an item
+                            val order = when(index) {
+                                1 -> ListSortOrder.DATE
+                                2 -> ListSortOrder.PACKAGE
+                                else -> ListSortOrder.NAME
+                            }
+                            model.showSortOrder(order)
+                            Prefs(it).listSortOrder = order
+                        }
+                    }
+                }
+
                 true
             }
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)

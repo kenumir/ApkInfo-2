@@ -37,4 +37,13 @@
     <string name="app_run_error">Run error: %s</string>
     <string name="find_in_market">Find in Market</string>
     <string name="show_all_apps">Show all apps</string>
+    <string name="sort">Sort Order</string>
+    <string name="sort_name">Name</string>
+    <string name="sort_date">Date</string>
+    <string name="sort_package">Package</string>
+    <string-array name="sort_orders">
+        <item>@string/sort_name</item>
+        <item>@string/sort_date</item>
+        <item>@string/sort_package</item>
+    </string-array>
 </resources>
