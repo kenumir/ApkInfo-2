@@ -129,7 +129,6 @@ class ApplicationsRepository(ctx: Context) {
             ListSortOrder.DATE -> {
                 results
                     .sortedWith(compareByDescending { it2 -> it2.date })
-                    .sortedWith(compareBy { it2 -> it2.name })
             }
             else -> {
                 results
