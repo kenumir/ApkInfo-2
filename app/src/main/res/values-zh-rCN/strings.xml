@@ -35,6 +35,7 @@
     <string name="native_lib_directory">本机库目录</string>
     <string name="protected_data_directory">受保护的数据目录</string>
     <string name="app_run_error">运行错误: %s</string>
+    <string name="find_in_market">在市场中寻找</string>
     <string name="show_all_apps">所有应用</string>
     <string name="sort">排序</string>
     <string name="sort_name">姓名</string>

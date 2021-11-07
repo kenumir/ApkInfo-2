@@ -35,6 +35,7 @@
     <string name="native_lib_directory">Diretório de biblioteca nativa</string>
     <string name="protected_data_directory">Diretório de dados protegido</string>
     <string name="app_run_error">Erro de execução: %s</string>
+    <string name="find_in_market">Encontrar no mercado</string>
     <string name="show_all_apps">Todos os aplicativos</string>
     <string name="sort">Ordenação</string>
     <string name="sort_name">Nome</string>

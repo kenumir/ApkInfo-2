@@ -35,7 +35,7 @@
     <string name="native_lib_directory">Каталог родной библиотеки</string>
     <string name="protected_data_directory">Защищенный каталог данных</string>
     <string name="app_run_error">Ошибка запуска: %s</string>
-
+    <string name="find_in_market">Найти на Маркете</string>
     <string name="show_all_apps">Все приложения</string>
     <string name="sort">Сортировка</string>
     <string name="sort_name">имя</string>

@@ -35,6 +35,7 @@
     <string name="native_lib_directory">Natívne adresár knižnice</string>
     <string name="protected_data_directory">Zoznam chránených údajov</string>
     <string name="app_run_error">Chyba spustenie: %s</string>
+    <string name="find_in_market">Nájsť v Markete</string>
     <string name="show_all_apps">Všetky aplikácie</string>
     <string name="sort">Triedenie</string>
     <string name="sort_name">Názov</string>

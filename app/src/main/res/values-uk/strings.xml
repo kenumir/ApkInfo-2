@@ -34,6 +34,7 @@
     <string name="apk_directory">Каталог APK</string>
     <string name="native_lib_directory">Довідник рідної бібліотеки</string>
     <string name="protected_data_directory">Захищений каталог даних</string>
+    <string name="find_in_market">Знайти на ринку</string>
     <string name="app_run_error">Помилка запуску: %s</string>
     <string name="show_all_apps">Усі програми</string>
     <string name="sort">Сортування</string>

@@ -35,6 +35,7 @@
     <string name="native_lib_directory">Direktori perpustakaan asli</string>
     <string name="protected_data_directory">Direktori data yang dilindungi</string>
     <string name="app_run_error">Jalankan kesalahan: %s</string>
+    <string name="find_in_market">Temukan di Pasar</string>
     <string name="show_all_apps">Semua aplikasi</string>
     <string name="sort">Penyortiran</string>
     <string name="sort_name">Nama</string>
