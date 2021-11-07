@@ -10,12 +10,12 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion versions.compileSdkVersion
 
     defaultConfig {
         applicationId "com.wt.apkinfo"
-        minSdkVersion 19
-        targetSdkVersion 30
+        minSdkVersion versions.minSdkVersion
+        targetSdkVersion versions.targetSdkVersion
         versionCode 214
         versionName "2.1.4"
         vectorDrawables.useSupportLibrary = true
