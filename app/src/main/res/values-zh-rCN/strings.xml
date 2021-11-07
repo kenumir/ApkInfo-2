@@ -31,7 +31,13 @@
     <string name="details_sdk">最低：%1$d, 目标：%2$d</string>
     <string name="details_other_properties">其他性质</string>
     <string name="data_directory">资料目录</string>
+    <string name="apk_directory">APK目录</string>
     <string name="native_lib_directory">本机库目录</string>
     <string name="protected_data_directory">受保护的数据目录</string>
     <string name="app_run_error">运行错误: %s</string>
+    <string name="show_all_apps">所有应用</string>
+    <string name="sort">排序</string>
+    <string name="sort_name">姓名</string>
+    <string name="sort_date">日期</string>
+    <string name="sort_package">包裹</string>
 </resources>

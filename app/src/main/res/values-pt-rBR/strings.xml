@@ -31,7 +31,13 @@
     <string name="details_sdk">Mín: %1$d, Meta: %2$d</string>
     <string name="details_other_properties">Outras propriedades</string>
     <string name="data_directory">Diretório de dados</string>
+    <string name="apk_directory">Diretório APK</string>
     <string name="native_lib_directory">Diretório de biblioteca nativa</string>
     <string name="protected_data_directory">Diretório de dados protegido</string>
     <string name="app_run_error">Erro de execução: %s</string>
+    <string name="show_all_apps">Todos os aplicativos</string>
+    <string name="sort">Ordenação</string>
+    <string name="sort_name">Nome</string>
+    <string name="sort_date">Data</string>
+    <string name="sort_package">Pacote</string>
 </resources>

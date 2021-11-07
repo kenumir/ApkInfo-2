@@ -31,7 +31,13 @@
     <string name="details_sdk">最小：%1$d、 ターゲット： %2$d</string>
     <string name="details_other_properties">その他の特性</string>
     <string name="data_directory">データディレクトリ</string>
+    <string name="apk_directory">APKディレクトリ</string>
     <string name="native_lib_directory">ネイティブライブラリディレクトリ</string>
     <string name="protected_data_directory">保護されたデータディレクトリ</string>
     <string name="app_run_error">実行エラー: %s</string>
+    <string name="show_all_apps">すべてのアプリケーション</string>
+    <string name="sort">並べ替え</string>
+    <string name="sort_name">名前</string>
+    <string name="sort_date">日にち</string>
+    <string name="sort_package">パッケージ</string>
 </resources>

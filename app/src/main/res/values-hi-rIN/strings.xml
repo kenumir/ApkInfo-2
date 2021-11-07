@@ -31,7 +31,14 @@
     <string name="details_sdk">न्यूनतम: %1$d, लक्ष्य: %2$d</string>
     <string name="details_other_properties">अन्य गुण</string>
     <string name="data_directory">डेटा निर्देशिका</string>
+    <string name="apk_directory">एपीके निर्देशिका</string>
     <string name="native_lib_directory">मूल पुस्तकालय निर्देशिका</string>
     <string name="protected_data_directory">संरक्षित डेटा निर्देशिका</string>
     <string name="app_run_error">रन त्रुटि: %s</string>
+    <string name="find_in_market">दुकान में खोजें</string>
+    <string name="show_all_apps">सभी आवेदन</string>
+    <string name="sort">छंटाई</string>
+    <string name="sort_name">नाम</string>
+    <string name="sort_date">दिनांक</string>
+    <string name="sort_package">पैकेज</string>
 </resources>

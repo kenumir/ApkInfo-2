@@ -13,4 +13,10 @@
     <string name="details_property_rtl_supported" translatable="false">Support RTL</string>
     <string name="app_name" translatable="false">Apk Info</string>
     <string name="app_list" translatable="false">Applications list</string>
+
+    <string-array name="sort_orders">
+        <item>@string/sort_name</item>
+        <item>@string/sort_date</item>
+        <item>@string/sort_package</item>
+    </string-array>
 </resources>

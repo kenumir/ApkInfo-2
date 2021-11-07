@@ -35,4 +35,10 @@
     <string name="native_lib_directory">Katalog bibliotek natywnych</string>
     <string name="protected_data_directory">Katalog `protected data`</string>
     <string name="app_run_error">Błąd uruchomienia: %s</string>
+    <string name="find_in_market">Wyszukaj w sklepie</string>
+    <string name="show_all_apps">Wszystkie aplikacje</string>
+    <string name="sort">Sortowanie</string>
+    <string name="sort_name">Nazwa</string>
+    <string name="sort_date">Data</string>
+    <string name="sort_package">Pakiet</string>
 </resources>

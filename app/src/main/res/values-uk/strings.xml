@@ -31,7 +31,13 @@
     <string name="details_sdk">Мінімум: %1$d, ціль: %2$d</string>
     <string name="details_other_properties">Інші властивості</string>
     <string name="data_directory">Каталог даних</string>
+    <string name="apk_directory">Каталог APK</string>
     <string name="native_lib_directory">Довідник рідної бібліотеки</string>
     <string name="protected_data_directory">Захищений каталог даних</string>
     <string name="app_run_error">Помилка запуску: %s</string>
+    <string name="show_all_apps">Усі програми</string>
+    <string name="sort">Сортування</string>
+    <string name="sort_name">назва</string>
+    <string name="sort_date">Дата</string>
+    <string name="sort_package">Пакет</string>
 </resources>

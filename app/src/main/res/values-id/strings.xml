@@ -31,7 +31,13 @@
     <string name="details_sdk">Min: %1$d, Target: %2$d</string>
     <string name="details_other_properties">Properti lainnya</string>
     <string name="data_directory">Direktori data</string>
+    <string name="apk_directory">Direktori APK</string>
     <string name="native_lib_directory">Direktori perpustakaan asli</string>
     <string name="protected_data_directory">Direktori data yang dilindungi</string>
     <string name="app_run_error">Jalankan kesalahan: %s</string>
+    <string name="show_all_apps">Semua aplikasi</string>
+    <string name="sort">Penyortiran</string>
+    <string name="sort_name">Nama</string>
+    <string name="sort_date">Tanggal</string>
+    <string name="sort_package">Paket</string>
 </resources>

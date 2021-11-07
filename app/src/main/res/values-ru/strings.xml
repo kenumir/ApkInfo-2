@@ -31,7 +31,14 @@
     <string name="details_sdk">Мин: %1$d, цель: %2$d</string>
     <string name="details_other_properties">Другие свойства</string>
     <string name="data_directory">Каталог данных</string>
+    <string name="apk_directory">Каталог APK</string>
     <string name="native_lib_directory">Каталог родной библиотеки</string>
     <string name="protected_data_directory">Защищенный каталог данных</string>
     <string name="app_run_error">Ошибка запуска: %s</string>
+
+    <string name="show_all_apps">Все приложения</string>
+    <string name="sort">Сортировка</string>
+    <string name="sort_name">имя</string>
+    <string name="sort_date">Дата</string>
+    <string name="sort_package">Упаковка</string>
 </resources>
