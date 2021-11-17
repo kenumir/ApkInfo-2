@@ -32,4 +32,13 @@ class Prefs(ctx: Context) {
             pref.edit().putInt("all_apps", v).apply()
         }
 
+    var appDetailsOpenCounter: Int
+        get() {
+            val r = pref.getInt("app_details_open_counter", 1)
+            pref.edit().putInt("app_details_open_counter", r + 1).apply()
+            return r
+        }
+        set(v) {
+            pref.edit().putInt("app_details_open_counter", v).apply()
+        }
 }

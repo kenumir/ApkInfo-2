@@ -8,21 +8,25 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.customListAdapter
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.wt.apkinfo.BuildConfig
 import com.wt.apkinfo.R
 import com.wt.apkinfo.app.AppBuildType
 import com.wt.apkinfo.data.ApplicationEntryInfo
+import com.wt.apkinfo.data.Prefs
 import com.wt.apkinfo.data.images.ImageLoader
 import com.wt.apkinfo.data.models.ApplicationDetailsViewModel
 import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.proto.DateTime
 import com.wt.apkinfo.proto.PropertiesDialogAdapter
+import com.wt.userinfo.UserInfo
 import kotlinx.android.synthetic.main.activity_app_details.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
 
@@ -331,6 +335,12 @@ class AppDetailsActivity : AppCompatActivity() {
             }
             true
         }
+
+        if (savedInstanceState == null) {
+            pkg?.let {
+                logDetailsOpenCounter(it)
+            }
+        }
     }
 
     override fun finish() {
@@ -342,6 +352,23 @@ class AppDetailsActivity : AppCompatActivity() {
         val clipboard: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("ApkInfo", text)
         clipboard.setPrimaryClip(clip)
+    }
+
+    private fun logDetailsOpenCounter(pkg: String) {
+        try {
+            val fa = FirebaseAnalytics.getInstance(applicationContext)
+            val value = Prefs(applicationContext).appDetailsOpenCounter
+            fa.setUserId(UserInfo.setup(applicationContext, BuildConfig.VERSION_NAME, null).id)
+            fa.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, Bundle().apply {
+                putInt(FirebaseAnalytics.Param.VALUE, value)
+                putString(FirebaseAnalytics.Param.ITEM_NAME, pkg)
+            })
+            if (BuildConfig.DEBUG) {
+                Log.i("AppDetailsActivity", "logDetailsOpenCounter: pkg=$pkg, counter=$value")
+            }
+        } catch (e: Exception) {
+            ERA.logException(e)
+        }
     }
 
     companion object {
