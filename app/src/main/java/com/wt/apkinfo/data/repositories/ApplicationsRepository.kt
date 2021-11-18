@@ -74,10 +74,14 @@ class ApplicationsRepository(ctx: Context) {
                     }
                 } ?: run {
                     if (showAllApps) {
-                        val info = pkg?.getApplicationInfo(it.packageName, 0)
-                        info?.let {
-                            appName = pkg?.getApplicationLabel(it).toString()
-                        } ?: run {
+                        try {
+                            pkg?.getApplicationInfo(it.packageName, 0)?.let {
+                                appName = pkg?.getApplicationLabel(it).toString()
+                            } ?: run {
+                                appName = ""
+                            }
+                        } catch (e: Exception) {
+                            ERA.logException(e)
                             appName = ""
                         }
                     } else {

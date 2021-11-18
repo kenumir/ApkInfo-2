@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.wt.apkinfo.BuildConfig
 import com.wt.apkinfo.R
+import com.wt.apkinfo.era.ERA
 
 class PropertiesDialogAdapter(private val items: ArrayList<String>) : RecyclerView.Adapter<PropertiesDialogAdapter.Holder>() {
 
@@ -44,10 +45,18 @@ class PropertiesDialogAdapter(private val items: ArrayList<String>) : RecyclerVi
                     text = text + (if (text.isNotEmpty()) " - " else "") +  text3.text.toString()
                 }
 
-                val clipboard: ClipboardManager = it.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("ApkInfo", text)
-                clipboard.setPrimaryClip(clip)
-                Toast.makeText(it.context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+                try {
+                    val clipboard: ClipboardManager =
+                        it.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val clip = ClipData.newPlainText("ApkInfo", text)
+                    clipboard.setPrimaryClip(clip)
+                    Toast.makeText(it.context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT)
+                        .show()
+                } catch (e: Exception) {
+                    ERA.logException(e)
+                    Toast.makeText(it.context, "Copy error", Toast.LENGTH_SHORT)
+                        .show()
+                }
 
                 if (BuildConfig.DEBUG) {
                     Log.i("ApkInfo", "Copy: $text")
