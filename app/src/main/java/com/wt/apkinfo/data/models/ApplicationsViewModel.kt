@@ -5,13 +5,16 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.wt.apkinfo.App
 import com.wt.apkinfo.BuildConfig
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.data.Prefs
 import com.wt.apkinfo.data.repositories.ApplicationsRepository
+import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.proto.ListSortOrder
 import java.util.concurrent.Executors
 import androidx.lifecycle.MutableLiveData as MutableLiveData1
@@ -56,6 +59,20 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
         lastSearchQuery = query
         data.value = ArrayList(listOf(null))
         exec.execute { data.postValue(appRepository.getAppList(query, showAllApps, sortOrder)) }
+
+        try {
+            query?.let {
+                if (it.isNotEmpty()) {
+                    FirebaseAnalytics
+                        .getInstance(getApplication())
+                        .logEvent(FirebaseAnalytics.Event.SEARCH, Bundle().apply {
+                            putString(FirebaseAnalytics.Param.SEARCH_TERM, it)
+                        })
+                }
+            }
+        } catch (e: Exception) {
+            ERA.logException(e)
+        }
     }
 
     fun showAllApps(b: Boolean) {
