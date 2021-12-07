@@ -17,6 +17,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
+        <meta-data
+            android:name="com.bugsnag.android.API_KEY"
+            android:value="130913250a8a29c2e9d0855f7d522227"/>
+
         <activity
             android:name=".activities.StartActivity"
             android:theme="@style/StartTheme"

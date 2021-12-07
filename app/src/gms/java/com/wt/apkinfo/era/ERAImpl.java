@@ -2,6 +2,7 @@ package com.wt.apkinfo.era;
 
 import android.content.Context;
 
+import com.bugsnag.android.Bugsnag;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 
@@ -17,6 +18,7 @@ public class ERAImpl {
 
 	public static void testError(Context ctx) {
 		//AGConnectCrash.getInstance().testIt(ctx);
+		Bugsnag.notify(new RuntimeException("Test error"));
 	}
 
 	public static void logException(Throwable e) {
@@ -25,6 +27,7 @@ public class ERAImpl {
 		} catch (Exception ee) {
 			// ignore
 		}
+		Bugsnag.notify(e);
 	}
 
 	public static void log(String s) {
@@ -33,6 +36,7 @@ public class ERAImpl {
 		} catch (Exception ee) {
 			// ignore
 		}
+		Bugsnag.leaveBreadcrumb(s);
 	}
 
 }
