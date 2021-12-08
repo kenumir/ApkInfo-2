@@ -17,8 +17,8 @@ android {
         applicationId "com.wt.apkinfo"
         minSdkVersion versions.minSdkVersion
         targetSdkVersion versions.targetSdkVersion
-        versionCode 219
-        versionName "2.1.9"
+        versionCode 220
+        versionName "2.2.0"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
     }
