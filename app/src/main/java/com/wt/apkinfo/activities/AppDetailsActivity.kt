@@ -77,7 +77,12 @@ class AppDetailsActivity : AppCompatActivity() {
             actionRun.setOnLongClickListener(longPress)
 
             actionShare.setOnClickListener {
-                ApkListActivity.show(this, data.pkg)
+                ApkListActivity.show(
+                    this,
+                    data.pkg,
+                    data.versionName,
+                    data.versionCode
+                )
             }
             actionCopy.setOnClickListener {
                 copyToClipboard(

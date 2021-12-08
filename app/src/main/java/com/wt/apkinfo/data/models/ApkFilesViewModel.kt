@@ -12,13 +12,22 @@ class ApkFilesViewModel(application: Application) : AndroidViewModel(application
     private val data = MutableLiveData1<List<ApkFileEntryInfo>>()
     private val exec = Executors.newCachedThreadPool()
     private val appRepository: ApplicationsRepository = ApplicationsRepository(application)
+    private var lastData: List<ApkFileEntryInfo>? = null
 
     fun getData() : MutableLiveData1<List<ApkFileEntryInfo>> {
         return data;
     }
 
     fun list(pkgName: String) {
-        exec.execute { data.postValue(appRepository.getApkFiles(pkgName)) }
+        exec.execute {
+            lastData = appRepository.getApkFiles(pkgName).also {
+                data.postValue(it)
+            }
+        }
+    }
+
+    fun getLastData(): List<ApkFileEntryInfo>? {
+        return lastData
     }
 
 }
