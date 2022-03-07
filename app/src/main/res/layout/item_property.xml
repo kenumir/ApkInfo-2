@@ -18,7 +18,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="?android:attr/textColorSecondary"/>
+        android:textColor="?android:attr/textColorSecondary"
+        android:textAlignment="gravity"
+        android:textDirection="locale"/>
 
     <TextView
         android:id="@+id/text2"
@@ -26,7 +28,9 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:textColor="?android:attr/textColorPrimary"
-        android:layout_marginTop="2dp"/>
+        android:layout_marginTop="2dp"
+        android:textAlignment="gravity"
+        android:textDirection="locale"/>
 
     <TextView
         android:id="@+id/text3"
@@ -35,6 +39,8 @@
         android:textSize="16sp"
         android:textColor="?android:attr/textColorPrimary"
         android:layout_marginTop="2dp"
+        android:textAlignment="gravity"
+        android:textDirection="locale"
         android:visibility="gone"/>
 
 </LinearLayout>

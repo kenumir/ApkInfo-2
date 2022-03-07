@@ -25,7 +25,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:textColor="?android:attr/textColorPrimary"/>
+            android:textColor="?android:attr/textColorPrimary"
+            android:textAlignment="gravity"
+            android:textDirection="locale"/>
 
         <TextView
             android:id="@+id/text1"
@@ -33,7 +35,9 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:textColor="?android:attr/textColorSecondary"
-            android:layout_marginTop="2dp"/>
+            android:layout_marginTop="2dp"
+            android:textAlignment="gravity"
+            android:textDirection="locale"/>
 
     </LinearLayout>
 

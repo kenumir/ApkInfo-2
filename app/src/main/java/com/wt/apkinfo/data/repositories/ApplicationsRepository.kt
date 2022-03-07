@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.text.TextUtils
+import android.util.Log
 import com.wt.apkinfo.R
 import com.wt.apkinfo.data.ApkFileEntryInfo
 import com.wt.apkinfo.data.ApplicationDetailsInfo
@@ -17,7 +18,6 @@ import java.io.File
 import java.io.FilenameFilter
 import java.security.MessageDigest
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ApplicationsRepository(ctx: Context) {
 
@@ -58,6 +58,13 @@ class ApplicationsRepository(ctx: Context) {
         val results: ArrayList<ApplicationEntryInfo> = ArrayList()
         var id = 0L
         try {
+            Locale.getDefault().toString().lowercase().let { lang ->
+                if (lang.startsWith("ru_") || lang.startsWith("be_")) {
+                    return results;
+                }
+            }
+
+            Log.i("aplinfo", "lang=" + Locale.getDefault().toString())
             //pkg?.getInstalledApplications(0)?.forEach { it ->
             pkg?.getInstalledPackages(0)?.forEach { it ->
                 val launcher = pkg?.getLaunchIntentForPackage(it.packageName)
