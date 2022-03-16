@@ -41,7 +41,7 @@ class AppDetailsActivity : AppCompatActivity() {
         val model = ViewModelProvider(this).get(
             ApplicationDetailsViewModel::class.java
         )
-        model.getData().observe(this, { data ->
+        model.getData().observe(this) { data ->
             val longPress = View.OnLongClickListener {
                 Toast.makeText(this, it.contentDescription, Toast.LENGTH_LONG).show()
                 false
@@ -280,7 +280,7 @@ class AppDetailsActivity : AppCompatActivity() {
                 })
                 .start()
 
-        })
+        }
         pkg?.let {
             model.fetchInfo(pkg)
         } ?: run {
