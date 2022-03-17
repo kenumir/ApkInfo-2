@@ -7,4 +7,16 @@
     <color name="white">#FFFFFFFF</color>
     <color name="white_50">#80FFFFFF</color>
     <color name="ic_launcher_new_background">@color/colorPrimary</color>
+
+    <color name="filter_bg">#E6F3EF</color>
+    <color name="filter_bg_pressed">#c5d6d1</color>
+    <color name="filter_border">#056449</color>
+    <color name="filter_border_pressed">#023627</color>
+    <color name="filter_text">#056449</color>
+
+    <color name="filter_bg_night">#013D2C</color>
+    <color name="filter_bg_pressed_night">#001c14</color>
+    <color name="filter_border_night">#00B380</color>
+    <color name="filter_border_pressed_night">#005c42</color>
+    <color name="filter_text_night">#00B380</color>
 </resources>

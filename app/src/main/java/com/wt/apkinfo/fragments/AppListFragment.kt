@@ -31,10 +31,7 @@ import com.wt.apkinfo.activities.AppDetailsActivity
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.data.Prefs
 import com.wt.apkinfo.data.models.ApplicationsViewModel
-import com.wt.apkinfo.proto.AppListAdapter
-import com.wt.apkinfo.proto.IntentHelper
-import com.wt.apkinfo.proto.ListSortOrder
-import com.wt.apkinfo.proto.OnAppListItemClick
+import com.wt.apkinfo.proto.*
 
 
 private const val ARG_PARAM1 = "param1"
@@ -56,6 +53,10 @@ class AppListFragment : Fragment() {
         override fun onItemClick(item: ApplicationEntryInfo?) {
             activity?.let { AppDetailsActivity.show(it, item) }
         }
+    }, object: OnFilterItemClick {
+        override fun onItemClick(item: FilterType) {
+
+        }
     })
     private var searchEdit: AppCompatAutoCompleteTextView? = null
     private lateinit var model: ApplicationsViewModel
@@ -70,9 +71,9 @@ class AppListFragment : Fragment() {
 
         model = ViewModelProvider(this).get(ApplicationsViewModel::class.java)
         model.getData()
-            .observe(this, { results ->
+            .observe(this) { results ->
                 adapter.swapData(results)
-            })
+            }
     }
 
     @SuppressLint("CheckResult")

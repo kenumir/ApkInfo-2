@@ -7,7 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wt.apkinfo.R
 import com.wt.apkinfo.data.ApplicationEntryInfo
 
-class AppListAdapter(val mOnAppListItemClick: OnAppListItemClick) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AppListAdapter(
+    private val mOnAppListItemClick: OnAppListItemClick,
+    private val mOnFilterItemClick: OnFilterItemClick
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var items: List<ApplicationEntryInfo?> = ArrayList()
 
@@ -18,18 +21,33 @@ class AppListAdapter(val mOnAppListItemClick: OnAppListItemClick) : RecyclerView
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == 2) {
-            AppViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_application, parent, false), mOnAppListItemClick)
+            AppViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_application, parent, false),
+                mOnAppListItemClick
+            )
+        } else if (viewType == 3) {
+            FilterViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_filter, parent, false),
+                mOnFilterItemClick
+            )
         } else {
-            LoaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_loader, parent, false))
+            LoaderViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_loader, parent, false)
+            )
         }
     }
 
     override fun getItemId(position: Int): Long {
         return if (position == 0 && items[position] == null) {
             0
+        } else if (items.isNotEmpty() && position == 0) {
+            -1
         } else {
-            val hash = items[position]?.pkg + "-" + items[position]?.name
-            hash.hashCode().toLong()
+            val pos = position - 1
+            (items[pos]?.pkg + "-" + items[pos]?.name).hashCode().toLong()
         }
     }
 
@@ -37,21 +55,27 @@ class AppListAdapter(val mOnAppListItemClick: OnAppListItemClick) : RecyclerView
         return if (position == 0 && items[position] == null) {
             1
         } else {
-            2
+            if (items.isNotEmpty() && position == 0) {
+                3
+            } else {
+                2
+            }
         }
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return if (items.isNotEmpty()) items.size + 1 else 0
     }
 
     @Suppress("ControlFlowWithEmptyBody")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is AppViewHolder) {
             val h: AppViewHolder = holder
-            h.update(items.get(position))
+            h.update(items[position-1])
         } else if (holder is LoaderViewHolder) {
             // nothing
+        } else if (holder is FilterViewHolder) {
+            // TODO handle this
         }
     }
 
