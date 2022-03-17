@@ -59,14 +59,18 @@ class AppDetailsActivity : AppCompatActivity() {
                 )
             )
             appInstallerPackage.text = data.installerPackage
-            if (data.isDebuggable) {
-                appTypeInfo.visibility = View.VISIBLE
-                appTypeInfo.setText(R.string.app_type_debug)
-            } else if (data.isSystemApp) {
-                appTypeInfo.visibility = View.VISIBLE
-                appTypeInfo.setText(R.string.app_type_system)
-            } else {
-                appTypeInfo.visibility = View.GONE
+            when {
+                data.isDebuggable -> {
+                    appTypeInfo.visibility = View.VISIBLE
+                    appTypeInfo.setText(R.string.app_type_debug)
+                }
+                data.isSystemApp -> {
+                    appTypeInfo.visibility = View.VISIBLE
+                    appTypeInfo.setText(R.string.app_type_system)
+                }
+                else -> {
+                    appTypeInfo.visibility = View.GONE
+                }
             }
             actionRun.visibility = if (data.launcherIntent == null) View.GONE else View.VISIBLE
             ImageLoader.get(appLogo.context).load(data.icon, appLogo)
@@ -100,7 +104,15 @@ class AppDetailsActivity : AppCompatActivity() {
                     startActivity(intent)
                 } catch (e: Exception) {
                     ERA.logException(e)
-                    startActivity(Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS))
+                    try {
+                        startActivity(Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS))
+                    } catch (w2: Exception) {
+                        Toast.makeText(
+                            this,
+                            resources.getString(R.string.app_run_error, e.message),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
             actionRun.setOnClickListener { ar ->
@@ -255,7 +267,7 @@ class AppDetailsActivity : AppCompatActivity() {
                     }
                 }
             }
-            moreOtherProperties.setOnClickListener { _ ->
+            moreOtherProperties.setOnClickListener {
                 val props = ArrayList<String>()
                 props.add(resources.getString(R.string.details_property_large_heap) + "\n" + data.isLargeHeap.toString())
                 props.add(resources.getString(R.string.details_property_hw_accelerated) + "\n" + data.isHwAccelerated.toString())
@@ -346,11 +358,6 @@ class AppDetailsActivity : AppCompatActivity() {
                 logDetailsOpenCounter(it)
             }
         }
-    }
-
-    override fun finish() {
-        super.finish()
-        //overridePendingTransition(0, 0)
     }
 
     private fun copyToClipboard(text: String) {

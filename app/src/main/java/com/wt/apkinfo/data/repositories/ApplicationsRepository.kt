@@ -14,7 +14,6 @@ import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.proto.ListSortOrder
 import com.wt.apkinfo.proto.StringUtil
 import java.io.File
-import java.io.FilenameFilter
 import java.security.MessageDigest
 import java.util.*
 
@@ -32,18 +31,21 @@ class ApplicationsRepository(ctx: Context) {
         pkg?.let{ pit ->
             ERA.log("ApplicationsRepository.getApkFiles: pkgName=$pkgName")
             try {
-                val appInfo = pit.getApplicationInfo(pkgName, 0)
-                val apk = File(appInfo.publicSourceDir)
-                apk.parent?.let {
-                    File(it).listFiles(object : FilenameFilter {
-                        override fun accept(dir: File?, name: String?): Boolean {
-                            return name?.endsWith(".apk")!!
+                try {
+                    pit.getApplicationInfo(pkgName, 0)
+                } catch (e: java.lang.Exception) {
+                    null
+                }?.let { appInfo ->
+                    val apk = File(appInfo.publicSourceDir)
+                    apk.parent?.let {
+                        File(it).listFiles { _, name ->
+                            name?.endsWith(".apk") ?: false
+                        }?.forEach { itf ->
+                            results.add(ApkFileEntryInfo.fromFile(itf))
                         }
-                    })?.forEach { itf ->
-                        results.add(ApkFileEntryInfo.fromFile(itf))
+                    } ?: run {
+                        results.add(ApkFileEntryInfo(apk.name, apk.absolutePath, apk.length()))
                     }
-                } ?: run {
-                    results.add(ApkFileEntryInfo(apk.name, apk.absolutePath, apk.length()))
                 }
             } catch (e: Exception) {
                 ERA.logException(e)
@@ -72,13 +74,18 @@ class ApplicationsRepository(ctx: Context) {
                 val pkgName = it.packageName
                 val date = it.lastUpdateTime
 
-                launcher?.let {
+                if (launcher != null) {
                     val activityList = pkg?.queryIntentActivities(launcher, 0)
                     activityList?.let {
-                        val info = it[0]
-                        appName = pkg?.let { it1 -> info.activityInfo?.loadLabel(it1) }.toString()
+                        appName = if (it.size > 0) {
+                            pkg?.let { it1 ->
+                                it[0].activityInfo?.loadLabel(it1)
+                            }.toString()
+                        } else {
+                            ""
+                        }
                     }
-                } ?: run {
+                } else {
                     if (showAllApps) {
                         try {
                             pkg?.getApplicationInfo(it.packageName, 0)?.let {
