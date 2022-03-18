@@ -19,4 +19,7 @@
     <color name="filter_border_night">#00B380</color>
     <color name="filter_border_pressed_night">#005c42</color>
     <color name="filter_text_night">#00B380</color>
+
+    <color name="filter_divider">#C7C7C7</color>
+    <color name="filter_divider_night">#5E5E5E</color>
 </resources>

@@ -96,4 +96,31 @@
         <item name="android:drawableTint" tools:ignore="NewApi">@color/filter_text</item>
     </style>
 
+    <style name="List_FilterRadioGroup_Base">
+        <item name="android:background">@drawable/filter_radio_list_bg</item>
+        <item name="android:padding">1dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+    </style>
+    <style name="List_FilterRadioGroup" parent="@style/List_FilterRadioGroup_Base">
+    </style>
+    <style name="List_FilterRadio_Base">
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:background">@drawable/filter_radio_bg</item>
+        <item name="android:button">@drawable/filter_radio_button_inset</item>
+    </style>
+    <style name="List_FilterRadio" parent="@style/List_FilterRadio_Base">
+    </style>
+    <style name="List_FilterRadio.First">
+        <item name="android:background">@drawable/filter_radio_bg_first</item>
+    </style>
+    <style name="List_FilterRadio.Last">
+        <item name="android:background">@drawable/filter_radio_bg_last</item>
+    </style>
+    <style name="List_FilterDivider">
+        <item name="android:background">@color/filter_divider</item>
+    </style>
+
 </resources>

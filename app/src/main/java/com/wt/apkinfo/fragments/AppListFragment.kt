@@ -55,7 +55,9 @@ class AppListFragment : Fragment() {
         }
     }, object: OnFilterItemClick {
         override fun onItemClick(item: FilterType) {
-
+            // TODO handle click on filter
+            val modalBottomSheet = FiltersFragment.create(R.string.sort)
+            modalBottomSheet.show(parentFragmentManager, FiltersFragment.TAG)
         }
     })
     private var searchEdit: AppCompatAutoCompleteTextView? = null

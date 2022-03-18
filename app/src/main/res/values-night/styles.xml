@@ -21,12 +21,25 @@
         <item name="popupTheme">@style/ThemeOverlay.MaterialComponents.Dark</item>
     </style>
 
-
+    <style name="List_FilterRadioGroup" parent="@style/List_FilterRadioGroup_Base">
+        <item name="android:background">@drawable/filter_radio_list_bg_night</item>
+    </style>
     <style name="List_FilterItem" parent="@style/List_FilterItemBase">
         <item name="android:background">@drawable/filter_bg_night</item>
         <item name="android:textColor">@color/filter_text_night</item>
         <item name="android:drawableTint" tools:ignore="NewApi">@color/filter_text_night</item>
     </style>
-
+    <style name="List_FilterRadio" parent="@style/List_FilterRadio_Base">
+        <item name="android:background">@drawable/filter_radio_bg_night</item>
+    </style>
+    <style name="List_FilterRadio.First">
+        <item name="android:background">@drawable/filter_radio_bg_first_night</item>
+    </style>
+    <style name="List_FilterRadio.Last">
+        <item name="android:background">@drawable/filter_radio_bg_last_night</item>
+    </style>
+    <style name="List_FilterDivider">
+        <item name="android:background">@color/filter_divider_night</item>
+    </style>
 
 </resources>

@@ -5,4 +5,5 @@
     <dimen name="list_double_item_height">56dp</dimen>
     <dimen name="list_single_item_height">56dp</dimen>
     <dimen name="list_bottom_margin">24dp</dimen>
+    <dimen name="list_filter_radius">9dp</dimen>
 </resources>
