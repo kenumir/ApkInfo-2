@@ -9,7 +9,8 @@ import com.wt.apkinfo.data.ApplicationEntryInfo
 
 class AppListAdapter(
     private val mOnAppListItemClick: OnAppListItemClick,
-    private val mOnFilterItemClick: OnFilterItemClick
+    private val mOnFilterItemClick: OnFilterItemClick,
+    private val mOnAdapterFilterData: OnAdapterFilterData
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var items: List<ApplicationEntryInfo?> = ArrayList()
@@ -75,7 +76,7 @@ class AppListAdapter(
         } else if (holder is LoaderViewHolder) {
             // nothing
         } else if (holder is FilterViewHolder) {
-            // TODO handle this
+            holder.update(mOnAdapterFilterData.getSort(), mOnAdapterFilterData.getShowAll())
         }
     }
 

@@ -42,4 +42,14 @@
     <string name="sort_name">Name</string>
     <string name="sort_date">Date</string>
     <string name="sort_package">Package</string>
+    <string name="type">Type</string>
+    <string name="type_all">All</string>
+    <string name="type_system">System</string>
+    <string name="type_user">User</string>
+    <string name="type_debug">Debug</string>
+    <string name="installer">Installer</string>
+    <string name="installer_all">All</string>
+    <string name="installer_vending">Play Store</string>
+    <string name="installer_huawei">App Gallery</string>
+    <string name="installer_other">Other</string>
 </resources>

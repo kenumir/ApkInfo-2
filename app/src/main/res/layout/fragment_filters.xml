@@ -18,37 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RadioButton
-            style="@style/List_FilterRadio.First"
-            android:id="@+id/optionFirst"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nazwa"
-            android:checked="true"/>
-
-        <View
-            style="@style/List_FilterDivider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp" />
-
-        <RadioButton
-            style="@style/List_FilterRadio"
-            android:id="@+id/option1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Data" />
-
-        <View
-            style="@style/List_FilterDivider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp" />
-
-        <RadioButton
-            style="@style/List_FilterRadio.Last"
-            android:id="@+id/optionLast"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pakiet"/>
     </RadioGroup>
 
 </LinearLayout>

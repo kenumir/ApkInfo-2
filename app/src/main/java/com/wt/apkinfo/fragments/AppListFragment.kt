@@ -18,12 +18,12 @@ import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.google.android.material.appbar.MaterialToolbar
 import com.wt.apkinfo.BuildConfig
 import com.wt.apkinfo.R
@@ -56,8 +56,49 @@ class AppListFragment : Fragment() {
     }, object: OnFilterItemClick {
         override fun onItemClick(item: FilterType) {
             // TODO handle click on filter
-            val modalBottomSheet = FiltersFragment.create(R.string.sort)
+            val titleRes = when (item) {
+                FilterType.SORT -> R.string.sort
+                FilterType.TYPE -> R.string.type
+                FilterType.INSTALLER -> R.string.installer
+            }
+            val itemsRes = when (item) {
+                FilterType.SORT -> intArrayOf(R.string.sort_name, R.string.sort_date, R.string.sort_package)
+                FilterType.TYPE -> intArrayOf(R.string.type_all, R.string.type_user)
+                FilterType.INSTALLER -> intArrayOf(R.string.installer_all, R.string.installer_vending, R.string.installer_huawei, R.string.installer_other)
+            }
+            val selPos = activity?.let {
+                when (item) {
+                    FilterType.SORT -> when (Prefs(it).listSortOrder) {
+                        ListSortOrder.DATE -> 1
+                        ListSortOrder.PACKAGE -> 2
+                        else -> 0
+                    }
+                    FilterType.TYPE -> if (Prefs(it).allApps == 1) 0 else 1
+                    FilterType.INSTALLER -> 0
+                }
+
+            } ?: 0
+            val modalBottomSheet = FiltersFragment.create(
+                titleRes,
+                itemsRes,
+                selPos,
+                item
+            )
             modalBottomSheet.show(parentFragmentManager, FiltersFragment.TAG)
+        }
+    }, object: OnAdapterFilterData {
+        override fun getSort(): ListSortOrder {
+            return activity?.let {
+                Prefs(it).listSortOrder
+            } ?: ListSortOrder.NAME
+        }
+
+        override fun getShowAll(): Boolean {
+            return activity?.let { a ->
+                Prefs(a).allApps == 1
+            } ?: run {
+                false
+            }
         }
     })
     private var searchEdit: AppCompatAutoCompleteTextView? = null
@@ -169,6 +210,7 @@ class AppListFragment : Fragment() {
             }
         }
 
+        /*
         toolbar.menu.add(R.string.show_all_apps)
             .setCheckable(true)
             .setChecked(
@@ -215,6 +257,8 @@ class AppListFragment : Fragment() {
             }
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
+         */
+
         toolbar.menu.add(R.string.about)
             .setOnMenuItemClickListener {
                 context?.let {
@@ -241,7 +285,45 @@ class AppListFragment : Fragment() {
                 throw RuntimeException("Test error")
             }
         }
+
+        setFragmentResultListener("filter") { requestKey, result ->
+            if ("filter" == requestKey) {
+                when(result.getInt("filter_type", FilterType.SORT.ordinal)) {
+                    FilterType.SORT.ordinal -> {
+                        val order = when(result.getInt("result", 0)) {
+                            0 -> ListSortOrder.NAME
+                            1 -> ListSortOrder.DATE
+                            2 -> ListSortOrder.PACKAGE
+                            else -> ListSortOrder.NAME
+                        }
+                        model.showSortOrder(order)
+                        activity?.let {Prefs(it).listSortOrder = order}
+                    }
+                    FilterType.TYPE.ordinal -> {
+                        val showAll = when(result.getInt("result", 0)) {
+                            0 -> true
+                            1 -> false
+                            else -> false
+                        }
+                        model.showAllApps(showAll)
+                        activity?.let { a ->
+                            Prefs(a).allApps = if (showAll) 1 else 0
+                        }
+                    }
+                    FilterType.INSTALLER.ordinal -> {
+                        // TODO add filter by installer package
+                    }
+                }
+
+            }
+        }
+
         return view
+    }
+
+    override fun onDestroyView() {
+        parentFragmentManager.clearFragmentResultListener("filter")
+        super.onDestroyView()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

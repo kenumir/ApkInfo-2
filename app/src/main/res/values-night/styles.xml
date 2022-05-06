@@ -26,8 +26,8 @@
     </style>
     <style name="List_FilterItem" parent="@style/List_FilterItemBase">
         <item name="android:background">@drawable/filter_bg_night</item>
-        <item name="android:textColor">@color/filter_text_night</item>
-        <item name="android:drawableTint" tools:ignore="NewApi">@color/filter_text_night</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:drawableTint" tools:ignore="NewApi">?android:attr/textColorPrimary</item>
     </style>
     <style name="List_FilterRadio" parent="@style/List_FilterRadio_Base">
         <item name="android:background">@drawable/filter_radio_bg_night</item>

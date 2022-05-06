@@ -21,10 +21,22 @@ class FilterViewHolder(itemView: View, click: OnFilterItemClick?) : RecyclerView
         filter_installer.setOnClickListener {
             click?.onItemClick(FilterType.INSTALLER)
         }
+        filter_installer.visibility = View.GONE
     }
 
-    fun update() {
+    fun update(sort: ListSortOrder, showAllApps: Boolean) {
+        filter_sort.text = "${itemView.resources.getString(R.string.sort)}: " +
+            when (sort) {
+                ListSortOrder.DATE -> itemView.resources.getString(R.string.sort_date)
+                ListSortOrder.PACKAGE -> itemView.resources.getString(R.string.sort_package)
+                ListSortOrder.NAME -> itemView.resources.getString(R.string.sort_name)
+            }
 
+        filter_type.text = "${itemView.resources.getString(R.string.type)}: " + if (showAllApps) {
+            itemView.resources.getString(R.string.type_all)
+        } else {
+            itemView.resources.getString(R.string.type_user)
+        }
     }
 
 }
