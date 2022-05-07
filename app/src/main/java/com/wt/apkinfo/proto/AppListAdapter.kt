@@ -33,6 +33,11 @@ class AppListAdapter(
                     .inflate(R.layout.item_filter, parent, false),
                 mOnFilterItemClick
             )
+        } else if (viewType == 4) {
+            NoResultsHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_no_results, parent, false)
+            )
         } else {
             LoaderViewHolder(
                 LayoutInflater.from(parent.context)
@@ -47,8 +52,12 @@ class AppListAdapter(
         } else if (items.isNotEmpty() && position == 0) {
             -1
         } else {
-            val pos = position - 1
-            (items[pos]?.pkg + "-" + items[pos]?.name).hashCode().toLong()
+            if (position == 1 && items[position-1] != null && items[position-1]?.pkg == null) {
+                Long.MAX_VALUE
+            } else {
+                val pos = position - 1
+                (items[pos]?.pkg + "-" + items[pos]?.name).hashCode().toLong()
+            }
         }
     }
 
@@ -59,7 +68,11 @@ class AppListAdapter(
             if (items.isNotEmpty() && position == 0) {
                 3
             } else {
-                2
+                if (position == 1 && items[position-1] != null && items[position-1]?.pkg == null) {
+                    4
+                } else {
+                    2
+                }
             }
         }
     }
@@ -76,7 +89,11 @@ class AppListAdapter(
         } else if (holder is LoaderViewHolder) {
             // nothing
         } else if (holder is FilterViewHolder) {
-            holder.update(mOnAdapterFilterData.getSort(), mOnAdapterFilterData.getShowAll())
+            holder.update(
+                mOnAdapterFilterData.getSort(),
+                mOnAdapterFilterData.getAppType(),
+                mOnAdapterFilterData.getAppInstaller()
+            )
         }
     }
 

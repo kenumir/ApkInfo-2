@@ -51,7 +51,11 @@ class AppListFragment : Fragment() {
     private var recycler: RecyclerView? = null
     private var adapter: AppListAdapter = AppListAdapter(object : OnAppListItemClick {
         override fun onItemClick(item: ApplicationEntryInfo?) {
-            activity?.let { AppDetailsActivity.show(it, item) }
+            if (item?.pkg == null) {
+                // skip action
+            } else {
+                activity?.let { AppDetailsActivity.show(it, item) }
+            }
         }
     }, object: OnFilterItemClick {
         override fun onItemClick(item: FilterType) {
@@ -63,8 +67,8 @@ class AppListFragment : Fragment() {
             }
             val itemsRes = when (item) {
                 FilterType.SORT -> intArrayOf(R.string.sort_name, R.string.sort_date, R.string.sort_package)
-                FilterType.TYPE -> intArrayOf(R.string.type_all, R.string.type_user)
-                FilterType.INSTALLER -> intArrayOf(R.string.installer_all, R.string.installer_vending, R.string.installer_huawei, R.string.installer_other)
+                FilterType.TYPE -> intArrayOf(R.string.type_all, R.string.type_user, R.string.type_debug, R.string.type_system)
+                FilterType.INSTALLER -> intArrayOf(R.string.installer_all, R.string.installer_vending, R.string.installer_huawei, R.string.installer_empty)
             }
             val selPos = activity?.let {
                 when (item) {
@@ -73,8 +77,20 @@ class AppListFragment : Fragment() {
                         ListSortOrder.PACKAGE -> 2
                         else -> 0
                     }
-                    FilterType.TYPE -> if (Prefs(it).allApps == 1) 0 else 1
-                    FilterType.INSTALLER -> 0
+                    FilterType.TYPE -> //if (Prefs(it).allApps == 1) 0 else 1
+                        when (Prefs(it).listFilterAppType) {
+                            FilterAppType.ALL -> 0
+                            FilterAppType.USER -> 1
+                            FilterAppType.DEBUG -> 2
+                            FilterAppType.SYSTEM -> 3
+                        }
+                    FilterType.INSTALLER ->
+                        when (Prefs(it).listFilterInstaller) {
+                            FilterInstaller.ALL -> 0
+                            FilterInstaller.PLAY_STORE -> 1
+                            FilterInstaller.APP_GALLERY -> 2
+                            FilterInstaller.EMPTY -> 3
+                        }
                 }
 
             } ?: 0
@@ -92,12 +108,18 @@ class AppListFragment : Fragment() {
                 Prefs(it).listSortOrder
             } ?: ListSortOrder.NAME
         }
-
-        override fun getShowAll(): Boolean {
+        override fun getAppType(): FilterAppType {
             return activity?.let { a ->
-                Prefs(a).allApps == 1
+                Prefs(a).listFilterAppType
             } ?: run {
-                false
+                FilterAppType.ALL
+            }
+        }
+        override fun getAppInstaller(): FilterInstaller {
+            return activity?.let { a ->
+                Prefs(a).listFilterInstaller
+            } ?: run {
+                FilterInstaller.ALL
             }
         }
     })
@@ -300,18 +322,30 @@ class AppListFragment : Fragment() {
                         activity?.let {Prefs(it).listSortOrder = order}
                     }
                     FilterType.TYPE.ordinal -> {
-                        val showAll = when(result.getInt("result", 0)) {
-                            0 -> true
-                            1 -> false
-                            else -> false
+                        val appType = when(result.getInt("result", 0)) {
+                            0 -> FilterAppType.ALL
+                            1 -> FilterAppType.USER
+                            2 -> FilterAppType.DEBUG
+                            3 -> FilterAppType.SYSTEM
+                            else -> FilterAppType.ALL
                         }
-                        model.showAllApps(showAll)
+                        model.setAppType(appType)
                         activity?.let { a ->
-                            Prefs(a).allApps = if (showAll) 1 else 0
+                            Prefs(a).listFilterAppType = appType
                         }
                     }
                     FilterType.INSTALLER.ordinal -> {
-                        // TODO add filter by installer package
+                        val installer = when(result.getInt("result", 0)) {
+                            0 -> FilterInstaller.ALL
+                            1 -> FilterInstaller.PLAY_STORE
+                            2 -> FilterInstaller.APP_GALLERY
+                            3 -> FilterInstaller.EMPTY
+                            else -> FilterInstaller.ALL
+                        }
+                        model.setAppInstaller(installer)
+                        activity?.let { a ->
+                            Prefs(a).listFilterInstaller = installer
+                        }
                     }
                 }
 

@@ -2,6 +2,8 @@ package com.wt.apkinfo.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.wt.apkinfo.proto.FilterAppType
+import com.wt.apkinfo.proto.FilterInstaller
 import com.wt.apkinfo.proto.ListSortOrder
 
 class Prefs(ctx: Context) {
@@ -26,10 +28,21 @@ class Prefs(ctx: Context) {
                 }
             }
         }
-    var allApps: Int
-        get() = pref.getInt("all_apps", 0)
+    var listFilterAppType: FilterAppType
+        get() = FilterAppType.valueOf(
+            pref.getString("filter_app_type", FilterAppType.ALL.name) ?:
+            FilterAppType.ALL.name
+        )
         set(v) {
-            pref.edit().putInt("all_apps", v).apply()
+            pref.edit().putString("filter_app_type", v.name).apply()
+        }
+    var listFilterInstaller: FilterInstaller
+        get() = FilterInstaller.valueOf(
+            pref.getString("filter_installer", FilterInstaller.ALL.name) ?:
+            FilterInstaller.ALL.name
+        )
+        set(v) {
+            pref.edit().putString("filter_installer", v.name).apply()
         }
 
     var appDetailsOpenCounter: Int

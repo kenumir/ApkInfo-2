@@ -15,6 +15,8 @@ import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.data.Prefs
 import com.wt.apkinfo.data.repositories.ApplicationsRepository
 import com.wt.apkinfo.era.ERA
+import com.wt.apkinfo.proto.FilterAppType
+import com.wt.apkinfo.proto.FilterInstaller
 import com.wt.apkinfo.proto.ListSortOrder
 import java.util.concurrent.Executors
 import androidx.lifecycle.MutableLiveData as MutableLiveData1
@@ -27,11 +29,13 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
 
     private var packageReceiver: BroadcastReceiver? = null
     private var lastSearchQuery: String? = null
-    private var showAllApps = Prefs(application).allApps == 1
+    //private var showAllApps = Prefs(application).allApps == 1
+    private var appType = Prefs(application).listFilterAppType
     private var sortOrder: ListSortOrder = Prefs(application).listSortOrder
+    private var installer: FilterInstaller = Prefs(application).listFilterInstaller
 
     init {
-        exec.execute { data.postValue(appRepository.getAppList(null, showAllApps, sortOrder)) }
+        exec.execute { data.postValue(appRepository.getAppList(null, appType, sortOrder, installer)) }
         val intentFilter = IntentFilter()
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED)
         intentFilter.addAction(Intent.ACTION_PACKAGE_CHANGED)
@@ -44,7 +48,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
                 if (BuildConfig.DEBUG) {
                     Log.i("tests", "ACTION_PACKAGE_: " + p1?.action)
                 }
-                exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery, showAllApps, sortOrder)) }
+                exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery, appType, sortOrder, installer)) }
             }
         }
         application.registerReceiver(packageReceiver, intentFilter)
@@ -58,7 +62,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
     fun search(query: String?) {
         lastSearchQuery = query
         data.value = ArrayList(listOf(null))
-        exec.execute { data.postValue(appRepository.getAppList(query, showAllApps, sortOrder)) }
+        exec.execute { data.postValue(appRepository.getAppList(query, appType, sortOrder, installer)) }
 
         try {
             query?.let {
@@ -75,16 +79,22 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    fun showAllApps(b: Boolean) {
-        showAllApps = b
+    fun setAppType(t: FilterAppType) {
+        appType = t
         data.value = ArrayList(listOf(null))
-        exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery, showAllApps, sortOrder)) }
+        exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery, appType, sortOrder, installer)) }
+    }
+
+    fun setAppInstaller(t: FilterInstaller) {
+        installer = t
+        data.value = ArrayList(listOf(null))
+        exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery, appType, sortOrder, installer)) }
     }
 
     fun showSortOrder(b: ListSortOrder) {
         sortOrder = b
         data.value = ArrayList(listOf(null))
-        exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery, showAllApps, sortOrder)) }
+        exec.execute { data.postValue(appRepository.getAppList(lastSearchQuery, appType, sortOrder, installer)) }
     }
 
     override fun onCleared() {

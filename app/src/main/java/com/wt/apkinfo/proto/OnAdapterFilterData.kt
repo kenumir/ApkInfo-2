@@ -2,5 +2,6 @@ package com.wt.apkinfo.proto
 
 interface OnAdapterFilterData {
     fun getSort(): ListSortOrder
-    fun getShowAll(): Boolean
+    fun getAppType(): FilterAppType
+    fun getAppInstaller(): FilterInstaller
 }

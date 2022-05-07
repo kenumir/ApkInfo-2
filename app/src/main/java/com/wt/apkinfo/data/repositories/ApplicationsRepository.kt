@@ -11,6 +11,8 @@ import com.wt.apkinfo.data.ApkFileEntryInfo
 import com.wt.apkinfo.data.ApplicationDetailsInfo
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.era.ERA
+import com.wt.apkinfo.proto.FilterAppType
+import com.wt.apkinfo.proto.FilterInstaller
 import com.wt.apkinfo.proto.ListSortOrder
 import com.wt.apkinfo.proto.StringUtil
 import java.io.File
@@ -55,7 +57,7 @@ class ApplicationsRepository(ctx: Context) {
     }
 
     @SuppressLint("DefaultLocale")
-    fun getAppList(query: String?, showAllApps: Boolean, sortOrder: ListSortOrder): List<ApplicationEntryInfo> {
+    fun getAppList(query: String?, appType: FilterAppType, sortOrder: ListSortOrder, installer: FilterInstaller): List<ApplicationEntryInfo> {
         val results: ArrayList<ApplicationEntryInfo> = ArrayList()
         var id = 0L
         try {
@@ -73,8 +75,36 @@ class ApplicationsRepository(ctx: Context) {
                 val appIcon = "app://${it.packageName}"
                 val pkgName = it.packageName
                 val date = it.lastUpdateTime
+                var appT: FilterAppType = FilterAppType.ALL
+                val installerPkgRes: FilterInstaller
+
+                val isSystemApp = it.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
+                val isDebuggable = it.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+
+                val installerPkg = try {
+                    pkg?.getInstallerPackageName(pkgName)?.let {
+                        if (it.isEmpty()) {
+                            null
+                        } else {
+                            it
+                        }
+                    } ?: run {
+                        null
+                    }
+                } catch (e: java.lang.Exception) {
+                    null
+                }
+
+                installerPkgRes = when (installerPkg) {
+                    "com.android.vending" -> FilterInstaller.PLAY_STORE
+                    "com.huawei.appmarket" -> FilterInstaller.APP_GALLERY
+                    "" -> FilterInstaller.EMPTY
+                    null -> FilterInstaller.EMPTY
+                    else -> FilterInstaller.ALL
+                }
 
                 if (launcher != null) {
+                    appT = FilterAppType.USER
                     val activityList = pkg?.queryIntentActivities(launcher, 0)
                     activityList?.let {
                         appName = if (it.size > 0) {
@@ -86,7 +116,8 @@ class ApplicationsRepository(ctx: Context) {
                         }
                     }
                 } else {
-                    if (showAllApps) {
+                    if (appType == FilterAppType.ALL) {
+                        appT = FilterAppType.ALL
                         try {
                             pkg?.getApplicationInfo(it.packageName, 0)?.let {
                                 appName = pkg?.getApplicationLabel(it).toString()
@@ -102,6 +133,28 @@ class ApplicationsRepository(ctx: Context) {
                     }
                 }
 
+                if (isSystemApp) {
+                    appT = FilterAppType.SYSTEM
+                } else if (isDebuggable) {
+                    appT = FilterAppType.DEBUG
+                }
+
+                if (appType == FilterAppType.ALL) {
+                    //
+                } else if (appType == FilterAppType.DEBUG && appT != FilterAppType.DEBUG) {
+                    appName = ""
+                } else if (appType == FilterAppType.SYSTEM && appT != FilterAppType.SYSTEM) {
+                    appName = ""
+                } else if (appType == FilterAppType.USER && appT != FilterAppType.USER) {
+                    appName = ""
+                }
+
+                if (installer != FilterInstaller.ALL) {
+                    if (installerPkgRes != installer) {
+                        appName = ""
+                    }
+                }
+
                 id++
                 if (!TextUtils.isEmpty(appName)) {
                     if (query == null || query.isEmpty()) {
@@ -111,7 +164,9 @@ class ApplicationsRepository(ctx: Context) {
                                 pkgName,
                                 appName,
                                 appIcon,
-                                date
+                                date,
+                                appT,
+                                installerPkgRes
                             )
                         )
                     } else {
@@ -128,12 +183,28 @@ class ApplicationsRepository(ctx: Context) {
                                     pkgName,
                                     appName,
                                     appIcon,
-                                    date
+                                    date,
+                                    appT,
+                                    installerPkgRes
                                 )
                             )
                         }
                     }
                 }
+            }
+
+            if (results.size == 0) {
+                results.add(
+                    ApplicationEntryInfo(
+                        id,
+                        null,
+                        res.getString(R.string.no_results),
+                        null,
+                        0,
+                        FilterAppType.ALL,
+                        FilterInstaller.ALL
+                    )
+                )
             }
         } catch (e: Exception) {
             ERA.logException(e)

@@ -51,5 +51,6 @@
     <string name="installer_all">All</string>
     <string name="installer_vending">Play Store</string>
     <string name="installer_huawei">App Gallery</string>
-    <string name="installer_other">Other</string>
+    <string name="installer_empty">Empty</string>
+    <string name="no_results">No results</string>
 </resources>

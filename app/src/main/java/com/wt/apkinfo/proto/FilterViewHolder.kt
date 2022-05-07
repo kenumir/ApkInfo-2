@@ -21,10 +21,9 @@ class FilterViewHolder(itemView: View, click: OnFilterItemClick?) : RecyclerView
         filter_installer.setOnClickListener {
             click?.onItemClick(FilterType.INSTALLER)
         }
-        filter_installer.visibility = View.GONE
     }
 
-    fun update(sort: ListSortOrder, showAllApps: Boolean) {
+    fun update(sort: ListSortOrder, appType: FilterAppType, installer: FilterInstaller) {
         filter_sort.text = "${itemView.resources.getString(R.string.sort)}: " +
             when (sort) {
                 ListSortOrder.DATE -> itemView.resources.getString(R.string.sort_date)
@@ -32,10 +31,18 @@ class FilterViewHolder(itemView: View, click: OnFilterItemClick?) : RecyclerView
                 ListSortOrder.NAME -> itemView.resources.getString(R.string.sort_name)
             }
 
-        filter_type.text = "${itemView.resources.getString(R.string.type)}: " + if (showAllApps) {
-            itemView.resources.getString(R.string.type_all)
-        } else {
-            itemView.resources.getString(R.string.type_user)
+        filter_type.text = "${itemView.resources.getString(R.string.type)}: " + when (appType) {
+            FilterAppType.ALL -> itemView.resources.getString(R.string.type_all)
+            FilterAppType.SYSTEM -> itemView.resources.getString(R.string.type_system)
+            FilterAppType.DEBUG -> itemView.resources.getString(R.string.type_debug)
+            FilterAppType.USER -> itemView.resources.getString(R.string.type_user)
+        }
+
+        filter_installer.text = "${itemView.resources.getString(R.string.installer)}: " + when (installer) {
+            FilterInstaller.ALL -> itemView.resources.getString(R.string.installer_all)
+            FilterInstaller.PLAY_STORE -> itemView.resources.getString(R.string.installer_vending)
+            FilterInstaller.APP_GALLERY -> itemView.resources.getString(R.string.installer_huawei)
+            FilterInstaller.EMPTY -> itemView.resources.getString(R.string.installer_empty)
         }
     }
 
