@@ -42,4 +42,15 @@
     <string name="sort_name">Nazwa</string>
     <string name="sort_date">Data</string>
     <string name="sort_package">Pakiet</string>
+    <string name="type">Typ</string>
+    <string name="type_all">Wszystkie</string>
+    <string name="type_system">System</string>
+    <string name="type_user">Użytkownika</string>
+    <string name="type_debug">Debugowalna</string>
+    <string name="installer">Instalator</string>
+    <string name="installer_all">Wszystkie</string>
+    <string name="installer_vending">Google Play</string>
+    <string name="installer_huawei">App Gallery</string>
+    <string name="installer_empty">Pusty</string>
+    <string name="no_results">Brak wyników</string>
 </resources>
