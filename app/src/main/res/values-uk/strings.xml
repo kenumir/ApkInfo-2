@@ -41,4 +41,18 @@
     <string name="sort_name">назва</string>
     <string name="sort_date">Дата</string>
     <string name="sort_package">Пакет</string>
+    <string name="type">Тип</string>
+    <string name="type_all">Усі</string>
+    <string name="type_system">Система</string>
+    <string name="type_user">Користувач</string>
+    <string name="type_debug">Налагодження</string>
+    <string name="installer">Інсталятор</string>
+    <string name="installer_all">Усі</string>
+    <string name="installer_vending">Play Маркет</string>
+    <string name="installer_huawei">Галерея програм</string>
+    <string name="installer_empty">Порожній</string>
+    <string name="no_results">Немає результатів</string>
+    <string name="search_apps">Пошук у додатках</string>
+    <string name="filters_and_sort">Фільтри та сортування</string>
+    <string name="applications">Програми</string>
 </resources>

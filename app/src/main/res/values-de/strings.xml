@@ -41,4 +41,18 @@
     <string name="sort_name">Name</string>
     <string name="sort_date">Datum</string>
     <string name="sort_package">Paket</string>
+    <string name="type">Typ</string>
+    <string name="type_all">Alle</string>
+    <string name="type_system">System</string>
+    <string name="type_user">Benutzer</string>
+    <string name="type_debug">Debuggen</string>
+    <string name="installer">Installer</string>
+    <string name="installer_all">Alle</string>
+    <string name="installer_vending">Play Store</string>
+    <string name="installer_huawei">App-Galerie</string>
+    <string name="installer_empty">Leer</string>
+    <string name="no_results">Keine Ergebnisse</string>
+    <string name="search_apps">Apps suchen</string>
+    <string name="filters_and_sort">Filter und Sortierung</string>
+    <string name="applications">Anwendungen</string>
 </resources>

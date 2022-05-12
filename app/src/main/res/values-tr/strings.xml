@@ -41,4 +41,18 @@
     <string name="sort_name">Isim</string>
     <string name="sort_date">Tarih</string>
     <string name="sort_package">Paket</string>
+    <string name="type">Tür</string>
+    <string name="type_all">Tümü</string>
+    <string name="type_system">Sistem</string>
+    <string name="type_user">Kullanıcı</string>
+    <string name="type_debug">Hata Ayıklama</string>
+    <string name="installer">Yükleyici</string>
+    <string name="installer_all">Tümü</string>
+    <string name="installer_vending">Play Store</string>
+    <string name="installer_huawei">Uygulama Galerisi</string>
+    <string name="installer_empty">Boş</string>
+    <string name="no_results">Sonuç yok</string>
+    <string name="search_apps">Uygulamaları ara</string>
+    <string name="filters_and_sort">Filtreler ve sıralama</string>
+    <string name="applications">Uygulamalar</string>
 </resources>

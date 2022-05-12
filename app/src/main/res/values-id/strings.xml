@@ -41,4 +41,18 @@
     <string name="sort_name">Nama</string>
     <string name="sort_date">Tanggal</string>
     <string name="sort_package">Paket</string>
+    <string name="type">Jenis</string>
+    <string name="type_all">Semua</string>
+    <string name="type_system">Sistem</string>
+    <string name="type_user">Pengguna</string>
+    <string name="type_debug">Debug</string>
+    <string name="installer">Pemasang</string>
+    <string name="installer_all">Semua</string>
+    <string name="installer_vending">Play Store</string>
+    <string name="installer_huawei">Galeri Aplikasi</string>
+    <string name="installer_empty">Kosong</string>
+    <string name="no_results">Tidak ada hasil</string>
+    <string name="search_apps">Aplikasi penelusuran</string>
+    <string name="filters_and_sort">Filter dan sortir</string>
+    <string name="applications">Aplikasi</string>
 </resources>

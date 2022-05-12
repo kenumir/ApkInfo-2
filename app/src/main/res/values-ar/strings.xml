@@ -42,4 +42,18 @@
     <string name="sort_name">اسم</string>
     <string name="sort_date">تاريخ</string>
     <string name="sort_package">صفقة</string>
+    <string name="type">النوع</string>
+    <string name="type_all">الكل</string>
+    <string name="type_system">النظام</string>
+    <string name="type_user">مستخدم</string>
+    <string name="type_debug">تصحيح الأخطاء</string>
+    <string name="installer">المثبت</string>
+    <string name="installer_all">الكل</string>
+    <string name="installer_vending">متجر Play</string>
+    <string name="installer_huawei">معرض التطبيقات</string>
+    <string name="installer_empty">فارغ</string>
+    <string name="no_results">لا توجد نتائج</string>
+    <string name="search_apps">البحث في التطبيقات</string>
+    <string name="filters_and_sort">عوامل التصفية والفرز</string>
+    <string name="applications">التطبيقات</string>
 </resources>

@@ -41,4 +41,18 @@
     <string name="sort_name">Název</string>
     <string name="sort_date">Data</string>
     <string name="sort_package">Balík</string>
+    <string name="type">Typ</string>
+    <string name="type_all">Vše</string>
+    <string name="type_system">Systém</string>
+    <string name="type_user">Uživatel</string>
+    <string name="type_debug">Ladění</string>
+    <string name="installer">Instalační program</string>
+    <string name="installer_all">Vše</string>
+    <string name="installer_vending">Obchod Play</string>
+    <string name="installer_huawei">Galerie aplikací</string>
+    <string name="installer_empty">Prázdné</string>
+    <string name="no_results">Žádné výsledky</string>
+    <string name="search_apps">Vyhledat aplikace</string>
+    <string name="filters_and_sort">Filtry a řazení</string>
+    <string name="applications">Aplikace</string>
 </resources>

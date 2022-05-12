@@ -41,4 +41,18 @@
     <string name="sort_name">नाम</string>
     <string name="sort_date">दिनांक</string>
     <string name="sort_package">पैकेज</string>
+    <string name="type">टाइप करें</string>
+    <string name="type_all">सभी</string>
+    <string name="type_system">सिस्टम</string>
+    <string name="type_user">उपयोगकर्ता</string>
+    <string name="type_debug">डीबग</string>
+    <string name="installer">I"इंस्टॉलर">इंस्टॉलर</string>
+    <string name="installer_all">सभी</string>
+    <string name="installer_vending">Play Store</string>
+    <string name="installer_huawei">ऐप गैलरी</string>
+    <string name="installer_empty">खाली</string>
+    <string name="no_results">कोई परिणाम नहीं</string>
+    <string name="search_apps">ऐप्स खोजें</string>
+    <string name="filters_and_sort">फ़िल्टर और सॉर्ट करें</string>
+    <string name="applications">स्ट्रिंग नाम = "एप्लिकेशन">एप्लिकेशन</string>
 </resources>

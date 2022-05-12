@@ -41,4 +41,18 @@
     <string name="sort_name">名前</string>
     <string name="sort_date">日にち</string>
     <string name="sort_package">パッケージ</string>
+    <string name="type">タイプ</string>
+    <string name="type_all">すべて</string>
+    <string name="type_system">システム</string>
+    <string name="type_user">ユーザー</string>
+    <string name="type_debug">デバッグ</string>
+    <string name="installer">インストーラー</string>
+    <string name="installer_all">すべて</string>
+    <string name="installer_vending">Play Store</string>
+    <string name="installer_huawei">アプリギャラリー</string>
+    <string name="installer_empty">空</string>
+    <string name="no_results">結果なし</string>
+    <string name="search_apps">アプリを検索</string>
+    <string name="filters_and_sort">フィルターと並べ替え</string>
+    <string name="applications">アプリケーション</string>
 </resources>

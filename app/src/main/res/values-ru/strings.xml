@@ -41,4 +41,18 @@
     <string name="sort_name">имя</string>
     <string name="sort_date">Дата</string>
     <string name="sort_package">Упаковка</string>
+    <string name="type">Тип</string>
+    <string name="type_all">Все</string>
+    <string name="type_system">Система</string>
+    <string name="type_user">Пользователь</string>
+    <string name="type_debug">Отладка</string>
+    <string name="installer">Установщик</string>
+    <string name="installer_all">Все</string>
+    <string name="installer_vending">Play Маркет</string>
+    <string name="installer_huawei">Галерея приложений</string>
+    <string name="installer_empty">Пусто</string>
+    <string name="no_results">Нет результатов</string>
+    <string name="search_apps">Поиск приложений</string>
+    <string name="filters_and_sort">Фильтры и сортировка</string>
+    <string name="applications">Приложения</string>
 </resources>
