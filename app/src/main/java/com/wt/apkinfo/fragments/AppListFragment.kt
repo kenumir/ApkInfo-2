@@ -370,12 +370,11 @@ class AppListFragment : Fragment() {
     }
 
     fun onBackAction(): Boolean {
-        searchEdit?.let {
-            if (it.text.toString().isNotEmpty()) {
-                searchMenu?.collapseActionView()
+        searchMenu?.let {
+            if (it.isActionViewExpanded) {
+                it.collapseActionView()
                 return true
             }
-            return false
         }
         return false
     }

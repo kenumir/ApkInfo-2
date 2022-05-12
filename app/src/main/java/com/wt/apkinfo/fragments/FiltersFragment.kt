@@ -10,6 +10,7 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.wt.apkinfo.R
 import com.wt.apkinfo.proto.FilterType
@@ -67,6 +68,12 @@ class FiltersFragment : BottomSheetDialogFragment() {
             }
         }
         return res
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // fix for showing full in landscape mode
+        BottomSheetBehavior.from(requireView().parent as View).state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     companion object {

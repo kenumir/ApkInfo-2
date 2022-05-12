@@ -1,14 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">?colorSurface</item>
-        <item name="colorAccent">@color/colorAccentDark</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
-        <item name="android:navigationBarColor" tools:ignore="NewApi">@color/toolbar_bg_night</item>
-        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
+    <style name="AppTheme" parent="AppTheme_Base">
+        <item name="android:navigationBarColor">@color/black</item>
     </style>
 
     <style name="StartTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
