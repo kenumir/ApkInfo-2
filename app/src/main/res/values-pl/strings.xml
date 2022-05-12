@@ -38,7 +38,7 @@
     <string name="app_run_error">Błąd uruchomienia: %s</string>
     <string name="find_in_market">Wyszukaj w sklepie</string>
     <string name="show_all_apps">Wszystkie aplikacje</string>
-    <string name="sort">Sortowanie</string>
+    <string name="sort">Sortuj</string>
     <string name="sort_name">Nazwa</string>
     <string name="sort_date">Data</string>
     <string name="sort_package">Pakiet</string>
@@ -53,4 +53,7 @@
     <string name="installer_huawei">App Gallery</string>
     <string name="installer_empty">Pusty</string>
     <string name="no_results">Brak wyników</string>
+    <string name="search_apps">Szukaj aplikacji</string>
+    <string name="filters_and_sort">Filtry i sortowanie</string>
+    <string name="applications">Aplikacje</string>
 </resources>

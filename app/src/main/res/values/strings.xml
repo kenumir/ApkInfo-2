@@ -38,7 +38,7 @@
     <string name="app_run_error">Run error: %s</string>
     <string name="find_in_market">Find in Market</string>
     <string name="show_all_apps">Show all apps</string>
-    <string name="sort">Sort Order</string>
+    <string name="sort">Sort</string>
     <string name="sort_name">Name</string>
     <string name="sort_date">Date</string>
     <string name="sort_package">Package</string>
@@ -54,4 +54,6 @@
     <string name="installer_empty">Empty</string>
     <string name="no_results">No results</string>
     <string name="search_apps">Search apps</string>
+    <string name="filters_and_sort">Filters and sort</string>
+    <string name="applications">Applications</string>
 </resources>

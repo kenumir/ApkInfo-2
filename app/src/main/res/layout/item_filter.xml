@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Filtry i sortowanie"
+        android:text="@string/filters_and_sort"
         android:textSize="12sp"
         android:textColor="?android:attr/textColorPrimary"
         android:paddingTop="8dp"
@@ -60,7 +60,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Aplikacje"
+        android:text="@string/applications"
         android:textSize="12sp"
         android:textColor="?android:attr/textColorPrimary"
         android:paddingTop="8dp"
