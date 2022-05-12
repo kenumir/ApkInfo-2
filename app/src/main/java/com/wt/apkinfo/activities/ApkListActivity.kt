@@ -108,6 +108,7 @@ class ApkListActivity : AppCompatActivity() {
             finish()
         }
 
+
         toolbar.apply {
             setTitle(R.string.apk_list)
             setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)

@@ -1,16 +1,23 @@
 package com.wt.apkinfo
 
 import android.app.Application
+import android.content.Context
 import android.os.Build
 import android.os.StrictMode
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.multidex.MultiDex
 import com.bugsnag.android.Bugsnag
 import com.wt.apkinfo.era.ERA
 import com.wt.userinfo.UserInfo
 
-class App : Application() {
+class App : Application () {
 
     private lateinit var mUserInfo: UserInfo
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
+    }
 
     override fun onCreate() {
         if (BuildConfig.DEBUG) {

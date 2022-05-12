@@ -53,4 +53,5 @@
     <string name="installer_huawei">App Gallery</string>
     <string name="installer_empty">Empty</string>
     <string name="no_results">No results</string>
+    <string name="search_apps">Search apps</string>
 </resources>

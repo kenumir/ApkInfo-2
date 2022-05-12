@@ -3,7 +3,6 @@ package com.wt.apkinfo.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,7 +15,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
@@ -163,7 +161,12 @@ class AppListFragment : Fragment() {
         recycler?.adapter = adapter
 
         val searchQuery = savedInstanceState?.getString(SAVE_SEARCH_QUERY)
-        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar)
+        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar).apply {
+            title = getString(R.string.app_name) + " - " + getString(R.string.search_apps)
+            setOnClickListener {
+                searchMenu?.expandActionView()
+            }
+        }
         val searchView = inflater.inflate(R.layout.layout_search, toolbar, false)
         val clearBtn = searchView.findViewById<ImageView>(R.id.clearBtn)
         searchEdit = searchView.findViewById(R.id.searchEdit)
@@ -187,14 +190,14 @@ class AppListFragment : Fragment() {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
             })
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                it.setCompoundDrawablesWithIntrinsicBounds(
-                    ContextCompat.getDrawable(
-                        it.context,
-                        R.drawable.ic_search_suggest
-                    ), null, null, null
-                )
-            }
+            //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //    it.setCompoundDrawablesWithIntrinsicBounds(
+            //        ContextCompat.getDrawable(
+            //            it.context,
+            //            R.drawable.ic_search_suggest
+            //        ), null, null, null
+            //    )
+            //}
         }
 
         clearBtn.setOnClickListener {
@@ -209,6 +212,7 @@ class AppListFragment : Fragment() {
         searchMenu = toolbar.menu.add(R.string.search)
             .setIcon(R.drawable.ic_search_white_24dp)
             .setActionView(searchView)
+            .setVisible(false)
             .setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
                     searchEdit?.requestFocus()
