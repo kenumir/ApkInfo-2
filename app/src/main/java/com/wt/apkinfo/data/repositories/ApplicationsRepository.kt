@@ -63,6 +63,17 @@ class ApplicationsRepository(ctx: Context) {
         try {
             Locale.getDefault().toString().lowercase().let { lang ->
                 if (lang.startsWith("ru_") || lang.startsWith("be_")) {
+                    results.add(
+                        ApplicationEntryInfo(
+                            id,
+                            null,
+                            res.getString(R.string.no_results),
+                            null,
+                            0,
+                            FilterAppType.ALL,
+                            FilterInstaller.ALL
+                        )
+                    )
                     return results;
                 }
             }
