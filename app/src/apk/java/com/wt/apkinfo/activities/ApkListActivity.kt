@@ -1,6 +1,6 @@
 package com.wt.apkinfo.activities
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -28,14 +28,6 @@ class ApkListActivity : AppCompatActivity() {
         const val KEY_VERSION_NAME = "version_name"
         const val KEY_VERSION_CODE = "version_code"
 
-        @JvmStatic
-        fun show(ctx: Context, pkgName: String?, versionName: String?, version: Int)  {
-            val it = Intent(ctx, ApkListActivity::class.java)
-            it.putExtra(KEY_PKG, pkgName)
-            it.putExtra(KEY_VERSION_NAME, versionName)
-            it.putExtra(KEY_VERSION_CODE, version)
-            ctx.startActivity(it)
-        }
     }
 
     private var mApkListAdapter: ApkListAdapter? = null
@@ -43,6 +35,7 @@ class ApkListActivity : AppCompatActivity() {
     private var mArchiveViewModel: ArchiveViewModel? = null
     private var mApkFilesViewModel: ApkFilesViewModel? = null
 
+    @SuppressLint("InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_apk_list)
@@ -64,21 +57,22 @@ class ApkListActivity : AppCompatActivity() {
 
         pkg?.let {
             mApkFilesViewModel = ViewModelProvider(this).get(ApkFilesViewModel::class.java).also { m ->
-                m.getData().observe(this, { data ->
+                m.getData().observe(this) { data ->
                     mApkListAdapter?.swapData(data)
                     archiveMenuItem?.isVisible = true
-                })
+                }
                 m.list(it)
             }
 
             ViewModelProvider(this).get(ArchiveViewModel::class.java).let { m ->
                 mArchiveViewModel = m.also { mm ->
-                    mm.getProgress().observe(this, { data ->
+                    mm.getProgress().observe(this) { data ->
                         archiveMenuItem?.actionView = if (data) {
-                            LayoutInflater.from(this@ApkListActivity).inflate(R.layout.loader_toolbar_icon, null, false)
+                            LayoutInflater.from(this@ApkListActivity)
+                                .inflate(R.layout.loader_toolbar_icon, null, false)
                         } else {
                             mm.getLastDataResult()?.let { shareFileName ->
-                                val archivePath: File = File(cacheDir, "archives")
+                                val archivePath = File(cacheDir, "archives")
                                 val zipFile = File(archivePath, shareFileName)
                                 FileProvider.getUriForFile(
                                     applicationContext,
@@ -91,15 +85,17 @@ class ApkListActivity : AppCompatActivity() {
                                         putExtra(Intent.EXTRA_STREAM, uri)
                                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                     }
-                                    startActivity(Intent.createChooser(
-                                        shareIntent,
-                                        resources.getString(R.string.share)
-                                    ))
+                                    startActivity(
+                                        Intent.createChooser(
+                                            shareIntent,
+                                            resources.getString(R.string.share)
+                                        )
+                                    )
                                 }
                             }
                             null
                         }
-                    })
+                    }
                 }
             }
 
@@ -107,7 +103,6 @@ class ApkListActivity : AppCompatActivity() {
             // no package name
             finish()
         }
-
 
         toolbar.apply {
             setTitle(R.string.apk_list)

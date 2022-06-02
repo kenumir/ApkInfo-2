@@ -1,10 +1,7 @@
 package com.wt.apkinfo.activities
 
 import android.animation.Animator
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -75,18 +72,25 @@ class AppDetailsActivity : AppCompatActivity() {
             actionRun.visibility = if (data.launcherIntent == null) View.GONE else View.VISIBLE
             ImageLoader.get(appLogo.context).load(data.icon, appLogo)
 
-            actionShare.setOnLongClickListener(longPress)
             actionCopy.setOnLongClickListener(longPress)
             actionInfo.setOnLongClickListener(longPress)
             actionRun.setOnLongClickListener(longPress)
 
-            actionShare.setOnClickListener {
-                ApkListActivity.show(
-                    this,
-                    data.pkg,
-                    data.versionName,
-                    data.versionCode
-                )
+            if (BuildConfig.BUILD_FOR_MARKET == AppBuildType.APK) {
+                actionShare.apply {
+                    setOnLongClickListener(longPress)
+                    setOnClickListener {
+                        startActivity(Intent().apply {
+                            component = ComponentName(packageName, "$packageName.activities.ApkListActivity")
+                            putExtra("pkg", data.pkg)
+                            putExtra("version_name", data.versionName)
+                            putExtra("version_code", data.versionCode)
+                        })
+
+                    }
+                }
+            } else {
+                actionShare.visibility = View.GONE
             }
             actionCopy.setOnClickListener {
                 copyToClipboard(
