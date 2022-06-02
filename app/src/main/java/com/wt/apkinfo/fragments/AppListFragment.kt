@@ -57,7 +57,6 @@ class AppListFragment : Fragment() {
         }
     }, object: OnFilterItemClick {
         override fun onItemClick(item: FilterType) {
-            // TODO handle click on filter
             val titleRes = when (item) {
                 FilterType.SORT -> R.string.sort
                 FilterType.TYPE -> R.string.type
@@ -103,19 +102,22 @@ class AppListFragment : Fragment() {
     }, object: OnAdapterFilterData {
         override fun getSort(): ListSortOrder {
             return activity?.let {
-                Prefs(it).listSortOrder
+                model.listSortOrder
+                //Prefs(it).listSortOrder
             } ?: ListSortOrder.NAME
         }
         override fun getAppType(): FilterAppType {
             return activity?.let { a ->
-                Prefs(a).listFilterAppType
+                model.filterAppType
+                //Prefs(a).listFilterAppType
             } ?: run {
                 FilterAppType.ALL
             }
         }
         override fun getAppInstaller(): FilterInstaller {
             return activity?.let { a ->
-                Prefs(a).listFilterInstaller
+                model.filterInstaller
+                //Prefs(a).listFilterInstaller
             } ?: run {
                 FilterInstaller.ALL
             }

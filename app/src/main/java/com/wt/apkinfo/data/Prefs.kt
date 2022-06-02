@@ -6,9 +6,9 @@ import com.wt.apkinfo.proto.FilterAppType
 import com.wt.apkinfo.proto.FilterInstaller
 import com.wt.apkinfo.proto.ListSortOrder
 
-class Prefs(ctx: Context) {
-    private val pref: SharedPreferences =
-        ctx.getSharedPreferences("com.wt.apkinfo.preferences", Context.MODE_PRIVATE)
+class Prefs(private val ctx: Context) {
+    private val pref: SharedPreferences
+        get() = ctx.getSharedPreferences("com.wt.apkinfo.preferences", Context.MODE_PRIVATE)
     var listSortOrder: ListSortOrder
         get() = when (pref.getInt("sort_order", 0)) {
             1 -> ListSortOrder.DATE
