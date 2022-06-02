@@ -26,9 +26,12 @@ import com.wt.apkinfo.proto.PropertiesDialogAdapter
 import com.wt.userinfo.UserInfo
 import kotlinx.android.synthetic.main.activity_app_details.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
+import java.util.concurrent.Executors
 
 
 class AppDetailsActivity : AppCompatActivity() {
+
+    private val exec = Executors.newCachedThreadPool()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -365,9 +368,11 @@ class AppDetailsActivity : AppCompatActivity() {
     }
 
     private fun copyToClipboard(text: String) {
-        val clipboard: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("ApkInfo", text)
-        clipboard.setPrimaryClip(clip)
+        exec.execute {
+            val clipboard: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("ApkInfo", text)
+            clipboard.setPrimaryClip(clip)
+        }
     }
 
     private fun logDetailsOpenCounter(pkg: String) {
