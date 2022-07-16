@@ -368,11 +368,11 @@ class AppDetailsActivity : AppCompatActivity() {
     }
 
     private fun copyToClipboard(text: String) {
-        exec.execute {
+        //exec.execute {
             val clipboard: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("ApkInfo", text)
             clipboard.setPrimaryClip(clip)
-        }
+        //}
     }
 
     private fun logDetailsOpenCounter(pkg: String) {
