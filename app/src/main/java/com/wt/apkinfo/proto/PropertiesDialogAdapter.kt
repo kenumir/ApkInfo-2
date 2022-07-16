@@ -13,11 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wt.apkinfo.BuildConfig
 import com.wt.apkinfo.R
 import com.wt.apkinfo.era.ERA
-import java.util.concurrent.Executors
 
 class PropertiesDialogAdapter(private val items: ArrayList<String>) : RecyclerView.Adapter<PropertiesDialogAdapter.Holder>() {
 
-    private val exec = Executors.newCachedThreadPool()
+    //private val exec = Executors.newCachedThreadPool()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         return Holder(LayoutInflater.from(parent.context).inflate(R.layout.item_property, parent, false))
@@ -32,11 +31,11 @@ class PropertiesDialogAdapter(private val items: ArrayList<String>) : RecyclerVi
     }
 
     private fun copyToClipboard(text: String, ctx: Context) {
-        exec.execute {
+        //exec.execute {
             val clipboard: ClipboardManager = ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("ApkInfo", text)
             clipboard.setPrimaryClip(clip)
-        }
+        //}
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
