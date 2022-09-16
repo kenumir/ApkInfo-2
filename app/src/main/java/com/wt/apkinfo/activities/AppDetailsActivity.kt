@@ -289,13 +289,12 @@ class AppDetailsActivity : AppCompatActivity() {
                 .setDuration(250)
                 .alpha(0f)
                 .setListener(object : Animator.AnimatorListener {
-                    override fun onAnimationRepeat(animation: Animator?) {}
-                    override fun onAnimationEnd(animation: Animator?) {
+                    override fun onAnimationRepeat(animation: Animator) {}
+                    override fun onAnimationEnd(animation: Animator) {
                         loader.visibility = View.GONE
                     }
-
-                    override fun onAnimationCancel(animation: Animator?) {}
-                    override fun onAnimationStart(animation: Animator?) {}
+                    override fun onAnimationCancel(animation: Animator) {}
+                    override fun onAnimationStart(animation: Animator) {}
                 })
                 .start()
 

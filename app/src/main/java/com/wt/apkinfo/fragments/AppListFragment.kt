@@ -216,14 +216,14 @@ class AppListFragment : Fragment() {
             .setActionView(searchView)
             .setVisible(false)
             .setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-                override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
+                override fun onMenuItemActionExpand(p0: MenuItem): Boolean {
                     searchEdit?.requestFocus()
                     searchEdit?.post {
                         showKeyboard()
                     }
                     return true
                 }
-                override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
+                override fun onMenuItemActionCollapse(p0: MenuItem): Boolean {
                     searchEdit?.clearFocus()
                     searchEdit?.setText("")
                     model.search("")
