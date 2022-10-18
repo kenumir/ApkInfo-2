@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="md_theme_light_primary">#006874</color>
+    <color name="md_theme_light_secondary">#4a6267</color>
+    <color name="md_theme_light_tertiary">#525e7d</color>
+    <color name="md_theme_dark_primary">#4fd8eb</color>
+    <color name="md_theme_dark_secondary">#b1cbd0</color>
+    <color name="md_theme_dark_tertiary">#bac6ea</color>
+
     <color name="colorPrimary">#ff3d00</color>
-    <color name="colorPrimaryDark">#C22E00</color>
-    <color name="colorAccent">#002DC2</color>
+    <color name="colorPrimaryDark">#b32a00</color>
+    <color name="colorAccent">#314edc</color>
     <color name="colorAccentDark">#829fff</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>

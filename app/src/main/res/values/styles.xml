@@ -1,9 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppTheme_Base" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
+    <style name="AppTheme_Base" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorPrimaryDark">?colorSurface</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">?colorSurface</item>
+        <item name="colorAccent">@color/md_theme_light_tertiary</item>
+        <item name="colorTertiary">@color/md_theme_light_tertiary</item>
     </style>
 
     <style name="AppTheme" parent="AppTheme_Base">

@@ -3,6 +3,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="AppTheme_Base">
         <item name="android:navigationBarColor">@color/black</item>
+        <item name="colorPrimary">@color/md_theme_dark_primary</item>
+        <item name="colorPrimaryDark">?colorSurface</item>
+        <item name="colorSecondary">?colorSurface</item>
+        <item name="colorTertiary">@color/md_theme_dark_tertiary</item>
+        <item name="colorAccent">@color/md_theme_dark_tertiary</item>
     </style>
 
     <style name="StartTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">

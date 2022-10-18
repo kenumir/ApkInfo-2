@@ -2,12 +2,11 @@ package com.wt.apkinfo
 
 import android.app.Application
 import android.content.Context
-import android.os.Build
 import android.os.StrictMode
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDex
 import com.bugsnag.android.Bugsnag
 import com.wt.apkinfo.era.ERA
+import com.wt.apkinfo.proto.Themes
 import com.wt.userinfo.UserInfo
 
 class App : Application () {
@@ -32,11 +31,8 @@ class App : Application () {
         Bugsnag.start(this);
         ERA.setString("Build For Market", BuildConfig.BUILD_FOR_MARKET)
 
-        if (Build.VERSION.SDK_INT >= 29) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
-        }
+        Themes.setupTheme(this)
+
         mUserInfo = UserInfo.setup(this, BuildConfig.VERSION_NAME) {
             ERA.logException(it)
         }

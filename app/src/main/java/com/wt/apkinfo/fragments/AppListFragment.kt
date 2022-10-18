@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wt.apkinfo.BuildConfig
 import com.wt.apkinfo.R
 import com.wt.apkinfo.activities.AppDetailsActivity
@@ -286,6 +287,28 @@ class AppListFragment : Fragment() {
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
          */
+
+        toolbar.menu.add(R.string.app_theme)
+            .setOnMenuItemClickListener {
+                context?.let {
+                    val options: Array<CharSequence> = arrayOf(
+                        resources.getString(R.string.app_theme_auto),
+                        resources.getString(R.string.app_theme_light),
+                        resources.getString(R.string.app_theme_dark)
+                    )
+                    val theme = Prefs(it).appTheme
+                    MaterialAlertDialogBuilder(it)
+                        .setTitle(R.string.app_theme)
+                        .setSingleChoiceItems(options, theme) { dialogInterface, i ->
+                            Prefs(it).appTheme = i
+                            Themes.setupTheme(it)
+                            dialogInterface.dismiss()
+                        }
+                        .show()
+                }
+                true
+            }
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
         toolbar.menu.add(R.string.about)
             .setOnMenuItemClickListener {

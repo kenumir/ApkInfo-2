@@ -56,4 +56,8 @@
     <string name="search_apps">Szukaj aplikacji</string>
     <string name="filters_and_sort">Filtry i sortowanie</string>
     <string name="applications">Aplikacje</string>
+    <string name="app_theme">Motyw</string>
+    <string name="app_theme_auto">Domyślny systemowy</string>
+    <string name="app_theme_light">Jasny</string>
+    <string name="app_theme_dark">Ciemny</string>
 </resources>

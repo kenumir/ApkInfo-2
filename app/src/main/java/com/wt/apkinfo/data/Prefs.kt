@@ -54,4 +54,12 @@ class Prefs(private val ctx: Context) {
         set(v) {
             pref.edit().putInt("app_details_open_counter", v).apply()
         }
+
+    var appTheme: Int
+        get() {
+            return pref.getInt("app_theme", 0)
+        }
+        set(v) {
+            pref.edit().putInt("app_theme", v).apply()
+        }
 }
