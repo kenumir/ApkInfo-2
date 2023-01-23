@@ -27,7 +27,7 @@
     <string name="details_permissions">権限（%d）</string>
     <string name="details_shared_libraries">共有ライブラリ（%d）</string>
     <string name="details_native_libraries">ネイティブライブラリ（%d）</string>
-    <string name="details_time">インストール： %1$s \ n更新： %2$s</string>
+    <string name="details_time">インストール： %1$s \n更新： %2$s</string>
     <string name="details_sdk">最小：%1$d、 ターゲット： %2$d</string>
     <string name="details_other_properties">その他の特性</string>
     <string name="data_directory">データディレクトリ</string>

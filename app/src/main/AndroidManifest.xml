@@ -14,6 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_new_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:localeConfig="@xml/locales_config"
         tools:ignore="GoogleAppIndexingWarning">
 
         <meta-data
