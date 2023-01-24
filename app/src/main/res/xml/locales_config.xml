@@ -21,4 +21,15 @@
     <locale android:name="uk"/>
     <locale android:name="bn"/> <!-- Bangladesh - Bengalski -->
     <locale android:name="kk"/> <!-- Kazakh - Kazakh -->
+    <!-- to add
+    hr - chorwacki
+    bg - bułgarski
+    el - grecki
+    lt - litewski
+    no - norweski
+    ro - rumuński
+    sl - słoweński
+    et - estoński
+    vi - wietnamski
+    -->
 </locale-config>
