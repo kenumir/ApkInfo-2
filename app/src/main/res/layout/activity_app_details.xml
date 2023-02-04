@@ -109,7 +109,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginTop="@dimen/list_vertical_margin">
+                android:layout_marginTop="@dimen/list_vertical_margin"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/actionShare"
@@ -139,7 +140,7 @@
                     app:srcCompat="@drawable/ic_content_copy"/>
 
                 <ImageView
-                    android:id="@+id/actionInfo"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/app_system_details"
@@ -154,7 +155,6 @@
                     app:srcCompat="@drawable/ic_info_outline_action"/>
 
                 <ImageView
-                    android:id="@+id/actionRun"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/launch"
@@ -169,6 +169,65 @@
                     app:srcCompat="@drawable/ic_launch_action"/>
 
             </LinearLayout>
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/actionsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="?colorSurface"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/MainAction"
+                        android:id="@+id/actionRun"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/launch"
+                        app:drawableTopCompat="@drawable/ic_launch_action"/>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:background="?colorSurface"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/MainAction"
+                        android:id="@+id/actionUninstall"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:drawableTopCompat="@drawable/outline_delete"
+                        android:text="@string/action_uninstall"/>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:background="?colorSurface"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/MainAction"
+                        android:id="@+id/actionInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:drawableTopCompat="@drawable/ic_info_outline_action"
+                        android:text="@string/more_info"/>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 style="@style/List_Header"

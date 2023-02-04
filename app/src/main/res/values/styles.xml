@@ -151,4 +151,17 @@
         <item name="android:background">@color/filter_divider</item>
     </style>
 
+    <!-- app details -->
+    <style name="MainAction">
+        <item name="android:layout_weight">1</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:lines">2</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
 </resources>

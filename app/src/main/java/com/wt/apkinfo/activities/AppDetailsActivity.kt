@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.customListAdapter
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.elevation.SurfaceColors
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.wt.apkinfo.BuildConfig
 import com.wt.apkinfo.R
@@ -37,15 +39,19 @@ class AppDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_app_details)
 
+        findViewById<MaterialCardView>(R.id.actionsCard)?.apply {
+            setCardBackgroundColor(SurfaceColors.SURFACE_1.getColor(context))
+        }
+
         val pkg = intent.getStringExtra("pkg")
         val model = ViewModelProvider(this).get(
             ApplicationDetailsViewModel::class.java
         )
         model.getData().observe(this) { data ->
-            val longPress = View.OnLongClickListener {
-                Toast.makeText(this, it.contentDescription, Toast.LENGTH_LONG).show()
-                false
-            }
+            //val longPress = View.OnLongClickListener {
+            //    Toast.makeText(this, it.contentDescription, Toast.LENGTH_LONG).show()
+            //    false
+            //}
 
             appName.text = data.name
             appPackage.text = data.pkg
@@ -75,13 +81,13 @@ class AppDetailsActivity : AppCompatActivity() {
             actionRun.visibility = if (data.launcherIntent == null) View.GONE else View.VISIBLE
             ImageLoader.get(appLogo.context).load(data.icon, appLogo)
 
-            actionCopy.setOnLongClickListener(longPress)
-            actionInfo.setOnLongClickListener(longPress)
-            actionRun.setOnLongClickListener(longPress)
+            //actionCopy.setOnLongClickListener(longPress)
+            //actionInfo.setOnLongClickListener(longPress)
+            //actionRun.setOnLongClickListener(longPress)
 
             if (BuildConfig.BUILD_FOR_MARKET == AppBuildType.APK) {
                 actionShare.apply {
-                    setOnLongClickListener(longPress)
+                    //setOnLongClickListener(longPress)
                     setOnClickListener {
                         startActivity(Intent().apply {
                             component = ComponentName(packageName, "$packageName.activities.ApkListActivity")
@@ -95,14 +101,28 @@ class AppDetailsActivity : AppCompatActivity() {
             } else {
                 actionShare.visibility = View.GONE
             }
-            actionCopy.setOnClickListener {
+
+            toolbar.menu.findItem(1).setOnMenuItemClickListener {
                 copyToClipboard(
                     "Name: ${data.name.toString()}\nPackage: ${data.pkg.toString()}\nSignature: ${data.signature.toString()}\n" +
                             "Version name: ${data.versionName.toString()}\n Version Code: ${data.versionCode}"
                 )
-                Toast.makeText(applicationContext, R.string.copied_to_clipboard, Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(applicationContext, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+                true
             }
+
+            if (BuildConfig.BUILD_FOR_MARKET == AppBuildType.APK) {
+                toolbar.menu.findItem(2).setOnMenuItemClickListener {
+                    startActivity(Intent().apply {
+                        component = ComponentName(packageName, "$packageName.activities.ApkListActivity")
+                        putExtra("pkg", data.pkg)
+                        putExtra("version_name", data.versionName)
+                        putExtra("version_code", data.versionCode)
+                    })
+                    true
+                }
+            }
+
             actionInfo.setOnClickListener {
                 try {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -306,6 +326,44 @@ class AppDetailsActivity : AppCompatActivity() {
             finish()
         }
 
+        findViewById<View>(R.id.actionUninstall)?.apply {
+            setOnClickListener{
+                try {
+                    val intent = Intent(Intent.ACTION_DELETE)
+                    intent.data = Uri.parse("package:$pkg")
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        it.context,
+                        resources.getString(R.string.app_run_error, e.message),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+
+        findViewById<View>(R.id.actionInfo)?.apply {
+            setOnClickListener{
+                try {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .setData(Uri.parse("package:${pkg}"))
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    ERA.logException(e)
+                    try {
+                        startActivity(Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS))
+                    } catch (w2: Exception) {
+                        Toast.makeText(
+                            it.context,
+                            resources.getString(R.string.app_run_error, e.message),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+        }
+
         toolbar.setTitle(R.string.app_details)
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         toolbar.setNavigationOnClickListener {
@@ -313,50 +371,56 @@ class AppDetailsActivity : AppCompatActivity() {
         }
         toolbar.navigationContentDescription = resources.getString(R.string.back)
 
-        toolbar.menu.add(R.string.find_in_market).setOnMenuItemClickListener {
-            if (AppBuildType.HUAWEI == BuildConfig.BUILD_FOR_MARKET) {
-                val hwAppId = "101754683"
-                try {
-                    startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("appmarket://details?id=$pkg")
-                        )
-                    )
-                } catch (e1: java.lang.Exception) {
+        toolbar.menu.apply {
+            add(R.string.find_in_market).setOnMenuItemClickListener {
+                if (AppBuildType.HUAWEI == BuildConfig.BUILD_FOR_MARKET) {
+                    val hwAppId = "101754683"
                     try {
                         startActivity(
                             Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse("https://appgallery.cloud.huawei.com/marketshare/app/C$hwAppId")
+                                Uri.parse("appmarket://details?id=$pkg")
                             )
                         )
-                    } catch (e2: java.lang.Exception) {
-                        ERA.logException(java.lang.Exception("No App Gallery and WebBrowser"))
+                    } catch (e1: java.lang.Exception) {
+                        try {
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://appgallery.cloud.huawei.com/marketshare/app/C$hwAppId")
+                                )
+                            )
+                        } catch (e2: java.lang.Exception) {
+                            ERA.logException(java.lang.Exception("No App Gallery and WebBrowser"))
+                        }
                     }
-                }
-            } else {
-                try {
-                    startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("market://details?id=$pkg")
-                        ).setPackage("com.android.vending")
-                    )
-                } catch (e: java.lang.Exception) {
+                } else {
                     try {
                         startActivity(
                             Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse("https://play.google.com/store/apps/details?id=$pkg")
-                            )
+                                Uri.parse("market://details?id=$pkg")
+                            ).setPackage("com.android.vending")
                         )
-                    } catch (e2: java.lang.Exception) {
-                        ERA.logException(java.lang.Exception("No Play Store app and WebBrowser"))
+                    } catch (e: java.lang.Exception) {
+                        try {
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://play.google.com/store/apps/details?id=$pkg")
+                                )
+                            )
+                        } catch (e2: java.lang.Exception) {
+                            ERA.logException(java.lang.Exception("No Play Store app and WebBrowser"))
+                        }
                     }
                 }
+                true
             }
-            true
+            add(0, 1, 0, R.string.copy)
+            if (BuildConfig.BUILD_FOR_MARKET == AppBuildType.APK) {
+                add(0, 2, 0, R.string.share)
+            }
         }
 
         if (savedInstanceState == null) {
