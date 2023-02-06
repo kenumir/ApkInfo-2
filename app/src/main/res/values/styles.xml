@@ -162,6 +162,8 @@
         <item name="android:focusable">true</item>
         <item name="android:lines">2</item>
         <item name="android:maxLines">2</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="drawableTint">?android:attr/textColorPrimary</item>
     </style>
 
 </resources>
