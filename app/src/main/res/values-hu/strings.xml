@@ -56,4 +56,9 @@
     <string name="search_apps">Alkalmazás keresése</string>
     <string name="filters_and_sort">Szűrés és rendezés</string>
     <string name="applications">Alkalmazások</string>
+    <string name="app_theme">Téma</string>
+    <string name="app_theme_auto">Alapértelmezett rendszer</string>
+    <string name="app_theme_light">Fény</string>
+    <string name="app_theme_dark">Sötét</string>
+    <string name="action_uninstall">Eltávolítás</string>
 </resources>

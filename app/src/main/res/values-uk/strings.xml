@@ -55,4 +55,9 @@
     <string name="search_apps">Пошук у додатках</string>
     <string name="filters_and_sort">Фільтри та сортування</string>
     <string name="applications">Програми</string>
+    <string name="app_theme">Тема</string>
+    <string name="app_theme_auto">Система за умовчанням</string>
+    <string name="app_theme_light">Світло</string>
+    <string name="app_theme_dark">Темний</string>
+    <string name="action_uninstall">Видалити</string>
 </resources>

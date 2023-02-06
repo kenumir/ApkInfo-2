@@ -60,4 +60,5 @@
     <string name="app_theme_auto">Domyślny systemowy</string>
     <string name="app_theme_light">Jasny</string>
     <string name="app_theme_dark">Ciemny</string>
+    <string name="action_uninstall">Odinstaluj</string>
 </resources>

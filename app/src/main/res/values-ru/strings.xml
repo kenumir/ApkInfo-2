@@ -55,4 +55,9 @@
     <string name="search_apps">Поиск приложений</string>
     <string name="filters_and_sort">Фильтры и сортировка</string>
     <string name="applications">Приложения</string>
+    <string name="app_theme">Тема</string>
+    <string name="app_theme_auto">Система по умолчанию</string>
+    <string name="app_theme_light">Легкий</string>
+    <string name="app_theme_dark">Темный</string>
+    <string name="action_uninstall">Удалить</string>
 </resources>

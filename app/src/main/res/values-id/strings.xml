@@ -55,4 +55,9 @@
     <string name="search_apps">Aplikasi penelusuran</string>
     <string name="filters_and_sort">Filter dan sortir</string>
     <string name="applications">Aplikasi</string>
+    <string name="app_theme">Tema</string>
+    <string name="app_theme_auto">Sistem default</string>
+    <string name="app_theme_light">Ringan</string>
+    <string name="app_theme_dark">Gelap</string>
+    <string name="action_uninstall">Copot pemasangan</string>
 </resources>

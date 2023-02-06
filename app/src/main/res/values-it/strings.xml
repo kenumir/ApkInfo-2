@@ -55,4 +55,9 @@
     <string name="search_apps">Cerca nelle app</string>
     <string name="filters_and_sort">Filtra e ordina</string>
     <string name="applications">Applicazioni</string>
+    <string name="app_theme">Tema</string>
+    <string name="app_theme_auto">Predefinito di sistema</string>
+    <string name="app_theme_light">Chiaro</string>
+    <string name="app_theme_dark">Scuro</string>
+    <string name="action_uninstall">Disinstalla</string>
 </resources>

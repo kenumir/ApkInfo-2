@@ -55,4 +55,9 @@
     <string name="search_apps">アプリを検索</string>
     <string name="filters_and_sort">フィルターと並べ替え</string>
     <string name="applications">アプリケーション</string>
+    <string name="app_theme">テーマ</string>
+    <string name="app_theme_auto">システムのデフォルト</string>
+    <string name="app_theme_light">ライト</string>
+    <string name="app_theme_dark">ダーク</string>
+    <string name="action_uninstall">アンインストール</string>
 </resources>

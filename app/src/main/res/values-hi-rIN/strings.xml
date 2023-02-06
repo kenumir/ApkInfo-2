@@ -55,4 +55,9 @@
     <string name="search_apps">ऐप्स खोजें</string>
     <string name="filters_and_sort">फ़िल्टर और सॉर्ट करें</string>
     <string name="applications">स्ट्रिंग नाम = "एप्लिकेशन">एप्लिकेशन</string>
+    <string name="app_theme">थीम</string>
+    <string name="app_theme_auto">सिस्टम डिफ़ॉल्ट</string>
+    <string name="app_theme_light">लाइट</string>
+    <string name="app_theme_dark">गहरा</string>
+    <string name="action_uninstall">अनइंस्टॉल करें</string>
 </resources>

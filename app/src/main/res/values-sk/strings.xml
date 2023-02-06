@@ -55,4 +55,9 @@
     <string name="search_apps">Vyhľadávanie aplikácií</string>
     <string name="filters_and_sort">Filtrovanie a triedenie</string>
     <string name="applications">Aplikácie</string>
+    <string name="app_theme">Motív</string>
+    <string name="app_theme_auto">Predvolené nastavenie systému</string>
+    <string name="app_theme_light">Svetlo</string>
+    <string name="app_theme_dark">Tmavý</string>
+    <string name="action_uninstall">Odinštalovať</string>
 </resources>
