@@ -33,4 +33,6 @@
 
     <color name="toolbar_bg">#ECEFF4</color>
     <color name="toolbar_bg_night">#2B2D32</color>
+
+    <color name="trans">#00000000</color>
 </resources>

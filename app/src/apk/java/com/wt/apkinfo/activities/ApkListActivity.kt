@@ -7,16 +7,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.wt.apkinfo.R
 import com.wt.apkinfo.data.ApkFileEntryInfo
 import com.wt.apkinfo.data.models.ApkFilesViewModel
 import com.wt.apkinfo.data.models.ArchiveViewModel
 import com.wt.apkinfo.proto.ApkListAdapter
-import kotlinx.android.synthetic.main.activity_apk_list.*
-import kotlinx.android.synthetic.main.layout_toolbar.*
 import java.io.File
 
 
@@ -49,7 +49,7 @@ class ApkListActivity : AppCompatActivity() {
                 shareApkFile(item.fullPath)
             }
         })
-        recycler.apply {
+        findViewById<RecyclerView>(R.id.recycler).apply {
             layoutManager = LinearLayoutManager(this@ApkListActivity)
             itemAnimator = null
             adapter = mApkListAdapter
@@ -104,7 +104,7 @@ class ApkListActivity : AppCompatActivity() {
             finish()
         }
 
-        toolbar.apply {
+        findViewById<Toolbar>(R.id.toolbar).apply {
             setTitle(R.string.apk_list)
             setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
             setNavigationOnClickListener {

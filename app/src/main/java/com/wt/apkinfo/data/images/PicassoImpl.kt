@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Request
 import com.squareup.picasso.RequestHandler
 import com.wt.apkinfo.BuildConfig
+import com.wt.apkinfo.R
 import java.io.IOException
 
 class PicassoImpl(ctx: Context) : ImageLoading {
@@ -65,6 +66,8 @@ class PicassoImpl(ctx: Context) : ImageLoading {
         mPicasso.cancelRequest(img)
         url?.let {
             mPicasso.load(it)
+                .placeholder(R.drawable.trans_bg)
+                .error(R.drawable.trans_bg)
                 .fit()
                 .centerInside()
                 .into(img)

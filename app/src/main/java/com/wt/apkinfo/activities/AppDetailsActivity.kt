@@ -1,14 +1,22 @@
 package com.wt.apkinfo.activities
 
 import android.animation.Animator
-import android.content.*
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.customListAdapter
@@ -26,8 +34,6 @@ import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.proto.DateTime
 import com.wt.apkinfo.proto.PropertiesDialogAdapter
 import com.wt.userinfo.UserInfo
-import kotlinx.android.synthetic.main.activity_app_details.*
-import kotlinx.android.synthetic.main.layout_toolbar.*
 import java.util.concurrent.Executors
 
 
@@ -53,40 +59,47 @@ class AppDetailsActivity : AppCompatActivity() {
             //    false
             //}
 
-            appName.text = data.name
-            appPackage.text = data.pkg
-            appVersionName.text = data.versionName
-            appVersionCode.text = data.versionCode.toString()
-            appSdkInfo.text = resources.getString(R.string.details_sdk, data.sdkMin, data.sdkTarget)
-            appSignature.text = data.signature
-            appTime.text = resources.getString(
+            findViewById<TextView>(R.id.appName).text = data.name
+            findViewById<TextView>(R.id.appPackage).text = data.pkg
+            findViewById<TextView>(R.id.appVersionName).text = data.versionName
+            findViewById<TextView>(R.id.appVersionCode).text = data.versionCode.toString()
+            findViewById<TextView>(R.id.appSdkInfo).text = resources.getString(R.string.details_sdk, data.sdkMin, data.sdkTarget)
+            findViewById<TextView>(R.id.appSignature).text = data.signature
+            findViewById<TextView>(R.id.appTime).text = resources.getString(
                 R.string.details_time, DateTime.formatFull(data.timeInstall), DateTime.formatFull(
                     data.timeUpdate
                 )
             )
-            appInstallerPackage.text = data.installerPackage
+            findViewById<TextView>(R.id.appInstallerPackage).text = data.installerPackage
             when {
                 data.isDebuggable -> {
-                    appTypeInfo.visibility = View.VISIBLE
-                    appTypeInfo.setText(R.string.app_type_debug)
+                    findViewById<TextView>(R.id.appTypeInfo).apply {
+                        visibility = View.VISIBLE
+                        setText(R.string.app_type_debug)
+                    }
                 }
                 data.isSystemApp -> {
-                    appTypeInfo.visibility = View.VISIBLE
-                    appTypeInfo.setText(R.string.app_type_system)
+                    findViewById<TextView>(R.id.appTypeInfo).apply {
+                        visibility = View.VISIBLE
+                        setText(R.string.app_type_system)
+                    }
+
                 }
                 else -> {
-                    appTypeInfo.visibility = View.GONE
+                    findViewById<TextView>(R.id.appTypeInfo).visibility = View.GONE
                 }
             }
-            actionRun.visibility = if (data.launcherIntent == null) View.GONE else View.VISIBLE
-            ImageLoader.get(appLogo.context).load(data.icon, appLogo)
+            findViewById<AppCompatTextView>(R.id.actionRun).visibility = if (data.launcherIntent == null) View.GONE else View.VISIBLE
+            findViewById<ImageView>(R.id.appLogo).apply {
+                ImageLoader.get(this.context).load(data.icon, this)
+            }
 
             //actionCopy.setOnLongClickListener(longPress)
             //actionInfo.setOnLongClickListener(longPress)
             //actionRun.setOnLongClickListener(longPress)
 
             if (BuildConfig.BUILD_FOR_MARKET == AppBuildType.APK) {
-                actionShare.apply {
+                findViewById<View>(R.id.actionShare).apply {
                     //setOnLongClickListener(longPress)
                     setOnClickListener {
                         startActivity(Intent().apply {
@@ -99,10 +112,10 @@ class AppDetailsActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                actionShare.visibility = View.GONE
+                findViewById<View>(R.id.actionShare).visibility = View.GONE
             }
 
-            toolbar.menu.findItem(1).setOnMenuItemClickListener {
+            findViewById<Toolbar>(R.id.toolbar).menu.findItem(1).setOnMenuItemClickListener {
                 copyToClipboard(
                     "Name: ${data.name.toString()}\nPackage: ${data.pkg.toString()}\nSignature: ${data.signature.toString()}\n" +
                             "Version name: ${data.versionName.toString()}\n Version Code: ${data.versionCode}"
@@ -112,7 +125,7 @@ class AppDetailsActivity : AppCompatActivity() {
             }
 
             if (BuildConfig.BUILD_FOR_MARKET == AppBuildType.APK) {
-                toolbar.menu.findItem(2).setOnMenuItemClickListener {
+                findViewById<Toolbar>(R.id.toolbar).menu.findItem(2).setOnMenuItemClickListener {
                     startActivity(Intent().apply {
                         component = ComponentName(packageName, "$packageName.activities.ApkListActivity")
                         putExtra("pkg", data.pkg)
@@ -123,7 +136,7 @@ class AppDetailsActivity : AppCompatActivity() {
                 }
             }
 
-            actionInfo.setOnClickListener {
+            findViewById<View>(R.id.actionInfo).setOnClickListener {
                 try {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -142,7 +155,7 @@ class AppDetailsActivity : AppCompatActivity() {
                     }
                 }
             }
-            actionRun.setOnClickListener { ar ->
+            findViewById<View>(R.id.actionRun).setOnClickListener { ar ->
                 data.launcherIntent?.let {
                     ar.visibility = View.VISIBLE
                     try {
@@ -161,140 +174,160 @@ class AppDetailsActivity : AppCompatActivity() {
             }
             data.meta.let {
                 val title = resources.getString(R.string.details_metadata, it.size)
-                moreMeta.text = title
-                moreMeta.visibility = if (it.size > 0) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-                moreMeta.setOnClickListener { _ ->
-                    MaterialDialog(this).show {
-                        title(0, title)
-                        customListAdapter(PropertiesDialogAdapter(it))
+                findViewById<AppCompatTextView>(R.id.moreMeta).apply {
+                    text = title
+                    visibility = if (it.size > 0) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
+                    setOnClickListener { _ ->
+                        MaterialDialog(context).show {
+                            title(0, title)
+                            customListAdapter(PropertiesDialogAdapter(it))
+                        }
                     }
                 }
+
             }
             data.activities.let {
                 val title = resources.getString(R.string.details_activities, it.size)
-                moreActivities.text = title
-                moreActivities.visibility = if (it.size > 0) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-                moreActivities.setOnClickListener { _ ->
-                    MaterialDialog(this).show {
-                        title(0, title)
-                        customListAdapter(PropertiesDialogAdapter(it))
+                findViewById<AppCompatTextView>(R.id.moreActivities).apply {
+                    text = title
+                    visibility = if (it.size > 0) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
+                    setOnClickListener { _ ->
+                        MaterialDialog(context).show {
+                            title(0, title)
+                            customListAdapter(PropertiesDialogAdapter(it))
+                        }
                     }
                 }
+
             }
             data.services.let {
                 val title = resources.getString(R.string.details_services, it.size)
-                moreServices.text = title
-                moreServices.visibility = if (it.size > 0) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-                moreServices.setOnClickListener { _ ->
-                    MaterialDialog(this).show {
-                        title(0, title)
-                        customListAdapter(PropertiesDialogAdapter(it))
+                findViewById<AppCompatTextView>(R.id.moreServices).apply {
+                    text = title
+                    visibility = if (it.size > 0) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
+                    setOnClickListener { _ ->
+                        MaterialDialog(context).show {
+                            title(0, title)
+                            customListAdapter(PropertiesDialogAdapter(it))
+                        }
                     }
                 }
             }
             data.providers.let {
                 val title = resources.getString(R.string.details_providers, it.size)
-                moreProviders.text = title
-                moreProviders.visibility = if (it.size > 0) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-                moreProviders.setOnClickListener { _ ->
-                    MaterialDialog(this).show {
-                        title(0, title)
-                        customListAdapter(PropertiesDialogAdapter(it))
+                findViewById<AppCompatTextView>(R.id.moreProviders).apply {
+                    text = title
+                    visibility = if (it.size > 0) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
+                    setOnClickListener { _ ->
+                        MaterialDialog(context).show {
+                            title(0, title)
+                            customListAdapter(PropertiesDialogAdapter(it))
+                        }
                     }
                 }
             }
             data.receivers.let {
                 val title = resources.getString(R.string.details_receivers, it.size)
-                moreReceivers.text = title
-                moreReceivers.visibility = if (it.size > 0) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-                moreReceivers.setOnClickListener { _ ->
-                    MaterialDialog(this).show {
-                        title(0, title)
-                        customListAdapter(PropertiesDialogAdapter(it))
+                findViewById<AppCompatTextView>(R.id.moreReceivers).apply {
+                    text = title
+                    visibility = if (it.size > 0) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
+                    setOnClickListener { _ ->
+                        MaterialDialog(context).show {
+                            title(0, title)
+                            customListAdapter(PropertiesDialogAdapter(it))
+                        }
                     }
                 }
             }
             data.directories.let {
                 val title = resources.getString(R.string.details_directories, it.size)
-                moreDirectories.text = title
-                moreDirectories.visibility = if (it.size > 0) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-                moreDirectories.setOnClickListener { _ ->
-                    MaterialDialog(this).show {
-                        title(0, title)
-                        customListAdapter(PropertiesDialogAdapter(it))
+                findViewById<AppCompatTextView>(R.id.moreDirectories).apply {
+                    text = title
+                    visibility = if (it.size > 0) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
+                    setOnClickListener { _ ->
+                        MaterialDialog(context).show {
+                            title(0, title)
+                            customListAdapter(PropertiesDialogAdapter(it))
+                        }
                     }
                 }
             }
             data.permissions.let {
                 val title = resources.getString(R.string.details_permissions, it.size)
-                morePermissions.text = title
-                morePermissions.visibility = if (it.size > 0) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-                morePermissions.setOnClickListener { _ ->
-                    MaterialDialog(this).show {
-                        title(0, title)
-                        customListAdapter(PropertiesDialogAdapter(it))
+                findViewById<AppCompatTextView>(R.id.morePermissions).apply {
+                    text = title
+                    visibility = if (it.size > 0) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
+                    setOnClickListener { _ ->
+                        MaterialDialog(context).show {
+                            title(0, title)
+                            customListAdapter(PropertiesDialogAdapter(it))
+                        }
                     }
                 }
             }
             data.sharedLibraries.let {
                 val title = resources.getString(R.string.details_shared_libraries, it.size)
-                moreSharedLibraries.text = title
-                moreSharedLibraries.visibility = if (it.size > 0) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-                moreSharedLibraries.setOnClickListener { _ ->
-                    MaterialDialog(this).show {
-                        title(0, title)
-                        customListAdapter(PropertiesDialogAdapter(it))
+                findViewById<AppCompatTextView>(R.id.moreSharedLibraries).apply {
+                    text = title
+                    visibility = if (it.size > 0) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
+                    setOnClickListener { _ ->
+                        MaterialDialog(context).show {
+                            title(0, title)
+                            customListAdapter(PropertiesDialogAdapter(it))
+                        }
                     }
                 }
             }
             data.nativeLibraries.let {
                 val title = resources.getString(R.string.details_native_libraries, it.size)
-                moreNativeLibraries.text = title
-                moreNativeLibraries.visibility = if (it.size > 0) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-                moreNativeLibraries.setOnClickListener { _ ->
-                    MaterialDialog(this).show {
-                        title(0, title)
-                        customListAdapter(PropertiesDialogAdapter(it))
+                findViewById<AppCompatTextView>(R.id.moreNativeLibraries).apply {
+                    text = title
+                    visibility = if (it.size > 0) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
+                    setOnClickListener { _ ->
+                        MaterialDialog(context).show {
+                            title(0, title)
+                            customListAdapter(PropertiesDialogAdapter(it))
+                        }
                     }
                 }
             }
-            moreOtherProperties.setOnClickListener {
+            findViewById<View>(R.id.moreOtherProperties).setOnClickListener {
                 val props = ArrayList<String>()
                 props.add(resources.getString(R.string.details_property_large_heap) + "\n" + data.isLargeHeap.toString())
                 props.add(resources.getString(R.string.details_property_hw_accelerated) + "\n" + data.isHwAccelerated.toString())
@@ -304,19 +337,23 @@ class AppDetailsActivity : AppCompatActivity() {
                     customListAdapter(PropertiesDialogAdapter(props))
                 }
             }
-            loader.alpha = 1f
-            loader.animate()
-                .setDuration(250)
-                .alpha(0f)
-                .setListener(object : Animator.AnimatorListener {
-                    override fun onAnimationRepeat(animation: Animator) {}
-                    override fun onAnimationEnd(animation: Animator) {
-                        loader.visibility = View.GONE
-                    }
-                    override fun onAnimationCancel(animation: Animator) {}
-                    override fun onAnimationStart(animation: Animator) {}
-                })
-                .start()
+            findViewById<View>(R.id.loader).apply {
+                val loader = this
+                alpha = 1f
+                animate()
+                    .setDuration(250)
+                    .alpha(0f)
+                    .setListener(object : Animator.AnimatorListener {
+                        override fun onAnimationRepeat(animation: Animator) {}
+                        override fun onAnimationEnd(animation: Animator) {
+                            loader.visibility = View.GONE
+                        }
+                        override fun onAnimationCancel(animation: Animator) {}
+                        override fun onAnimationStart(animation: Animator) {}
+                    })
+                    .start()
+            }
+
 
         }
         pkg?.let {
@@ -364,64 +401,66 @@ class AppDetailsActivity : AppCompatActivity() {
             }
         }
 
-        toolbar.setTitle(R.string.app_details)
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        toolbar.setNavigationOnClickListener {
-            finish()
-        }
-        toolbar.navigationContentDescription = resources.getString(R.string.back)
-
-        toolbar.menu.apply {
-            add(R.string.find_in_market).setOnMenuItemClickListener {
-                if (AppBuildType.HUAWEI == BuildConfig.BUILD_FOR_MARKET) {
-                    val hwAppId = "101754683"
-                    try {
-                        startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("appmarket://details?id=$pkg")
-                            )
-                        )
-                    } catch (e1: java.lang.Exception) {
+        findViewById<Toolbar>(R.id.toolbar).apply {
+            setTitle(R.string.app_details)
+            setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            setNavigationOnClickListener {
+                finish()
+            }
+            navigationContentDescription = resources.getString(R.string.back)
+            menu.apply {
+                add(R.string.find_in_market).setOnMenuItemClickListener {
+                    if (AppBuildType.HUAWEI == BuildConfig.BUILD_FOR_MARKET) {
+                        val hwAppId = "101754683"
                         try {
                             startActivity(
                                 Intent(
                                     Intent.ACTION_VIEW,
-                                    Uri.parse("https://appgallery.cloud.huawei.com/marketshare/app/C$hwAppId")
+                                    Uri.parse("appmarket://details?id=$pkg")
                                 )
                             )
-                        } catch (e2: java.lang.Exception) {
-                            ERA.logException(java.lang.Exception("No App Gallery and WebBrowser"))
+                        } catch (e1: java.lang.Exception) {
+                            try {
+                                startActivity(
+                                    Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("https://appgallery.cloud.huawei.com/marketshare/app/C$hwAppId")
+                                    )
+                                )
+                            } catch (e2: java.lang.Exception) {
+                                ERA.logException(java.lang.Exception("No App Gallery and WebBrowser"))
+                            }
                         }
-                    }
-                } else {
-                    try {
-                        startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("market://details?id=$pkg")
-                            ).setPackage("com.android.vending")
-                        )
-                    } catch (e: java.lang.Exception) {
+                    } else {
                         try {
                             startActivity(
                                 Intent(
                                     Intent.ACTION_VIEW,
-                                    Uri.parse("https://play.google.com/store/apps/details?id=$pkg")
-                                )
+                                    Uri.parse("market://details?id=$pkg")
+                                ).setPackage("com.android.vending")
                             )
-                        } catch (e2: java.lang.Exception) {
-                            ERA.logException(java.lang.Exception("No Play Store app and WebBrowser"))
+                        } catch (e: java.lang.Exception) {
+                            try {
+                                startActivity(
+                                    Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("https://play.google.com/store/apps/details?id=$pkg")
+                                    )
+                                )
+                            } catch (e2: java.lang.Exception) {
+                                ERA.logException(java.lang.Exception("No Play Store app and WebBrowser"))
+                            }
                         }
                     }
+                    true
                 }
-                true
-            }
-            add(0, 1, 0, R.string.copy)
-            if (BuildConfig.BUILD_FOR_MARKET == AppBuildType.APK) {
-                add(0, 2, 0, R.string.share)
+                add(0, 1, 0, R.string.copy)
+                if (BuildConfig.BUILD_FOR_MARKET == AppBuildType.APK) {
+                    add(0, 2, 0, R.string.share)
+                }
             }
         }
+
 
         if (savedInstanceState == null) {
             pkg?.let {
