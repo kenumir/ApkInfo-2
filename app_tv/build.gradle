@@ -1,0 +1,95 @@
+plugins {
+	id 'com.android.application'
+	id 'org.jetbrains.kotlin.android'
+}
+
+android {
+	namespace versions.appId
+	compileSdk versions.compileSdkVersion
+
+	defaultConfig {
+		applicationId versions.appId
+		minSdkVersion versions.minSdkVersion
+		targetSdkVersion versions.targetSdkVersion
+		versionCode versions.versionCode
+		versionName versions.versionName + "_tv"
+		vectorDrawables.useSupportLibrary = true
+		multiDexEnabled true
+	}
+
+	signingConfigs {
+		debugKeystore {
+			storeFile file("../debug_certificate/debug_cert.jks")
+			storePassword "android"
+			keyAlias "debug_certificate"
+			keyPassword "android"
+		}
+	}
+
+	buildTypes {
+		debug {
+			signingConfig signingConfigs.debugKeystore
+		}
+		release {
+			shrinkResources true
+			minifyEnabled true
+			proguardFiles  getDefaultProguardFile('proguard-android-optimize.txt'),
+				'proguard-rules.pro',
+				'proguard/proguard-rules.pro',
+				'proguard/otto.pro',
+				'proguard/retrofit.pro',
+				'proguard/okio.pro',
+				'proguard/crashlytics.pro',
+				'proguard/support_design.pro',
+				'proguard/support_v7.pro',
+				'proguard/picasso.pro',
+				'proguard/android.pro'
+		}
+		android.applicationVariants.all { variant ->
+			variant.outputs.all {
+				outputFileName = outputFileName.replace("app-", "ApkInfo-TV-" + defaultConfig.versionName + "-").replace(".apk", "-[" + defaultConfig.versionCode + "].apk")
+			}
+		}
+	}
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
+	kotlinOptions {
+		jvmTarget = '1.8'
+	}
+
+	bundle {
+		language {
+			enableSplit = true
+		}
+		density {
+			enableSplit = true
+		}
+		abi {
+			enableSplit = true
+		}
+	}
+
+	flavorDimensions "market"
+
+	productFlavors {
+		gms {
+			buildConfigField "String", "BUILD_FOR_MARKET", "\"google\""
+			versionCode android.defaultConfig.versionCode * 10000
+		}
+		hms {
+			buildConfigField "String", "BUILD_FOR_MARKET", "\"huawei\""
+			versionCode android.defaultConfig.versionCode * 10000
+		}
+		apk {
+			buildConfigField "String", "BUILD_FOR_MARKET", "\"apk\""
+			versionCode android.defaultConfig.versionCode * 1000
+		}
+	}
+}
+
+dependencies {
+	implementation project(':app_base')
+	implementation 'androidx.leanback:leanback:1.0.0'
+}

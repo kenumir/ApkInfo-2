@@ -1,2 +1,5 @@
-include ':app', ':module_user_info'
 rootProject.name='Apk Info'
+include ':app_base'
+include ':app'
+include ':app_tv'
+include ':module_user_info'

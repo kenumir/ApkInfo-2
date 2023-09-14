@@ -1,0 +1,88 @@
+plugins {
+	id 'com.android.library'
+	id 'org.jetbrains.kotlin.android'
+}
+
+android {
+	namespace versions.appId + ".base"
+	compileSdk versions.compileSdkVersion
+
+	defaultConfig {
+		minSdkVersion versions.minSdkVersion
+		targetSdkVersion versions.targetSdkVersion
+		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+		consumerProguardFiles "consumer-rules.pro"
+
+		//buildConfigField "String", "VERSION_NAME", "\"" + versions.versionName + "\""
+	}
+
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+		}
+	}
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
+	kotlinOptions {
+		jvmTarget = '1.8'
+	}
+
+	flavorDimensions "market"
+
+	productFlavors {
+		gms {
+			buildConfigField "String", "BUILD_FOR_MARKET", "\"google\""
+			buildConfigField "String", "APP_VERSION_NAME", "\"" + versions.versionName + "\""
+		}
+		hms {
+			buildConfigField "String", "BUILD_FOR_MARKET", "\"huawei\""
+			buildConfigField "String", "APP_VERSION_NAME", "\"" + versions.versionName + "\""
+		}
+		apk {
+			buildConfigField "String", "BUILD_FOR_MARKET", "\"apk\""
+			buildConfigField "String", "APP_VERSION_NAME", "\"" + versions.versionName + "\""
+		}
+	}
+}
+
+dependencies {
+	implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+	// multidex
+	implementation 'androidx.multidex:multidex:2.0.1'
+	androidTestImplementation 'androidx.multidex:multidex:2.0.1'
+	androidTestImplementation 'androidx.multidex:multidex-instrumentation:2.0.0'
+
+	implementation 'androidx.core:core-ktx:1.10.1'
+	implementation 'androidx.appcompat:appcompat:1.6.1'
+	implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+	implementation 'androidx.fragment:fragment-ktx:1.6.0'
+	implementation 'androidx.recyclerview:recyclerview:1.3.0'
+	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+	implementation 'com.android.installreferrer:installreferrer:2.2'
+
+	implementation 'com.google.android.material:material:1.9.0'
+	implementation 'com.google.firebase:firebase-analytics:21.3.0'
+	implementation 'com.google.firebase:firebase-crashlytics:18.3.7'
+
+	//noinspection GradleDependency
+	implementation 'com.squareup.picasso:picasso:2.5.2' // its small and sufficient
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+	implementation 'com.afollestad.material-dialogs:core:3.3.0'
+
+	implementation("com.bugsnag:bugsnag-android:5.30.0") { // https://github.com/bugsnag/bugsnag-android
+		exclude group: "com.bugsnag", module: "bugsnag-plugin-android-anr"
+		exclude group: "com.bugsnag", module: "bugsnag-plugin-android-ndk"
+	}
+
+	implementation project(':module_user_info')
+
+	//hms
+	//hmsImplementation 'com.huawei.agconnect:agconnect-core:1.3.1.300'
+	//hmsImplementation 'com.huawei.agconnect:agconnect-crash:1.3.1.300'
+	//hmsImplementation 'com.huawei.hms:hianalytics:6.9.0.302'
+}

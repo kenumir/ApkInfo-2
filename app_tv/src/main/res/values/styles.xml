@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="List_DoubleItem_Box">
+		<item name="android:paddingLeft">@dimen/list_horizontal_margin</item>
+		<item name="android:paddingRight">@dimen/list_horizontal_margin</item>
+		<item name="android:orientation">vertical</item>
+		<item name="android:gravity">center_vertical</item>
+		<item name="android:background">?attr/selectableItemBackground</item>
+		<item name="android:clickable">false</item>
+		<item name="android:focusable">false</item>
+		<item name="android:minHeight">@dimen/list_double_item_height</item>
+	</style>
+
+</resources>
