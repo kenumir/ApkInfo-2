@@ -33,7 +33,7 @@ ext.versions = [
     compileSdkVersion: 33,
     minSdkVersion: 21,
     targetSdkVersion: 33,
-    versionName: "2.4.9",
-    versionCode: 249,
+    versionName: "2.5.0",
+    versionCode: 250,
     appId: 'com.wt.apkinfo'
 ]
