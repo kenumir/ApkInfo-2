@@ -50,7 +50,7 @@ class ApplicationsRepository(ctx: Context) {
                     }
                 }
             } catch (e: Exception) {
-                ERA.logException(e)
+                //ERA.logException(e)
             }
         }
         return results
@@ -136,7 +136,7 @@ class ApplicationsRepository(ctx: Context) {
                                 appName = ""
                             }
                         } catch (e: Exception) {
-                            ERA.logException(e)
+                            //ERA.logException(e)
                             appName = ""
                         }
                     } else {
@@ -218,7 +218,7 @@ class ApplicationsRepository(ctx: Context) {
                 )
             }
         } catch (e: Exception) {
-            ERA.logException(e)
+            //ERA.logException(e)
         }
         return when (sortOrder) {
             ListSortOrder.PACKAGE -> {
