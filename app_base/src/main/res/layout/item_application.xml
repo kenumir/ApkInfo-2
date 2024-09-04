@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
+    android:layout_height="wrap_content"
+    android:minHeight="72dp"
     android:clickable="true"
     android:focusable="true"
     android:background="?android:attr/selectableItemBackground"
@@ -11,8 +12,8 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_margin="16dp"
         android:scaleType="centerInside"
         android:importantForAccessibility="no"/>
@@ -30,14 +31,12 @@
             android:gravity="center_vertical"
             android:lines="1"
             android:ellipsize="end"
-            android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
             android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:textAlignment="gravity"
             android:textDirection="locale"
-            tools:text="App Name"
-            tools:targetApi="jelly_bean_mr1" />
+            tools:text="App Name" />
 
         <TextView
             android:id="@+id/text2"
@@ -46,15 +45,28 @@
             android:gravity="center_vertical"
             android:lines="1"
             android:ellipsize="end"
-            android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
             android:layout_marginTop="1dp"
             android:textAlignment="gravity"
             android:textDirection="locale"
-            tools:text="App Desc"
-            tools:targetApi="jelly_bean_mr1" />
+            tools:text="App Desc" />
+
+        <TextView
+            android:id="@+id/text3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:ellipsize="end"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/m3_ref_palette_neutral_variant60"
+            android:textSize="12sp"
+            android:layout_marginTop="1dp"
+            android:textAlignment="gravity"
+            android:textDirection="locale"
+            tools:text="2024-09-02 15:25:00" />
 
     </LinearLayout>
 

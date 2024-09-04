@@ -84,7 +84,7 @@ android {
         }
     }
 
-    flavorDimensions "market"
+    flavorDimensions = ["market"]
 
     productFlavors {
         gms {
