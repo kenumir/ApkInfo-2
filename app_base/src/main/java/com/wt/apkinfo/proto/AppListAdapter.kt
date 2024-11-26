@@ -21,54 +21,59 @@ class AppListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == 2) {
-            AppViewHolder(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_application, parent, false),
-                mOnAppListItemClick
-            )
-        } else if (viewType == 3) {
-            FilterViewHolder(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_filter, parent, false),
-                mOnFilterItemClick
-            )
-        } else if (viewType == 4) {
-            NoResultsHolder(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_no_results, parent, false)
-            )
-        } else {
-            LoaderViewHolder(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_loader, parent, false)
-            )
+        return when (viewType) {
+            2 -> {
+                AppViewHolder(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_application, parent, false),
+                    mOnAppListItemClick
+                )
+            }
+            3 -> {
+                FilterViewHolder(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_filter, parent, false),
+                    mOnFilterItemClick
+                )
+            }
+            4 -> {
+                NoResultsHolder(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_no_results, parent, false)
+                )
+            }
+            else -> {
+                LoaderViewHolder(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_loader, parent, false)
+                )
+            }
         }
     }
 
     override fun getItemId(position: Int): Long {
-        return if (position == 0 && items[position] == null) {
+        return if (position == 0 && items[0] == null) {
             0
         } else if (items.isNotEmpty() && position == 0) {
             -1
         } else {
-            if (position == 1 && items[position-1] != null && items[position-1]?.pkg == null) {
+            if (position == 1 && items[0] != null && items[0]?.pkg == null) {
                 Long.MAX_VALUE
             } else {
-                val pos = position - 1
-                (items[pos]?.pkg + "-" + items[pos]?.name).hashCode().toLong()
+                val item = items[position - 1]
+                (item?.pkg + "-" + item?.name + "-" + item?.icon + "-" + item?.date).hashCode().toLong()
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == 0 && items[position] == null) {
+        return if (position == 0 && items[0] == null) {
             1
         } else {
             if (items.isNotEmpty() && position == 0) {
                 3
             } else {
-                if (position == 1 && items[position-1] != null && items[position-1]?.pkg == null) {
+                if (position == 1 && items[0] != null && items[0]?.pkg == null) {
                     4
                 } else {
                     2
@@ -81,19 +86,21 @@ class AppListAdapter(
         return if (items.isNotEmpty()) items.size + 1 else 0
     }
 
-    @Suppress("ControlFlowWithEmptyBody")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is AppViewHolder) {
-            val h: AppViewHolder = holder
-            h.update(items[position-1])
-        } else if (holder is LoaderViewHolder) {
-            // nothing
-        } else if (holder is FilterViewHolder) {
-            holder.update(
-                mOnAdapterFilterData.getSort(),
-                mOnAdapterFilterData.getAppType(),
-                mOnAdapterFilterData.getAppInstaller()
-            )
+        when (holder) {
+            is AppViewHolder -> {
+                holder.update(items[position-1])
+            }
+            is LoaderViewHolder -> {
+                // nothing
+            }
+            is FilterViewHolder -> {
+                holder.update(
+                    mOnAdapterFilterData.getSort(),
+                    mOnAdapterFilterData.getAppType(),
+                    mOnAdapterFilterData.getAppInstaller()
+                )
+            }
         }
     }
 
