@@ -10,9 +10,10 @@ class ApplicationEntryInfo constructor(
     val icon: String?,
     val date: Long,
     val appType: FilterAppType,
-    val installer: FilterInstaller
+    val installer: FilterInstaller,
+    val targetSdk: Int
     ) {
     override fun toString(): String {
-        return "{id=$id, pkg=$pkg, name=$name, icon=$icon, date=$date, appType=$appType, installer=$installer}"
+        return "{id=$id, pkg=$pkg, name=$name, icon=$icon, date=$date, appType=$appType, installer=$installer, targetSdk=$targetSdk}"
     }
 }

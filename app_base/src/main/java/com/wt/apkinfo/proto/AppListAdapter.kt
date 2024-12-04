@@ -98,7 +98,8 @@ class AppListAdapter(
                 holder.update(
                     mOnAdapterFilterData.getSort(),
                     mOnAdapterFilterData.getAppType(),
-                    mOnAdapterFilterData.getAppInstaller()
+                    mOnAdapterFilterData.getAppInstaller(),
+                    mOnAdapterFilterData.getTargetSdk()
                 )
             }
         }

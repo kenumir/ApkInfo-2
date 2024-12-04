@@ -30,7 +30,7 @@ task clean(type: Delete) {
 }
 
 ext.versions = [
-    compileSdkVersion: 34,
+    compileSdkVersion: 35,
     minSdkVersion: 21,
     targetSdkVersion: 34,
     versionName: "2.5.6",

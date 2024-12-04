@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.wt.apkinfo.proto.FilterAppType
 import com.wt.apkinfo.proto.FilterInstaller
+import com.wt.apkinfo.proto.FilterTargetSdk
 import com.wt.apkinfo.proto.ListSortOrder
 
 class Prefs(private val ctx: Context) {
@@ -43,6 +44,14 @@ class Prefs(private val ctx: Context) {
         )
         set(v) {
             pref.edit().putString("filter_installer", v.name).apply()
+        }
+    var listFilterTargetSdk: FilterTargetSdk
+        get() = FilterTargetSdk.valueOf(
+            pref.getString("filter_target_sdk", FilterTargetSdk.ALL.name) ?:
+            FilterTargetSdk.ALL.name
+        )
+        set(v) {
+            pref.edit().putString("filter_target_sdk", v.name).apply()
         }
 
     var appDetailsOpenCounter: Int

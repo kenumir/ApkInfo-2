@@ -17,6 +17,7 @@ import com.wt.apkinfo.data.repositories.ApplicationsRepository
 import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.proto.FilterAppType
 import com.wt.apkinfo.proto.FilterInstaller
+import com.wt.apkinfo.proto.FilterTargetSdk
 import com.wt.apkinfo.proto.ListSortOrder
 import java.util.concurrent.Executors
 import androidx.lifecycle.MutableLiveData as MutableLiveData1
@@ -44,15 +45,21 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
         set(v) {
             Prefs(getApplication()).listFilterInstaller = v
         }
+    private var targetSdkParam: FilterTargetSdk
+        get() = Prefs(getApplication()).listFilterTargetSdk
+        set(v) {
+            Prefs(getApplication()).listFilterTargetSdk = v
+        }
 
     public var filterAppType: FilterAppType? = null
     public var listSortOrder: ListSortOrder? = null
     public var filterInstaller: FilterInstaller? = null
+    public var filterTargetSdk: FilterTargetSdk? = null
 
     init {
         exec.execute {
             assignValues()
-            data.postValue(appRepository.getAppList(null, appTypeParam, sortOrderParam, installerParam))
+            data.postValue(appRepository.getAppList(null, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
         }
         val intentFilter = IntentFilter()
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED)
@@ -68,7 +75,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
                 }
                 exec.execute {
                     assignValues()
-                    data.postValue(appRepository.getAppList(lastSearchQuery, appTypeParam, sortOrderParam, installerParam))
+                    data.postValue(appRepository.getAppList(lastSearchQuery, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
                 }
             }
         }
@@ -79,6 +86,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
         filterAppType = appTypeParam
         listSortOrder = sortOrderParam
         filterInstaller = installerParam
+        filterTargetSdk = targetSdkParam
     }
 
     fun getData() : MutableLiveData1<List<ApplicationEntryInfo?>> {
@@ -90,7 +98,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
         data.value = ArrayList(listOf(null))
         exec.execute {
             assignValues()
-            data.postValue(appRepository.getAppList(query, appTypeParam, sortOrderParam, installerParam))
+            data.postValue(appRepository.getAppList(query, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
         }
 
         try {
@@ -113,7 +121,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
         data.value = ArrayList(listOf(null))
         exec.execute {
             assignValues()
-            data.postValue(appRepository.getAppList(lastSearchQuery, appTypeParam, sortOrderParam, installerParam))
+            data.postValue(appRepository.getAppList(lastSearchQuery, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
         }
     }
 
@@ -122,7 +130,16 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
         data.value = ArrayList(listOf(null))
         exec.execute {
             assignValues()
-            data.postValue(appRepository.getAppList(lastSearchQuery, appTypeParam, sortOrderParam, installerParam))
+            data.postValue(appRepository.getAppList(lastSearchQuery, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
+        }
+    }
+
+    fun setTargetSdk(t: FilterTargetSdk) {
+        targetSdkParam = t
+        data.value = ArrayList(listOf(null))
+        exec.execute {
+            assignValues()
+            data.postValue(appRepository.getAppList(lastSearchQuery, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
         }
     }
 
@@ -131,7 +148,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
         data.value = ArrayList(listOf(null))
         exec.execute {
             assignValues()
-            data.postValue(appRepository.getAppList(lastSearchQuery, appTypeParam, sortOrderParam, installerParam))
+            data.postValue(appRepository.getAppList(lastSearchQuery, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
         }
     }
 

@@ -10,6 +10,7 @@ class FilterViewHolder(itemView: View, click: OnFilterItemClick?) : RecyclerView
     val filter_sort = itemView.findViewById<TextView>(R.id.filter_sort)
     val filter_type = itemView.findViewById<TextView>(R.id.filter_type)
     val filter_installer = itemView.findViewById<TextView>(R.id.filter_installer)
+    val filter_target_sdk = itemView.findViewById<TextView>(R.id.filter_target_sdk)
 
     init {
         filter_sort.setOnClickListener {
@@ -21,9 +22,12 @@ class FilterViewHolder(itemView: View, click: OnFilterItemClick?) : RecyclerView
         filter_installer.setOnClickListener {
             click?.onItemClick(FilterType.INSTALLER)
         }
+        filter_target_sdk.setOnClickListener {
+            click?.onItemClick(FilterType.TARGET_SDK)
+        }
     }
 
-    fun update(sort: ListSortOrder, appType: FilterAppType, installer: FilterInstaller) {
+    fun update(sort: ListSortOrder, appType: FilterAppType, installer: FilterInstaller, targetSdk: FilterTargetSdk) {
         filter_sort.text = "${itemView.resources.getString(R.string.sort)}: " +
             when (sort) {
                 ListSortOrder.DATE -> itemView.resources.getString(R.string.sort_date)
@@ -43,6 +47,13 @@ class FilterViewHolder(itemView: View, click: OnFilterItemClick?) : RecyclerView
             FilterInstaller.PLAY_STORE -> itemView.resources.getString(R.string.installer_vending)
             FilterInstaller.APP_GALLERY -> itemView.resources.getString(R.string.installer_huawei)
             FilterInstaller.EMPTY -> itemView.resources.getString(R.string.installer_empty)
+        }
+
+        filter_target_sdk.text = "${itemView.resources.getString(R.string.filter_target_sdk)}: " + when (targetSdk) {
+            FilterTargetSdk.ALL -> itemView.resources.getString(R.string.filter_target_sdk_all)
+            FilterTargetSdk.API_35 -> itemView.resources.getString(R.string.filter_target_sdk_35)
+            FilterTargetSdk.API_34 -> itemView.resources.getString(R.string.filter_target_sdk_34)
+            FilterTargetSdk.API_33 -> itemView.resources.getString(R.string.filter_target_sdk_33)
         }
     }
 

@@ -53,6 +53,13 @@
                 android:layout_height="wrap_content"
                 tools:text="Installer: All"/>
 
+            <TextView
+                style="@style/List_FilterItem"
+                android:id="@+id/filter_target_sdk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Target SDK: All"/>
+
         </LinearLayout>
 
     </HorizontalScrollView>

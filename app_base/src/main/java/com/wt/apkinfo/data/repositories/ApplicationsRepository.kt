@@ -13,6 +13,7 @@ import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.proto.FilterAppType
 import com.wt.apkinfo.proto.FilterInstaller
+import com.wt.apkinfo.proto.FilterTargetSdk
 import com.wt.apkinfo.proto.ListSortOrder
 import com.wt.apkinfo.proto.StringUtil
 import java.io.File
@@ -57,7 +58,7 @@ class ApplicationsRepository(ctx: Context) {
     }
 
     @SuppressLint("DefaultLocale")
-    fun getAppList(query: String?, appType: FilterAppType, sortOrder: ListSortOrder, installer: FilterInstaller): List<ApplicationEntryInfo> {
+    fun getAppList(query: String?, appType: FilterAppType, sortOrder: ListSortOrder, installer: FilterInstaller, targetSdk: FilterTargetSdk): List<ApplicationEntryInfo> {
         val results: ArrayList<ApplicationEntryInfo> = ArrayList()
         var id = 0L
         try {
@@ -71,7 +72,8 @@ class ApplicationsRepository(ctx: Context) {
                             null,
                             0,
                             FilterAppType.ALL,
-                            FilterInstaller.ALL
+                            FilterInstaller.ALL,
+                            0
                         )
                     )
                     return results;
@@ -89,18 +91,33 @@ class ApplicationsRepository(ctx: Context) {
                 var appT: FilterAppType = FilterAppType.ALL
                 val installerPkgRes: FilterInstaller
 
-                val isSystemApp = it.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
-                val isDebuggable = it.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+                val info = it.applicationInfo
+                val isSystemApp = info != null && info.flags and ApplicationInfo.FLAG_SYSTEM != 0
+                val isDebuggable = info != null && info.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+                val targetSdkRes = info?.targetSdkVersion ?: 0
+
 
                 val installerPkg = try {
-                    pkg?.getInstallerPackageName(pkgName)?.let {
-                        if (it.isEmpty()) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        pkg?.getInstallSourceInfo(pkgName)?.let {
+                            if (it.installingPackageName.isNullOrEmpty()) {
+                                null
+                            } else {
+                                it
+                            }
+                        } ?: run {
                             null
-                        } else {
-                            it
                         }
-                    } ?: run {
-                        null
+                    } else {
+                        pkg?.getInstallerPackageName(pkgName)?.let {
+                            if (it.isEmpty()) {
+                                null
+                            } else {
+                                it
+                            }
+                        } ?: run {
+                            null
+                        }
                     }
                 } catch (e: java.lang.Exception) {
                     null
@@ -160,6 +177,27 @@ class ApplicationsRepository(ctx: Context) {
                     appName = ""
                 }
 
+                when (targetSdk) {
+                    FilterTargetSdk.ALL -> {
+                        // all apps
+                    }
+                    FilterTargetSdk.API_35 -> {
+                        if (targetSdkRes != 35) {
+                            appName = ""
+                        }
+                    }
+                    FilterTargetSdk.API_34 -> {
+                        if (targetSdkRes != 34) {
+                            appName = ""
+                        }
+                    }
+                    FilterTargetSdk.API_33 -> {
+                        if (targetSdkRes != 33) {
+                            appName = ""
+                        }
+                    }
+                }
+
                 if (installer != FilterInstaller.ALL) {
                     if (installerPkgRes != installer) {
                         appName = ""
@@ -177,7 +215,8 @@ class ApplicationsRepository(ctx: Context) {
                                 appIcon,
                                 date,
                                 appT,
-                                installerPkgRes
+                                installerPkgRes,
+                                targetSdkRes
                             )
                         )
                     } else {
@@ -196,7 +235,8 @@ class ApplicationsRepository(ctx: Context) {
                                     appIcon,
                                     date,
                                     appT,
-                                    installerPkgRes
+                                    installerPkgRes,
+                                    targetSdkRes
                                 )
                             )
                         }
@@ -213,7 +253,8 @@ class ApplicationsRepository(ctx: Context) {
                         null,
                         0,
                         FilterAppType.ALL,
-                        FilterInstaller.ALL
+                        FilterInstaller.ALL,
+                        0
                     )
                 )
             }
@@ -272,9 +313,9 @@ class ApplicationsRepository(ctx: Context) {
                     }
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    result.sdkMin = pi.applicationInfo.minSdkVersion
+                    result.sdkMin = pi.applicationInfo?.minSdkVersion ?: 0
                 }
-                result.sdkTarget = pi.applicationInfo.targetSdkVersion
+                result.sdkTarget = pi.applicationInfo?.targetSdkVersion ?: 0
                 result.pkg = packageName
 
                 pit.getInstallerPackageName(packageName)?.let {
@@ -294,7 +335,7 @@ class ApplicationsRepository(ctx: Context) {
                 val pInfo = pit.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
                 pInfo?.let {
                     val md = MessageDigest.getInstance("SHA")
-                    md.update(it.signatures[0].toByteArray())
+                    md.update(it.signatures!![0].toByteArray())
                     val s = StringBuilder()
                     for (b in md.digest()) {
                         s.append(":").append(String.format("%02x", b))
@@ -303,22 +344,22 @@ class ApplicationsRepository(ctx: Context) {
                 }
                 result.timeInstall = pi.firstInstallTime
                 result.timeUpdate = pi.lastUpdateTime
-                result.directories.add(res.getString(R.string.data_directory) + "\n" + pi.applicationInfo.dataDir)
-                result.directories.add(res.getString(R.string.native_lib_directory) + "\n" + pi.applicationInfo.nativeLibraryDir)
+                result.directories.add(res.getString(R.string.data_directory) + "\n" + pi.applicationInfo?.dataDir)
+                result.directories.add(res.getString(R.string.native_lib_directory) + "\n" + pi.applicationInfo?.nativeLibraryDir)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    result.directories.add(res.getString(R.string.protected_data_directory) + "\n" + pi.applicationInfo.deviceProtectedDataDir)
+                    result.directories.add(res.getString(R.string.protected_data_directory) + "\n" + pi.applicationInfo?.deviceProtectedDataDir)
                 }
-                result.directories.add(res.getString(R.string.apk_directory) + "\n" + pi.applicationInfo.publicSourceDir)
+                result.directories.add(res.getString(R.string.apk_directory) + "\n" + pi.applicationInfo?.publicSourceDir)
 
-                pi.applicationInfo.nativeLibraryDir?.let {
+                pi.applicationInfo?.nativeLibraryDir?.let {
                     if (it.isNotEmpty()) {
-                        File(pi.applicationInfo.nativeLibraryDir).listFiles()?.forEach { itf ->
+                        File(pi.applicationInfo?.nativeLibraryDir!!).listFiles()?.forEach { itf ->
                             result.nativeLibraries.add(StringUtil.formatFileSize(itf.length()) + "\n" + itf.absolutePath)
                         }
                     }
                 }
 
-                pit.getPackageInfo(packageName, PackageManager.GET_META_DATA).applicationInfo.metaData?.let{
+                pit.getPackageInfo(packageName, PackageManager.GET_META_DATA).applicationInfo?.metaData?.let{
                     val keys = it.keySet()
                     for(key in keys) {
                         result.meta.add(key + "\n" + it[key].toString())

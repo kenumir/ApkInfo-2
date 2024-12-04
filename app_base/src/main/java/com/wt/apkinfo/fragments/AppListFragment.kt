@@ -30,7 +30,18 @@ import com.wt.apkinfo.base.R
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.data.Prefs
 import com.wt.apkinfo.data.models.ApplicationsViewModel
-import com.wt.apkinfo.proto.*
+import com.wt.apkinfo.proto.AppListAdapter
+import com.wt.apkinfo.proto.FilterAppType
+import com.wt.apkinfo.proto.FilterInstaller
+import com.wt.apkinfo.proto.FilterTargetSdk
+import com.wt.apkinfo.proto.FilterType
+import com.wt.apkinfo.proto.IntentHelper
+import com.wt.apkinfo.proto.ListSortOrder
+import com.wt.apkinfo.proto.OnAdapterFilterData
+import com.wt.apkinfo.proto.OnAppListItemClick
+import com.wt.apkinfo.proto.OnFilterItemClick
+import com.wt.apkinfo.proto.Themes
+import com.wt.apkinfo.proto.Utils
 
 
 private const val ARG_PARAM1 = "param1"
@@ -62,11 +73,13 @@ class AppListFragment : Fragment() {
                 FilterType.SORT -> R.string.sort
                 FilterType.TYPE -> R.string.type
                 FilterType.INSTALLER -> R.string.installer
+                FilterType.TARGET_SDK -> R.string.filter_target_sdk
             }
             val itemsRes = when (item) {
                 FilterType.SORT -> intArrayOf(R.string.sort_name, R.string.sort_date, R.string.sort_package)
                 FilterType.TYPE -> intArrayOf(R.string.type_all, R.string.type_user, R.string.type_debug, R.string.type_system)
                 FilterType.INSTALLER -> intArrayOf(R.string.installer_all, R.string.installer_vending, R.string.installer_huawei, R.string.installer_empty)
+                FilterType.TARGET_SDK -> intArrayOf(R.string.filter_target_sdk_all, R.string.filter_target_sdk_35, R.string.filter_target_sdk_34, R.string.filter_target_sdk_33)
             }
             val selPos = activity?.let {
                 when (item) {
@@ -89,6 +102,13 @@ class AppListFragment : Fragment() {
                             FilterInstaller.APP_GALLERY -> 2
                             FilterInstaller.EMPTY -> 3
                         }
+                    FilterType.TARGET_SDK ->
+                        when (Prefs(it).listFilterTargetSdk) {
+                            FilterTargetSdk.ALL -> 0
+                            FilterTargetSdk.API_35 -> 1
+                            FilterTargetSdk.API_34 -> 2
+                            FilterTargetSdk.API_33 -> 3
+                        }
                 }
 
             } ?: 0
@@ -108,7 +128,7 @@ class AppListFragment : Fragment() {
             } ?: ListSortOrder.NAME
         }
         override fun getAppType(): FilterAppType {
-            return activity?.let { a ->
+            return activity?.let {
                 model.filterAppType
                 //Prefs(a).listFilterAppType
             } ?: run {
@@ -116,11 +136,19 @@ class AppListFragment : Fragment() {
             }
         }
         override fun getAppInstaller(): FilterInstaller {
-            return activity?.let { a ->
+            return activity?.let {
                 model.filterInstaller
                 //Prefs(a).listFilterInstaller
             } ?: run {
                 FilterInstaller.ALL
+            }
+        }
+        override fun getTargetSdk(): FilterTargetSdk {
+            return activity?.let {
+                model.filterTargetSdk
+                //Prefs(a).listFilterInstaller
+            } ?: run {
+                FilterTargetSdk.ALL
             }
         }
     })
@@ -374,6 +402,19 @@ class AppListFragment : Fragment() {
                         model.setAppInstaller(installer)
                         activity?.let { a ->
                             Prefs(a).listFilterInstaller = installer
+                        }
+                    }
+                    FilterType.TARGET_SDK.ordinal -> {
+                        val ts = when(result.getInt("result", 0)) {
+                            0 -> FilterTargetSdk.ALL
+                            1 -> FilterTargetSdk.API_35
+                            2 -> FilterTargetSdk.API_34
+                            3 -> FilterTargetSdk.API_33
+                            else -> FilterTargetSdk.ALL
+                        }
+                        model.setTargetSdk(ts)
+                        activity?.let { a ->
+                            Prefs(a).listFilterTargetSdk = ts
                         }
                     }
                 }

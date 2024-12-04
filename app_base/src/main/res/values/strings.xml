@@ -61,4 +61,9 @@
     <string name="app_theme_light">Light</string>
     <string name="app_theme_dark">Dark</string>
     <string name="action_uninstall">Uninstall</string>
+    <string name="filter_target_sdk">Target SDK</string>
+    <string name="filter_target_sdk_all">All</string>
+    <string name="filter_target_sdk_35">35</string>
+    <string name="filter_target_sdk_34">34</string>
+    <string name="filter_target_sdk_33">33</string>
 </resources>
