@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:background="#00000000"
         android:elevation="0dp"
+        android:fitsSystemWindows="true"
         app:elevation="0dp"
         app:liftOnScrollColor="?colorSurface">
 

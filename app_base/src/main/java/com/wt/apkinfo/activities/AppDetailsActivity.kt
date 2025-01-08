@@ -14,9 +14,12 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.customListAdapter
@@ -44,7 +47,17 @@ class AppDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_app_details)
+        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
+            v.setPadding(
+                insets.getInsets(WindowInsetsCompat.Type.statusBars()).left,
+                insets.getInsets(WindowInsetsCompat.Type.statusBars()).top,
+                insets.getInsets(WindowInsetsCompat.Type.navigationBars()).right,
+                insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+            )
+            insets
+        }
 
         findViewById<MaterialCardView>(R.id.actionsCard)?.apply {
             setCardBackgroundColor(SurfaceColors.SURFACE_1.getColor(context))

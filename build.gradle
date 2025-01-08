@@ -32,7 +32,7 @@ task clean(type: Delete) {
 ext.versions = [
     compileSdkVersion: 35,
     minSdkVersion: 21,
-    targetSdkVersion: 34,
+    targetSdkVersion: 35,
     versionName: "2.5.7",
     versionCode: 257,
     appId: 'com.wt.apkinfo',

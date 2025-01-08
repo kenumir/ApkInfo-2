@@ -3,7 +3,9 @@ package com.wt.apkinfo.activities
 import android.os.Bundle
 import android.os.RemoteException
 import android.text.TextUtils
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
 import com.wt.apkinfo.App
@@ -17,7 +19,12 @@ class MainActivity : AppCompatActivity(), InstallReferrerStateListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
+
+            insets
+        }
 
         if (savedInstanceState == null) {
             val ir = (application as App).getUserInfo().installReferrer
