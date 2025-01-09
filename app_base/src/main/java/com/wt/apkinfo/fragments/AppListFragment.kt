@@ -15,6 +15,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
@@ -190,6 +192,16 @@ class AppListFragment : Fragment() {
         recycler?.itemAnimator = DefaultItemAnimator()
         recycler?.setHasFixedSize(true)
         recycler?.adapter = adapter
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.setPadding(bars.left, bars.top, bars.right, 0)
+            recycler?.setPadding(0,0,0, insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom)
+            insets
+        }
 
         val searchQuery = savedInstanceState?.getString(SAVE_SEARCH_QUERY)
         val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar).apply {

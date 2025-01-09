@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity(), InstallReferrerStateListener {
     private var mReferrerClient: InstallReferrerClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
 

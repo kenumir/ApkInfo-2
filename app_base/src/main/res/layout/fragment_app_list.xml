@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/app_list"
+        android:clipToPadding="false"
         app:layout_anchor="@+id/appBar"
         app:layout_anchorGravity="bottom"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
@@ -20,7 +21,7 @@
         android:layout_height="wrap_content"
         android:background="#00000000"
         android:elevation="0dp"
-        android:fitsSystemWindows="true"
+        android:fitsSystemWindows="false"
         app:elevation="0dp"
         app:liftOnScrollColor="?colorSurface">
 
