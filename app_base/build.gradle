@@ -30,7 +30,7 @@ android {
 		jvmTarget = '1.8'
 	}
 
-	flavorDimensions "market"
+	flavorDimensions = ["market"]
 
 	productFlavors {
 		gms {
