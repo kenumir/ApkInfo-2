@@ -23,7 +23,8 @@
         android:elevation="0dp"
         android:fitsSystemWindows="false"
         app:elevation="0dp"
-        app:liftOnScrollColor="?colorSurface">
+        app:liftOnScrollColor="?colorSurface"
+        android:orientation="vertical">
 
         <com.google.android.material.appbar.MaterialToolbar
             style="@style/AppToolbarStyleMain"
@@ -32,6 +33,84 @@
             android:layout_width="match_parent"
             app:title="@string/search_apps"
             app:layout_scrollFlags="scroll|enterAlways" />
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:descendantFocusability="blocksDescendants">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filters_and_sort"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
+
+                    <TextView
+                        style="@style/List_FilterItem"
+                        android:id="@+id/filter_sort"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Sort: Date" />
+
+                    <TextView
+                        style="@style/List_FilterItem"
+                        android:id="@+id/filter_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Type: All"/>
+
+                    <TextView
+                        style="@style/List_FilterItem"
+                        android:id="@+id/filter_installer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Installer: All"/>
+
+                    <TextView
+                        style="@style/List_FilterItem"
+                        android:id="@+id/filter_target_sdk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Target SDK: All"/>
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/applications"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"/>
+
+        </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 

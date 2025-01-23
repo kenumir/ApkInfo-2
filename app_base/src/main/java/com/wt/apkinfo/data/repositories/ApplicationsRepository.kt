@@ -109,10 +109,8 @@ class ApplicationsRepository(ctx: Context) {
                         }
                     } else {
                         pkg?.getInstallerPackageName(pkgName)?.let {
-                            if (it.isEmpty()) {
+                            it.ifEmpty {
                                 null
-                            } else {
-                                it
                             }
                         } ?: run {
                             null
