@@ -25,7 +25,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.customListAdapter
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.elevation.SurfaceColors
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.wt.apkinfo.app.AppBuildType
 import com.wt.apkinfo.base.BuildConfig
 import com.wt.apkinfo.base.R
@@ -37,7 +36,6 @@ import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.proto.DateTime
 import com.wt.apkinfo.proto.PropertiesDialogAdapter
 import com.wt.apkinfo.proto.Utils
-import com.wt.userinfo.UserInfo
 import java.util.concurrent.Executors
 
 
@@ -548,13 +546,7 @@ class AppDetailsActivity : AppCompatActivity() {
 
     private fun logDetailsOpenCounter(pkg: String) {
         try {
-            val fa = FirebaseAnalytics.getInstance(applicationContext)
             val value = Prefs(applicationContext).appDetailsOpenCounter
-            fa.setUserId(UserInfo.setup(applicationContext, BuildConfig.APP_VERSION_NAME, null).id)
-            fa.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, Bundle().apply {
-                putInt(FirebaseAnalytics.Param.VALUE, value)
-                putString(FirebaseAnalytics.Param.ITEM_NAME, pkg)
-            })
             if (BuildConfig.DEBUG) {
                 Log.i("AppDetailsActivity", "logDetailsOpenCounter: pkg=$pkg, counter=$value")
             }

@@ -5,16 +5,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.wt.apkinfo.App
 import com.wt.apkinfo.base.BuildConfig
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.data.Prefs
 import com.wt.apkinfo.data.repositories.ApplicationsRepository
-import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.proto.FilterAppType
 import com.wt.apkinfo.proto.FilterInstaller
 import com.wt.apkinfo.proto.FilterTargetSdk
@@ -51,10 +48,10 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
             Prefs(getApplication()).listFilterTargetSdk = v
         }
 
-    public var filterAppType: FilterAppType? = null
-    public var listSortOrder: ListSortOrder? = null
-    public var filterInstaller: FilterInstaller? = null
-    public var filterTargetSdk: FilterTargetSdk? = null
+    var filterAppType: FilterAppType? = null
+    var listSortOrder: ListSortOrder? = null
+    var filterInstaller: FilterInstaller? = null
+    var filterTargetSdk: FilterTargetSdk? = null
 
     init {
         exec.execute {
@@ -99,20 +96,6 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
         exec.execute {
             assignValues()
             data.postValue(appRepository.getAppList(query, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
-        }
-
-        try {
-            query?.let {
-                if (it.isNotEmpty()) {
-                    FirebaseAnalytics
-                        .getInstance(getApplication())
-                        .logEvent(FirebaseAnalytics.Event.SEARCH, Bundle().apply {
-                            putString(FirebaseAnalytics.Param.SEARCH_TERM, it)
-                        })
-                }
-            }
-        } catch (e: Exception) {
-            ERA.logException(e)
         }
     }
 
