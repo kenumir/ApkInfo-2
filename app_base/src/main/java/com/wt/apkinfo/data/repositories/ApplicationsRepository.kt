@@ -96,14 +96,13 @@ class ApplicationsRepository(ctx: Context) {
                 val isDebuggable = info != null && info.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
                 val targetSdkRes = info?.targetSdkVersion ?: 0
 
-
                 val installerPkg = try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         pkg?.getInstallSourceInfo(pkgName)?.let {
                             if (it.installingPackageName.isNullOrEmpty()) {
                                 null
                             } else {
-                                it
+                                it.installingPackageName
                             }
                         } ?: run {
                             null
