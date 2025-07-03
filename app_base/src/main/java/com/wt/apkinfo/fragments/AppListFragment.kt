@@ -89,7 +89,7 @@ class AppListFragment : Fragment() {
                 FilterType.SORT -> intArrayOf(R.string.sort_name, R.string.sort_date, R.string.sort_package)
                 FilterType.TYPE -> intArrayOf(R.string.type_all, R.string.type_user, R.string.type_debug, R.string.type_system)
                 FilterType.INSTALLER -> intArrayOf(R.string.installer_all, R.string.installer_vending, R.string.installer_huawei, R.string.installer_empty)
-                FilterType.TARGET_SDK -> intArrayOf(R.string.filter_target_sdk_all, R.string.filter_target_sdk_35, R.string.filter_target_sdk_34, R.string.filter_target_sdk_33)
+                FilterType.TARGET_SDK -> intArrayOf(R.string.filter_target_sdk_all, R.string.filter_target_sdk_36, R.string.filter_target_sdk_35, R.string.filter_target_sdk_34, R.string.filter_target_sdk_33)
             }
             val selPos = activity?.let {
                 when (item) {
@@ -115,9 +115,10 @@ class AppListFragment : Fragment() {
                     FilterType.TARGET_SDK ->
                         when (Prefs(it).listFilterTargetSdk) {
                             FilterTargetSdk.ALL -> 0
-                            FilterTargetSdk.API_35 -> 1
-                            FilterTargetSdk.API_34 -> 2
-                            FilterTargetSdk.API_33 -> 3
+                            FilterTargetSdk.API_36 -> 1
+                            FilterTargetSdk.API_35 -> 2
+                            FilterTargetSdk.API_34 -> 3
+                            FilterTargetSdk.API_33 -> 4
                         }
                 }
 
@@ -361,9 +362,10 @@ class AppListFragment : Fragment() {
                     FilterType.TARGET_SDK.ordinal -> {
                         val ts = when(result.getInt("result", 0)) {
                             0 -> FilterTargetSdk.ALL
-                            1 -> FilterTargetSdk.API_35
-                            2 -> FilterTargetSdk.API_34
-                            3 -> FilterTargetSdk.API_33
+                            1 -> FilterTargetSdk.API_36
+                            2 -> FilterTargetSdk.API_35
+                            3 -> FilterTargetSdk.API_34
+                            4 -> FilterTargetSdk.API_33
                             else -> FilterTargetSdk.ALL
                         }
                         model.setTargetSdk(ts)
@@ -429,6 +431,7 @@ class AppListFragment : Fragment() {
                     resources.getString(R.string.filter_target_sdk),
                     when (Prefs(view.context).listFilterTargetSdk) {
                         FilterTargetSdk.ALL -> resources.getString(R.string.filter_target_sdk_all)
+                        FilterTargetSdk.API_36 -> resources.getString(R.string.filter_target_sdk_36)
                         FilterTargetSdk.API_35 -> resources.getString(R.string.filter_target_sdk_35)
                         FilterTargetSdk.API_34 -> resources.getString(R.string.filter_target_sdk_34)
                         FilterTargetSdk.API_33 -> resources.getString(R.string.filter_target_sdk_33)

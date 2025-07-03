@@ -2,6 +2,7 @@ package com.wt.apkinfo.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.wt.apkinfo.proto.FilterAppType
 import com.wt.apkinfo.proto.FilterInstaller
 import com.wt.apkinfo.proto.FilterTargetSdk
@@ -19,13 +20,13 @@ class Prefs(private val ctx: Context) {
         set(value) {
             when (value) {
                 ListSortOrder.DATE -> {
-                    pref.edit().putInt("sort_order", 1).apply()
+                    pref.edit { putInt("sort_order", 1) }
                 }
                 ListSortOrder.PACKAGE -> {
-                    pref.edit().putInt("sort_order", 2).apply()
+                    pref.edit { putInt("sort_order", 2) }
                 }
                 else -> {
-                    pref.edit().putInt("sort_order", 0).apply()
+                    pref.edit { putInt("sort_order", 0) }
                 }
             }
         }
@@ -35,7 +36,7 @@ class Prefs(private val ctx: Context) {
             FilterAppType.ALL.name
         )
         set(v) {
-            pref.edit().putString("filter_app_type", v.name).apply()
+            pref.edit { putString("filter_app_type", v.name) }
         }
     var listFilterInstaller: FilterInstaller
         get() = FilterInstaller.valueOf(
@@ -43,7 +44,7 @@ class Prefs(private val ctx: Context) {
             FilterInstaller.ALL.name
         )
         set(v) {
-            pref.edit().putString("filter_installer", v.name).apply()
+            pref.edit { putString("filter_installer", v.name) }
         }
     var listFilterTargetSdk: FilterTargetSdk
         get() = FilterTargetSdk.valueOf(
@@ -51,17 +52,17 @@ class Prefs(private val ctx: Context) {
             FilterTargetSdk.ALL.name
         )
         set(v) {
-            pref.edit().putString("filter_target_sdk", v.name).apply()
+            pref.edit { putString("filter_target_sdk", v.name) }
         }
 
     var appDetailsOpenCounter: Int
         get() {
             val r = pref.getInt("app_details_open_counter", 1)
-            pref.edit().putInt("app_details_open_counter", r + 1).apply()
+            pref.edit { putInt("app_details_open_counter", r + 1) }
             return r
         }
         set(v) {
-            pref.edit().putInt("app_details_open_counter", v).apply()
+            pref.edit { putInt("app_details_open_counter", v) }
         }
 
     var appTheme: Int
@@ -69,6 +70,6 @@ class Prefs(private val ctx: Context) {
             return pref.getInt("app_theme", 0)
         }
         set(v) {
-            pref.edit().putInt("app_theme", v).apply()
+            pref.edit { putInt("app_theme", v) }
         }
 }

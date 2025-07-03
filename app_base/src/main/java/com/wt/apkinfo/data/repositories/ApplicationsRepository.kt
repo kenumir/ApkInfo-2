@@ -193,6 +193,11 @@ class ApplicationsRepository(ctx: Context) {
                             appName = ""
                         }
                     }
+                    FilterTargetSdk.API_36 -> {
+                        if (targetSdkRes != 36) {
+                            appName = ""
+                        }
+                    }
                 }
 
                 if (installer != FilterInstaller.ALL) {
