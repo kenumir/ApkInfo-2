@@ -32,6 +32,10 @@ android {
         }
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     buildTypes {
         debug {
             signingConfig signingConfigs.debugKeystore
@@ -109,6 +113,11 @@ android {
 dependencies {
     implementation project(':module_user_info')
     implementation project(':app_base')
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 if (getGradle().getStartParameter().getTaskRequests().toString().contains("Hms")) {

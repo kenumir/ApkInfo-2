@@ -1,17 +1,17 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '2.1.20'
+    ext.kotlin_version = '2.2.20'
     repositories {
         google()
         jcenter()
         maven { url 'https://developer.huawei.com/repo/' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.11.0'
+        classpath 'com.android.tools.build:gradle:8.13.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.4.3'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.4'
+        classpath 'com.google.gms:google-services:4.4.4'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.6'
         classpath 'com.huawei.agconnect:agcp:1.7.2.300'
         classpath "com.bugsnag:bugsnag-android-gradle-plugin:8.2.0" // https://github.com/bugsnag/bugsnag-android-gradle-plugin
     }
@@ -30,15 +30,15 @@ task clean(type: Delete) {
 }
 
 ext.versions = [
-    compileSdkVersion: 35,
-    minSdkVersion: 21,
-    targetSdkVersion: 35,
-    versionName: "2.6.0",
-    versionCode: 260,
+    compileSdkVersion: 36,
+    minSdkVersion: 23,
+    targetSdkVersion: 36,
+    versionName: "2.6.1",
+    versionCode: 261,
     appId: 'com.wt.apkinfo',
     libs: [
         androidx: [
-            appcompat: '1.7.0'
+            appcompat: '1.7.1'
         ]
     ]
 ]

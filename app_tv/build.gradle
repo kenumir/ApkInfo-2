@@ -26,6 +26,10 @@ android {
 		}
 	}
 
+	buildFeatures {
+		buildConfig = true
+	}
+
 	buildTypes {
 		debug {
 			signingConfig signingConfigs.debugKeystore
@@ -91,5 +95,5 @@ android {
 
 dependencies {
 	implementation project(':app_base')
-	implementation 'androidx.leanback:leanback:1.0.0'
+	implementation 'androidx.leanback:leanback:1.2.0'
 }
