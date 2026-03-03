@@ -9,7 +9,6 @@ android {
 
 	defaultConfig {
 		minSdkVersion versions.minSdkVersion
-		targetSdkVersion versions.targetSdkVersion
 		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 		consumerProguardFiles "consumer-rules.pro"
 
@@ -50,6 +49,12 @@ android {
 			buildConfigField "String", "APP_VERSION_NAME", "\"" + versions.versionName + "\""
 		}
 	}
+	lint {
+		targetSdk 36
+	}
+	testOptions {
+		targetSdk 36
+	}
 }
 
 dependencies {
@@ -78,7 +83,7 @@ dependencies {
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 	implementation 'com.afollestad.material-dialogs:core:3.3.0'
 
-	implementation("com.bugsnag:bugsnag-android:6.19.0") { // https://github.com/bugsnag/bugsnag-android
+	implementation("com.bugsnag:bugsnag-android:6.24.0") { // https://github.com/bugsnag/bugsnag-android
 		exclude group: "com.bugsnag", module: "bugsnag-plugin-android-anr"
 		exclude group: "com.bugsnag", module: "bugsnag-plugin-android-ndk"
 	}
