@@ -46,12 +46,8 @@ android {
             proguardFiles  getDefaultProguardFile('proguard-android-optimize.txt'),
                 'proguard-rules.pro',
                 'proguard/proguard-rules.pro',
-                'proguard/otto.pro',
-                'proguard/retrofit.pro',
                 'proguard/okio.pro',
                 'proguard/crashlytics.pro',
-                'proguard/support_design.pro',
-                'proguard/support_v7.pro',
                 'proguard/picasso.pro',
                 'proguard/android.pro'
         }
@@ -113,11 +109,6 @@ android {
 dependencies {
     implementation project(':module_user_info')
     implementation project(':app_base')
-}
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
 }
 
 if (getGradle().getStartParameter().getTaskRequests().toString().contains("Hms")) {

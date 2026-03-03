@@ -20,6 +20,7 @@
         android:theme="@style/AppTheme"
         android:localeConfig="@xml/locales_config"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:networkSecurityConfig="@xml/network_security_config"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
 
         <meta-data
@@ -35,10 +36,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.MainActivity" android:exported="false" />
         <activity
             android:name=".activities.AppDetailsActivity"
-            android:label="@string/app_details" />
+            android:label="@string/app_details"
+            android:exported="false" />
 
     </application>
 

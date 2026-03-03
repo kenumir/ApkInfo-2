@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.wt.apkinfo.base.BuildConfig
 import com.wt.apkinfo.data.repositories.ApplicationsRepository
 import java.io.BufferedInputStream
@@ -12,15 +13,15 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.nio.charset.Charset
-import java.util.concurrent.Executors
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ArchiveViewModel(application: Application) : AndroidViewModel(application) {
 
     private val data = MutableLiveData<File>()
     private val progress = MutableLiveData(false)
-    private val exec = Executors.newCachedThreadPool()
     private val app = application
     private val appRepository: ApplicationsRepository = ApplicationsRepository(application)
     private var dataResult: String? = null
@@ -31,7 +32,7 @@ class ArchiveViewModel(application: Application) : AndroidViewModel(application)
 
     fun startMakeArchive(pkg: String, versionName: String?, version: Int) {
         progress.postValue(true)
-        exec.execute {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val versionNameFixed = versionName
                     ?.replace("[^\\p{ASCII}]", "")

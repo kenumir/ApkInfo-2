@@ -7,6 +7,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.wt.apkinfo.App
 import com.wt.apkinfo.base.BuildConfig
 import com.wt.apkinfo.data.ApplicationEntryInfo
@@ -16,13 +18,12 @@ import com.wt.apkinfo.proto.FilterAppType
 import com.wt.apkinfo.proto.FilterInstaller
 import com.wt.apkinfo.proto.FilterTargetSdk
 import com.wt.apkinfo.proto.ListSortOrder
-import java.util.concurrent.Executors
-import androidx.lifecycle.MutableLiveData as MutableLiveData1
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ApplicationsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val data = MutableLiveData1<List<ApplicationEntryInfo?>>()
-    private val exec = Executors.newCachedThreadPool()
+    private val data = MutableLiveData<List<ApplicationEntryInfo?>>()
     private val appRepository: ApplicationsRepository = ApplicationsRepository(application)
 
     private var packageReceiver: BroadcastReceiver? = null
@@ -54,7 +55,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
     var filterTargetSdk: FilterTargetSdk? = null
 
     init {
-        exec.execute {
+        viewModelScope.launch(Dispatchers.IO) {
             assignValues()
             data.postValue(appRepository.getAppList(null, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
         }
@@ -70,7 +71,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
                 if (BuildConfig.DEBUG) {
                     Log.i("tests", "ACTION_PACKAGE_: " + p1?.action)
                 }
-                exec.execute {
+                viewModelScope.launch(Dispatchers.IO) {
                     assignValues()
                     data.postValue(appRepository.getAppList(lastSearchQuery, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
                 }
@@ -86,14 +87,14 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
         filterTargetSdk = targetSdkParam
     }
 
-    fun getData() : MutableLiveData1<List<ApplicationEntryInfo?>> {
+    fun getData() : MutableLiveData<List<ApplicationEntryInfo?>> {
         return data
     }
 
     fun search(query: String?) {
         lastSearchQuery = query
         data.value = ArrayList(listOf(null))
-        exec.execute {
+        viewModelScope.launch(Dispatchers.IO) {
             assignValues()
             data.postValue(appRepository.getAppList(query, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
         }
@@ -102,7 +103,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
     fun setAppType(t: FilterAppType) {
         appTypeParam = t
         data.value = ArrayList(listOf(null))
-        exec.execute {
+        viewModelScope.launch(Dispatchers.IO) {
             assignValues()
             data.postValue(appRepository.getAppList(lastSearchQuery, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
         }
@@ -111,7 +112,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
     fun setAppInstaller(t: FilterInstaller) {
         installerParam = t
         data.value = ArrayList(listOf(null))
-        exec.execute {
+        viewModelScope.launch(Dispatchers.IO) {
             assignValues()
             data.postValue(appRepository.getAppList(lastSearchQuery, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
         }
@@ -120,7 +121,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
     fun setTargetSdk(t: FilterTargetSdk) {
         targetSdkParam = t
         data.value = ArrayList(listOf(null))
-        exec.execute {
+        viewModelScope.launch(Dispatchers.IO) {
             assignValues()
             data.postValue(appRepository.getAppList(lastSearchQuery, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
         }
@@ -129,7 +130,7 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
     fun showSortOrder(b: ListSortOrder) {
         sortOrderParam = b
         data.value = ArrayList(listOf(null))
-        exec.execute {
+        viewModelScope.launch(Dispatchers.IO) {
             assignValues()
             data.postValue(appRepository.getAppList(lastSearchQuery, appTypeParam, sortOrderParam, installerParam, targetSdkParam))
         }

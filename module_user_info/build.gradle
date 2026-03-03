@@ -5,6 +5,7 @@ android {
 
     defaultConfig {
         minSdkVersion versions.minSdkVersion
+        buildConfigField "String", "API_SECRET", "\"${project.findProperty('API_SECRET') ?: ''}\""
     }
 
     buildTypes {
@@ -36,8 +37,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "androidx.appcompat:appcompat:${versions.libs.androidx.appcompat}"
-    implementation 'com.squareup.okhttp3:okhttp:3.12.13'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'com.google.code.gson:gson:2.13.2'
     implementation 'androidx.work:work-runtime:2.11.1'
-    //implementation 'com.google.android.gms:play-services-base:17.6.0'
 }

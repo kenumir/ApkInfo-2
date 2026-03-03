@@ -21,9 +21,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.list.customListAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.SurfaceColors
 import com.wt.apkinfo.app.AppBuildType
 import com.wt.apkinfo.base.BuildConfig
@@ -36,12 +37,9 @@ import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.proto.DateTime
 import com.wt.apkinfo.proto.PropertiesDialogAdapter
 import com.wt.apkinfo.proto.Utils
-import java.util.concurrent.Executors
 
 
 class AppDetailsActivity : AppCompatActivity() {
-
-    private val exec = Executors.newCachedThreadPool()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -221,10 +219,13 @@ class AppDetailsActivity : AppCompatActivity() {
                         View.GONE
                     }
                     setOnClickListener { _ ->
-                        MaterialDialog(context).show {
-                            title(0, title)
-                            customListAdapter(PropertiesDialogAdapter(it))
-                        }
+                        MaterialAlertDialogBuilder(context)
+                            .setTitle(title)
+                            .setView(RecyclerView(context).apply {
+                                layoutManager = LinearLayoutManager(context)
+                                adapter = PropertiesDialogAdapter(it)
+                            })
+                            .show()
                     }
                     if (Utils.isTV(this.context)) {
                         visibility = View.GONE
@@ -242,10 +243,13 @@ class AppDetailsActivity : AppCompatActivity() {
                         View.GONE
                     }
                     setOnClickListener { _ ->
-                        MaterialDialog(context).show {
-                            title(0, title)
-                            customListAdapter(PropertiesDialogAdapter(it))
-                        }
+                        MaterialAlertDialogBuilder(context)
+                            .setTitle(title)
+                            .setView(RecyclerView(context).apply {
+                                layoutManager = LinearLayoutManager(context)
+                                adapter = PropertiesDialogAdapter(it)
+                            })
+                            .show()
                     }
                     if (Utils.isTV(this.context)) {
                         visibility = View.GONE
@@ -262,10 +266,13 @@ class AppDetailsActivity : AppCompatActivity() {
                         View.GONE
                     }
                     setOnClickListener { _ ->
-                        MaterialDialog(context).show {
-                            title(0, title)
-                            customListAdapter(PropertiesDialogAdapter(it))
-                        }
+                        MaterialAlertDialogBuilder(context)
+                            .setTitle(title)
+                            .setView(RecyclerView(context).apply {
+                                layoutManager = LinearLayoutManager(context)
+                                adapter = PropertiesDialogAdapter(it)
+                            })
+                            .show()
                     }
 
                 }
@@ -280,10 +287,13 @@ class AppDetailsActivity : AppCompatActivity() {
                         View.GONE
                     }
                     setOnClickListener { _ ->
-                        MaterialDialog(context).show {
-                            title(0, title)
-                            customListAdapter(PropertiesDialogAdapter(it))
-                        }
+                        MaterialAlertDialogBuilder(context)
+                            .setTitle(title)
+                            .setView(RecyclerView(context).apply {
+                                layoutManager = LinearLayoutManager(context)
+                                adapter = PropertiesDialogAdapter(it)
+                            })
+                            .show()
                     }
                 }
             }
@@ -297,10 +307,13 @@ class AppDetailsActivity : AppCompatActivity() {
                         View.GONE
                     }
                     setOnClickListener { _ ->
-                        MaterialDialog(context).show {
-                            title(0, title)
-                            customListAdapter(PropertiesDialogAdapter(it))
-                        }
+                        MaterialAlertDialogBuilder(context)
+                            .setTitle(title)
+                            .setView(RecyclerView(context).apply {
+                                layoutManager = LinearLayoutManager(context)
+                                adapter = PropertiesDialogAdapter(it)
+                            })
+                            .show()
                     }
                 }
             }
@@ -314,10 +327,13 @@ class AppDetailsActivity : AppCompatActivity() {
                         View.GONE
                     }
                     setOnClickListener { _ ->
-                        MaterialDialog(context).show {
-                            title(0, title)
-                            customListAdapter(PropertiesDialogAdapter(it))
-                        }
+                        MaterialAlertDialogBuilder(context)
+                            .setTitle(title)
+                            .setView(RecyclerView(context).apply {
+                                layoutManager = LinearLayoutManager(context)
+                                adapter = PropertiesDialogAdapter(it)
+                            })
+                            .show()
                     }
                 }
             }
@@ -332,10 +348,13 @@ class AppDetailsActivity : AppCompatActivity() {
                         View.GONE
                     }
                     setOnClickListener { _ ->
-                        MaterialDialog(context).show {
-                            title(0, title)
-                            customListAdapter(PropertiesDialogAdapter(it))
-                        }
+                        MaterialAlertDialogBuilder(context)
+                            .setTitle(title)
+                            .setView(RecyclerView(context).apply {
+                                layoutManager = LinearLayoutManager(context)
+                                adapter = PropertiesDialogAdapter(it)
+                            })
+                            .show()
                     }
                 }
             }
@@ -350,10 +369,13 @@ class AppDetailsActivity : AppCompatActivity() {
                         View.GONE
                     }
                     setOnClickListener { _ ->
-                        MaterialDialog(context).show {
-                            title(0, title)
-                            customListAdapter(PropertiesDialogAdapter(it))
-                        }
+                        MaterialAlertDialogBuilder(context)
+                            .setTitle(title)
+                            .setView(RecyclerView(context).apply {
+                                layoutManager = LinearLayoutManager(context)
+                                adapter = PropertiesDialogAdapter(it)
+                            })
+                            .show()
                     }
                 }
             }
@@ -368,10 +390,13 @@ class AppDetailsActivity : AppCompatActivity() {
                         View.GONE
                     }
                     setOnClickListener { _ ->
-                        MaterialDialog(context).show {
-                            title(0, title)
-                            customListAdapter(PropertiesDialogAdapter(it))
-                        }
+                        MaterialAlertDialogBuilder(context)
+                            .setTitle(title)
+                            .setView(RecyclerView(context).apply {
+                                layoutManager = LinearLayoutManager(context)
+                                adapter = PropertiesDialogAdapter(it)
+                            })
+                            .show()
                     }
                 }
             }
@@ -381,10 +406,13 @@ class AppDetailsActivity : AppCompatActivity() {
                 props.add(resources.getString(R.string.details_property_large_heap) + "\n" + data.isLargeHeap.toString())
                 props.add(resources.getString(R.string.details_property_hw_accelerated) + "\n" + data.isHwAccelerated.toString())
                 props.add(resources.getString(R.string.details_property_rtl_supported) + "\n" + data.isSupportRtl.toString())
-                MaterialDialog(this).show {
-                    title(R.string.details_other_properties)
-                    customListAdapter(PropertiesDialogAdapter(props))
-                }
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.details_other_properties)
+                    .setView(RecyclerView(this).apply {
+                        layoutManager = LinearLayoutManager(this@AppDetailsActivity)
+                        adapter = PropertiesDialogAdapter(props)
+                    })
+                    .show()
             }
             findViewById<View>(R.id.loader).apply {
                 val loader = this

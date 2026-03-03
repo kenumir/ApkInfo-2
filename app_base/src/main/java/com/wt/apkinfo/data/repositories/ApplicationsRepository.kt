@@ -280,8 +280,7 @@ class ApplicationsRepository(ctx: Context) {
         //return results.sortedWith(compareBy { it2 -> it2.name })
     }
 
-    @Suppress("DEPRECATION")
-    @SuppressLint("PackageManagerGetSignatures")
+    @SuppressLint("DefaultLocale")
     fun getApplicationDetailsInfo(packageName: String): ApplicationDetailsInfo {
         val result = ApplicationDetailsInfo()
         pkg?.let { pit ->
@@ -320,10 +319,20 @@ class ApplicationsRepository(ctx: Context) {
                 result.sdkTarget = pi.applicationInfo?.targetSdkVersion ?: 0
                 result.pkg = packageName
 
-                pit.getInstallerPackageName(packageName)?.let {
-                    result.installerPackage = if (it.isEmpty()) { res.getString(R.string.not_set) } else { it }
-                } ?: run {
-                    result.installerPackage = res.getString(R.string.not_set)
+                val installerPkg = try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        pit.getInstallSourceInfo(packageName).installingPackageName
+                    } else {
+                        @Suppress("DEPRECATION")
+                        pit.getInstallerPackageName(packageName)
+                    }
+                } catch (e: Exception) {
+                    null
+                }
+                result.installerPackage = if (installerPkg.isNullOrEmpty()) {
+                    res.getString(R.string.not_set)
+                } else {
+                    installerPkg
                 }
 
                 result.versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -334,10 +343,24 @@ class ApplicationsRepository(ctx: Context) {
                 result.versionName = pi.versionName
 
 
-                val pInfo = pit.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
-                pInfo?.let {
+                val sigBytes = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val pInfo = pit.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
+                    pInfo?.signingInfo?.let { si ->
+                        if (si.hasMultipleSigners()) {
+                            si.apkContentsSigners?.firstOrNull()?.toByteArray()
+                        } else {
+                            si.signingCertificateHistory?.firstOrNull()?.toByteArray()
+                        }
+                    }
+                } else {
+                    @Suppress("DEPRECATION")
+                    val pInfo = pit.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+                    @Suppress("DEPRECATION")
+                    pInfo?.signatures?.firstOrNull()?.toByteArray()
+                }
+                sigBytes?.let {
                     val md = MessageDigest.getInstance("SHA")
-                    md.update(it.signatures!![0].toByteArray())
+                    md.update(it)
                     val s = StringBuilder()
                     for (b in md.digest()) {
                         s.append(":").append(String.format("%02x", b))
@@ -376,7 +399,7 @@ class ApplicationsRepository(ctx: Context) {
 
                 pit.getPackageInfo(packageName, PackageManager.GET_SERVICES).services?.let{
                     for(ai in it) {
-                        result.activities.add(ai.name + "\n" + ai.loadLabel(pit).toString())
+                        result.services.add(ai.name + "\n" + ai.loadLabel(pit).toString())
                     }
                 }
 
@@ -424,7 +447,7 @@ class ApplicationsRepository(ctx: Context) {
                 }
 
             } catch (e: java.lang.Exception) {
-                e.printStackTrace()
+                ERA.logException(e)
             }
         }
         return result

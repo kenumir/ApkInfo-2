@@ -24,7 +24,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wt.apkinfo.activities.AppDetailsActivity
@@ -293,17 +292,17 @@ class AppListFragment : Fragment() {
         toolbar.menu.add(R.string.about)
             .setOnMenuItemClickListener {
                 context?.let {
-                    MaterialDialog(it).show {
-                        title(R.string.about_app)
-                        message(text = resources.getString(
+                    MaterialAlertDialogBuilder(it)
+                        .setTitle(R.string.about_app)
+                        .setMessage(resources.getString(
                             R.string.about_desc,
                             BuildConfig.APP_VERSION_NAME
                         ))
-                        positiveButton(R.string.label_ok)
-                        negativeButton(R.string.about_open) {
-                            IntentHelper.openInBrowser(context, "https://twitter.com/kenumir")
+                        .setPositiveButton(R.string.label_ok, null)
+                        .setNegativeButton(R.string.about_open) { _, _ ->
+                            IntentHelper.openInBrowser(it, "https://twitter.com/kenumir")
                         }
-                    }
+                        .show()
                 }
 
                 true
