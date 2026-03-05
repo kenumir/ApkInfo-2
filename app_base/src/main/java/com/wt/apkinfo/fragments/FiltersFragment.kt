@@ -13,7 +13,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.wt.apkinfo.base.R
 import com.wt.apkinfo.base.databinding.FragmentFiltersBinding
 import com.wt.apkinfo.proto.FilterType
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FiltersFragment : BottomSheetDialogFragment() {
@@ -37,7 +36,6 @@ class FiltersFragment : BottomSheetDialogFragment() {
                     setFragmentResult("filter", bundleOf("result" to view.id, "filter_type" to filterType))
                     // Używamy lifecycleScope zamiast view.post dla bezpieczeństwa
                     lifecycleScope.launch {
-                        delay(100) // krótka pauza na efekt kliknięcia
                         if (isAdded) dismissAllowingStateLoss()
                     }
                 }
