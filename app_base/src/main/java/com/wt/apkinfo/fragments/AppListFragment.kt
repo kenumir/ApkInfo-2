@@ -1,6 +1,5 @@
 package com.wt.apkinfo.fragments
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
@@ -12,10 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -24,11 +20,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wt.apkinfo.activities.AppDetailsActivity
 import com.wt.apkinfo.base.BuildConfig
 import com.wt.apkinfo.base.R
+import com.wt.apkinfo.base.databinding.FragmentAppListBinding
+import com.wt.apkinfo.base.databinding.LayoutSearchBinding
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.data.Prefs
 import com.wt.apkinfo.data.models.ApplicationsViewModel
@@ -44,38 +41,31 @@ import com.wt.apkinfo.proto.OnFilterItemClick
 import com.wt.apkinfo.proto.Themes
 import com.wt.apkinfo.proto.Utils
 
-
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private const val SAVE_SEARCH_QUERY = "search_query"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [AppListFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AppListFragment : Fragment() {
 
     private var param1: String? = null
     private var param2: String? = null
 
-    private var recycler: RecyclerView? = null
-    private var filterSort: TextView? = null
-    private var filterType: TextView? = null
-    private var filterInstaller: TextView? = null
-    private var filterTargetSdk: TextView? = null
+    private var _binding: FragmentAppListBinding? = null
+    private val binding get() = _binding!!
+
+    private var searchBinding: LayoutSearchBinding? = null
+
     private var adapter: AppListAdapter = AppListAdapter(object : OnAppListItemClick {
         override fun onItemClick(item: ApplicationEntryInfo?) {
-            if (item?.pkg == null) {
-                // skip action
-            } else {
+            if (item?.pkg != null) {
                 activity?.let { AppDetailsActivity.show(it, item) }
             }
         }
     })
-    private var searchEdit: AppCompatAutoCompleteTextView? = null
+
     private lateinit var model: ApplicationsViewModel
     private var searchMenu: MenuItem? = null
+
     private val onFilterItemClick = object: OnFilterItemClick {
         override fun onItemClick(item: FilterType) {
             val titleRes = when (item) {
@@ -97,37 +87,28 @@ class AppListFragment : Fragment() {
                         ListSortOrder.PACKAGE -> 2
                         else -> 0
                     }
-                    FilterType.TYPE -> //if (Prefs(it).allApps == 1) 0 else 1
-                        when (Prefs(it).listFilterAppType) {
-                            FilterAppType.ALL -> 0
-                            FilterAppType.USER -> 1
-                            FilterAppType.DEBUG -> 2
-                            FilterAppType.SYSTEM -> 3
-                        }
-                    FilterType.INSTALLER ->
-                        when (Prefs(it).listFilterInstaller) {
-                            FilterInstaller.ALL -> 0
-                            FilterInstaller.PLAY_STORE -> 1
-                            FilterInstaller.APP_GALLERY -> 2
-                            FilterInstaller.EMPTY -> 3
-                        }
-                    FilterType.TARGET_SDK ->
-                        when (Prefs(it).listFilterTargetSdk) {
-                            FilterTargetSdk.ALL -> 0
-                            FilterTargetSdk.API_36 -> 1
-                            FilterTargetSdk.API_35 -> 2
-                            FilterTargetSdk.API_34 -> 3
-                            FilterTargetSdk.API_33 -> 4
-                        }
+                    FilterType.TYPE -> when (Prefs(it).listFilterAppType) {
+                        FilterAppType.ALL -> 0
+                        FilterAppType.USER -> 1
+                        FilterAppType.DEBUG -> 2
+                        FilterAppType.SYSTEM -> 3
+                    }
+                    FilterType.INSTALLER -> when (Prefs(it).listFilterInstaller) {
+                        FilterInstaller.ALL -> 0
+                        FilterInstaller.PLAY_STORE -> 1
+                        FilterInstaller.APP_GALLERY -> 2
+                        FilterInstaller.EMPTY -> 3
+                    }
+                    FilterType.TARGET_SDK -> when (Prefs(it).listFilterTargetSdk) {
+                        FilterTargetSdk.ALL -> 0
+                        FilterTargetSdk.API_36 -> 1
+                        FilterTargetSdk.API_35 -> 2
+                        FilterTargetSdk.API_34 -> 3
+                        FilterTargetSdk.API_33 -> 4
+                    }
                 }
-
             } ?: 0
-            val modalBottomSheet = FiltersFragment.create(
-                titleRes,
-                itemsRes,
-                selPos,
-                item
-            )
+            val modalBottomSheet = FiltersFragment.create(titleRes, itemsRes, selPos, item)
             modalBottomSheet.show(parentFragmentManager, FiltersFragment.TAG)
         }
     }
@@ -140,18 +121,18 @@ class AppListFragment : Fragment() {
         }
 
         model = ViewModelProvider(this).get(ApplicationsViewModel::class.java)
-        model.getData()
-            .observe(this) { results ->
-                adapter.swapData(results)
-            }
+        model.getData().observe(this) { results ->
+            adapter.swapData(results)
+        }
     }
 
     @SuppressLint("CheckResult")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_app_list, container, false)
+    ): View {
+        _binding = FragmentAppListBinding.inflate(inflater, container, false)
+        
         val layManager = LinearLayoutManager(activity)
         adapter.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver(){
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -161,292 +142,227 @@ class AppListFragment : Fragment() {
                 }
             }
         })
-        recycler = view.findViewById(R.id.recycler)
-        recycler?.layoutManager = layManager
-        recycler?.itemAnimator = DefaultItemAnimator()
-        recycler?.setHasFixedSize(true)
-        recycler?.adapter = adapter
+        
+        binding.recycler.apply {
+            layoutManager = layManager
+            itemAnimator = DefaultItemAnimator()
+            setHasFixedSize(true)
+            adapter = this@AppListFragment.adapter
+        }
 
-        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val bars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
                         or WindowInsetsCompat.Type.displayCutout()
             )
             v.setPadding(bars.left, bars.top, bars.right, 0)
-            recycler?.setPadding(0,0,0, insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom)
+            binding.recycler.setPadding(0, 0, 0, insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom)
             insets
         }
 
         val searchQuery = savedInstanceState?.getString(SAVE_SEARCH_QUERY)
-        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar).apply {
+        binding.toolbar.apply {
             title = getString(R.string.app_name) + " - " + getString(R.string.search_apps)
             setOnClickListener {
                 searchMenu?.expandActionView()
             }
         }
-        val searchView = inflater.inflate(R.layout.layout_search, toolbar, false)
-        val clearBtn = searchView.findViewById<ImageView>(R.id.clearBtn)
-        searchEdit = searchView.findViewById(R.id.searchEdit)
-        searchEdit?.let {
-            it.setText(searchQuery)
-            it.setOnEditorActionListener(OnEditorActionListener { _, actionId, _ ->
+        
+        searchBinding = LayoutSearchBinding.inflate(inflater, binding.toolbar, false)
+        searchBinding?.let { sb ->
+            sb.searchEdit.setText(searchQuery)
+            sb.searchEdit.setOnEditorActionListener(OnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    model.search(it.text.toString())
+                    model.search(sb.searchEdit.text.toString())
                     return@OnEditorActionListener true
                 }
                 false
             })
-            it.addTextChangedListener(object : TextWatcher {
+            sb.searchEdit.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
-                    clearBtn.visibility = if (p0.toString().isNotEmpty()) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
-                    }
+                    sb.clearBtn.visibility = if (p0.toString().isNotEmpty()) View.VISIBLE else View.GONE
                 }
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
             })
-        }
-
-        filterSort = view.findViewById<TextView>(R.id.filter_sort).apply {
-            setOnClickListener {
-                onFilterItemClick.onItemClick(FilterType.SORT)
-            }
-        }
-        filterType = view.findViewById<TextView>(R.id.filter_type).apply {
-            setOnClickListener {
-                onFilterItemClick.onItemClick(FilterType.TYPE)
-            }
-        }
-        filterInstaller = view.findViewById<TextView>(R.id.filter_installer).apply {
-            setOnClickListener {
-                onFilterItemClick.onItemClick(FilterType.INSTALLER)
-            }
-        }
-        filterTargetSdk = view.findViewById<TextView>(R.id.filter_target_sdk).apply {
-            setOnClickListener {
-                onFilterItemClick.onItemClick(FilterType.TARGET_SDK)
+            
+            sb.clearBtn.setOnClickListener {
+                sb.searchEdit.setText("")
+                sb.searchEdit.requestFocus()
+                model.search("")
+                showKeyboard()
             }
         }
 
+        binding.filterSort.setOnClickListener { onFilterItemClick.onItemClick(FilterType.SORT) }
+        binding.filterType.setOnClickListener { onFilterItemClick.onItemClick(FilterType.TYPE) }
+        binding.filterInstaller.setOnClickListener { onFilterItemClick.onItemClick(FilterType.INSTALLER) }
+        binding.filterTargetSdk.setOnClickListener { onFilterItemClick.onItemClick(FilterType.TARGET_SDK) }
 
-        clearBtn.setOnClickListener {
-            searchEdit?.let {
-                it.setText("")
-                it.requestFocus()
-            }
-            model.search("")
-            showKeyboard()
-        }
-
-        searchMenu = toolbar.menu.add(R.string.search)
+        searchMenu = binding.toolbar.menu.add(R.string.search)
             .setIcon(R.drawable.ic_search_white_24dp)
-            .setActionView(searchView)
+            .setActionView(searchBinding?.root)
             .setVisible(false)
             .setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(p0: MenuItem): Boolean {
-                    searchEdit?.requestFocus()
-                    searchEdit?.post {
-                        showKeyboard()
-                    }
+                    searchBinding?.searchEdit?.requestFocus()
+                    searchBinding?.searchEdit?.post { showKeyboard() }
                     return true
                 }
                 override fun onMenuItemActionCollapse(p0: MenuItem): Boolean {
-                    searchEdit?.clearFocus()
-                    searchEdit?.setText("")
+                    searchBinding?.searchEdit?.clearFocus()
+                    searchBinding?.searchEdit?.setText("")
                     model.search("")
                     return true
                 }
-
             })
         searchMenu?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS or MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW)
-        searchQuery?.let {
-            if (it.isNotEmpty()) {
-                searchMenu?.expandActionView()
-            }
+        
+        if (!searchQuery.isNullOrEmpty()) {
+            searchMenu?.expandActionView()
         }
 
-        toolbar.menu.add(R.string.app_theme)
-            .setOnMenuItemClickListener {
-                context?.let {
-                    val options: Array<CharSequence> = arrayOf(
-                        resources.getString(R.string.app_theme_auto),
-                        resources.getString(R.string.app_theme_light),
-                        resources.getString(R.string.app_theme_dark)
-                    )
-                    val theme = Prefs(it).appTheme
-                    MaterialAlertDialogBuilder(it)
-                        .setTitle(R.string.app_theme)
-                        .setSingleChoiceItems(options, theme) { dialogInterface, i ->
-                            Prefs(it).appTheme = i
-                            Themes.setupTheme(it)
-                            dialogInterface.dismiss()
-                        }
-                        .show()
-                }
-                true
+        binding.toolbar.menu.add(R.string.app_theme).setOnMenuItemClickListener {
+            context?.let { ctx ->
+                val options: Array<CharSequence> = arrayOf(
+                    resources.getString(R.string.app_theme_auto),
+                    resources.getString(R.string.app_theme_light),
+                    resources.getString(R.string.app_theme_dark)
+                )
+                MaterialAlertDialogBuilder(ctx)
+                    .setTitle(R.string.app_theme)
+                    .setSingleChoiceItems(options, Prefs(ctx).appTheme) { dialogInterface, i ->
+                        Prefs(ctx).appTheme = i
+                        Themes.setupTheme(ctx)
+                        dialogInterface.dismiss()
+                    }
+                    .show()
             }
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            true
+        }.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
-        toolbar.menu.add(R.string.about)
-            .setOnMenuItemClickListener {
-                context?.let {
-                    MaterialAlertDialogBuilder(it)
-                        .setTitle(R.string.about_app)
-                        .setMessage(resources.getString(
-                            R.string.about_desc,
-                            BuildConfig.APP_VERSION_NAME
-                        ))
-                        .setPositiveButton(R.string.label_ok, null)
-                        .setNegativeButton(R.string.about_open) { _, _ ->
-                            IntentHelper.openInBrowser(it, "https://twitter.com/kenumir")
-                        }
-                        .show()
-                }
-
-                true
+        binding.toolbar.menu.add(R.string.about).setOnMenuItemClickListener {
+            context?.let { ctx ->
+                MaterialAlertDialogBuilder(ctx)
+                    .setTitle(R.string.about_app)
+                    .setMessage(resources.getString(R.string.about_desc, BuildConfig.APP_VERSION_NAME))
+                    .setPositiveButton(R.string.label_ok, null)
+                    .setNegativeButton(R.string.about_open) { _, _ ->
+                        IntentHelper.openInBrowser(ctx, "https://twitter.com/kenumir")
+                    }
+                    .show()
             }
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            true
+        }.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
         if (BuildConfig.DEBUG) {
-            toolbar.menu.add("Test error").setOnMenuItemClickListener {
-                //ERA.testError(activity)
+            binding.toolbar.menu.add("Test error").setOnMenuItemClickListener {
                 throw RuntimeException("Test error")
             }
         }
 
-        setFragmentResultListener("filter") { requestKey, result ->
-            if ("filter" == requestKey) {
-                when(result.getInt("filter_type", FilterType.SORT.ordinal)) {
-                    FilterType.SORT.ordinal -> {
-                        val order = when(result.getInt("result", 0)) {
-                            0 -> ListSortOrder.NAME
-                            1 -> ListSortOrder.DATE
-                            2 -> ListSortOrder.PACKAGE
-                            else -> ListSortOrder.NAME
-                        }
-                        model.showSortOrder(order)
-                        activity?.let {Prefs(it).listSortOrder = order}
-                        updateFilters()
+        setFragmentResultListener("filter") { _, result ->
+            when(result.getInt("filter_type", FilterType.SORT.ordinal)) {
+                FilterType.SORT.ordinal -> {
+                    val order = when(result.getInt("result", 0)) {
+                        1 -> ListSortOrder.DATE
+                        2 -> ListSortOrder.PACKAGE
+                        else -> ListSortOrder.NAME
                     }
-                    FilterType.TYPE.ordinal -> {
-                        val appType = when(result.getInt("result", 0)) {
-                            0 -> FilterAppType.ALL
-                            1 -> FilterAppType.USER
-                            2 -> FilterAppType.DEBUG
-                            3 -> FilterAppType.SYSTEM
-                            else -> FilterAppType.ALL
-                        }
-                        model.setAppType(appType)
-                        activity?.let { a ->
-                            Prefs(a).listFilterAppType = appType
-                        }
-                        updateFilters()
-                    }
-                    FilterType.INSTALLER.ordinal -> {
-                        val installer = when(result.getInt("result", 0)) {
-                            0 -> FilterInstaller.ALL
-                            1 -> FilterInstaller.PLAY_STORE
-                            2 -> FilterInstaller.APP_GALLERY
-                            3 -> FilterInstaller.EMPTY
-                            else -> FilterInstaller.ALL
-                        }
-                        model.setAppInstaller(installer)
-                        activity?.let { a ->
-                            Prefs(a).listFilterInstaller = installer
-                        }
-                        updateFilters()
-                    }
-                    FilterType.TARGET_SDK.ordinal -> {
-                        val ts = when(result.getInt("result", 0)) {
-                            0 -> FilterTargetSdk.ALL
-                            1 -> FilterTargetSdk.API_36
-                            2 -> FilterTargetSdk.API_35
-                            3 -> FilterTargetSdk.API_34
-                            4 -> FilterTargetSdk.API_33
-                            else -> FilterTargetSdk.ALL
-                        }
-                        model.setTargetSdk(ts)
-                        activity?.let { a ->
-                            Prefs(a).listFilterTargetSdk = ts
-                        }
-                        updateFilters()
-                    }
+                    model.showSortOrder(order)
+                    activity?.let { Prefs(it).listSortOrder = order }
                 }
-
+                FilterType.TYPE.ordinal -> {
+                    val appType = when(result.getInt("result", 0)) {
+                        1 -> FilterAppType.USER
+                        2 -> FilterAppType.DEBUG
+                        3 -> FilterAppType.SYSTEM
+                        else -> FilterAppType.ALL
+                    }
+                    model.setAppType(appType)
+                    activity?.let { Prefs(it).listFilterAppType = appType }
+                }
+                FilterType.INSTALLER.ordinal -> {
+                    val installer = when(result.getInt("result", 0)) {
+                        1 -> FilterInstaller.PLAY_STORE
+                        2 -> FilterInstaller.APP_GALLERY
+                        3 -> FilterInstaller.EMPTY
+                        else -> FilterInstaller.ALL
+                    }
+                    model.setAppInstaller(installer)
+                    activity?.let { Prefs(it).listFilterInstaller = installer }
+                }
+                FilterType.TARGET_SDK.ordinal -> {
+                    val ts = when(result.getInt("result", 0)) {
+                        1 -> FilterTargetSdk.API_36
+                        2 -> FilterTargetSdk.API_35
+                        3 -> FilterTargetSdk.API_34
+                        4 -> FilterTargetSdk.API_33
+                        else -> FilterTargetSdk.ALL
+                    }
+                    model.setTargetSdk(ts)
+                    activity?.let { Prefs(it).listFilterTargetSdk = ts }
+                }
             }
+            updateFilters()
         }
 
-        if (Utils.isTV(view.context)) {
-            view.findViewById<View>(R.id.appBar).visibility = View.GONE
+        if (Utils.isTV(binding.root.context)) {
+            binding.appBar.visibility = View.GONE
         }
 
         updateFilters()
-
-        return view
+        return binding.root
     }
 
     private fun updateFilters() {
-        activity?.let {
-            filterSort?.let { view ->
-                view.text = view.resources.getString(
-                    R.string.filter_placeholder,
-                    resources.getString(R.string.sort),
-                    when (Prefs(view.context).listSortOrder) {
-                        ListSortOrder.DATE -> resources.getString(R.string.sort_date)
-                        ListSortOrder.PACKAGE -> resources.getString(R.string.sort_package)
-                        ListSortOrder.NAME -> resources.getString(R.string.sort_name)
-                    }
-                )
-            }
-            filterType?.let { view ->
-                view.text = view.resources.getString(
-                    R.string.filter_placeholder,
-                    resources.getString(R.string.type),
-                    when (Prefs(view.context).listFilterAppType) {
-                        FilterAppType.ALL -> resources.getString(R.string.type_all)
-                        FilterAppType.SYSTEM -> resources.getString(R.string.type_system)
-                        FilterAppType.DEBUG -> resources.getString(R.string.type_debug)
-                        FilterAppType.USER -> resources.getString(R.string.type_user)
-                    }
-                )
-            }
-            filterInstaller?.let { view ->
-                view.text = view.resources.getString(
-                    R.string.filter_placeholder,
-                    resources.getString(R.string.installer),
-                    when (Prefs(view.context).listFilterInstaller) {
-                        FilterInstaller.ALL -> resources.getString(R.string.installer_all)
-                        FilterInstaller.PLAY_STORE -> resources.getString(R.string.installer_vending)
-                        FilterInstaller.APP_GALLERY -> resources.getString(R.string.installer_huawei)
-                        FilterInstaller.EMPTY -> resources.getString(R.string.installer_empty)
-                    }
-                )
-            }
-            filterTargetSdk?.let { view ->
-                view.text = view.resources.getString(
-                    R.string.filter_placeholder,
-                    resources.getString(R.string.filter_target_sdk),
-                    when (Prefs(view.context).listFilterTargetSdk) {
-                        FilterTargetSdk.ALL -> resources.getString(R.string.filter_target_sdk_all)
-                        FilterTargetSdk.API_36 -> resources.getString(R.string.filter_target_sdk_36)
-                        FilterTargetSdk.API_35 -> resources.getString(R.string.filter_target_sdk_35)
-                        FilterTargetSdk.API_34 -> resources.getString(R.string.filter_target_sdk_34)
-                        FilterTargetSdk.API_33 -> resources.getString(R.string.filter_target_sdk_33)
-                    }
-                )
-            }
+        context?.let { ctx ->
+            binding.filterSort.text = getString(R.string.filter_placeholder, getString(R.string.sort),
+                when (Prefs(ctx).listSortOrder) {
+                    ListSortOrder.DATE -> getString(R.string.sort_date)
+                    ListSortOrder.PACKAGE -> getString(R.string.sort_package)
+                    ListSortOrder.NAME -> getString(R.string.sort_name)
+                }
+            )
+            binding.filterType.text = getString(R.string.filter_placeholder, getString(R.string.type),
+                when (Prefs(ctx).listFilterAppType) {
+                    FilterAppType.ALL -> getString(R.string.type_all)
+                    FilterAppType.SYSTEM -> getString(R.string.type_system)
+                    FilterAppType.DEBUG -> getString(R.string.type_debug)
+                    FilterAppType.USER -> getString(R.string.type_user)
+                }
+            )
+            binding.filterInstaller.text = getString(R.string.filter_placeholder, getString(R.string.installer),
+                when (Prefs(ctx).listFilterInstaller) {
+                    FilterInstaller.ALL -> getString(R.string.installer_all)
+                    FilterInstaller.PLAY_STORE -> getString(R.string.installer_vending)
+                    FilterInstaller.APP_GALLERY -> getString(R.string.installer_huawei)
+                    FilterInstaller.EMPTY -> getString(R.string.installer_empty)
+                }
+            )
+            binding.filterTargetSdk.text = getString(R.string.filter_placeholder, getString(R.string.filter_target_sdk),
+                when (Prefs(ctx).listFilterTargetSdk) {
+                    FilterTargetSdk.ALL -> getString(R.string.filter_target_sdk_all)
+                    FilterTargetSdk.API_36 -> getString(R.string.filter_target_sdk_36)
+                    FilterTargetSdk.API_35 -> getString(R.string.filter_target_sdk_35)
+                    FilterTargetSdk.API_34 -> getString(R.string.filter_target_sdk_34)
+                    FilterTargetSdk.API_33 -> getString(R.string.filter_target_sdk_33)
+                }
+            )
         }
     }
 
     override fun onDestroyView() {
         parentFragmentManager.clearFragmentResultListener("filter")
         super.onDestroyView()
+        _binding = null
+        searchBinding = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(SAVE_SEARCH_QUERY, searchEdit?.text.toString())
+        searchBinding?.let {
+            outState.putString(SAVE_SEARCH_QUERY, it.searchEdit.text.toString())
+        }
         super.onSaveInstanceState(outState)
     }
 
@@ -463,7 +379,9 @@ class AppListFragment : Fragment() {
     private fun showKeyboard() {
         activity?.let {
             val imm = it.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(searchEdit, 0)
+            searchBinding?.searchEdit?.let { edit ->
+                imm.showSoftInput(edit, 0)
+            }
         }
     }
 
