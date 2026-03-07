@@ -11,24 +11,20 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.SurfaceColors
 import com.wt.apkinfo.app.AppBuildType
 import com.wt.apkinfo.base.BuildConfig
 import com.wt.apkinfo.base.R
+import com.wt.apkinfo.base.databinding.ActivityAppDetailsBinding
 import com.wt.apkinfo.data.ApplicationEntryInfo
 import com.wt.apkinfo.data.Prefs
 import com.wt.apkinfo.data.images.ImageLoader
@@ -41,11 +37,15 @@ import com.wt.apkinfo.proto.Utils
 
 class AppDetailsActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityAppDetailsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_app_details)
-        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
+        binding = ActivityAppDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             v.setPadding(
                 insets.getInsets(WindowInsetsCompat.Type.statusBars()).left,
                 insets.getInsets(WindowInsetsCompat.Type.statusBars()).top,
@@ -55,7 +55,7 @@ class AppDetailsActivity : AppCompatActivity() {
             insets
         }
 
-        findViewById<MaterialCardView>(R.id.actionsCard)?.apply {
+        binding.actionsCard.apply {
             setCardBackgroundColor(SurfaceColors.SURFACE_1.getColor(context))
         }
 
@@ -64,57 +64,48 @@ class AppDetailsActivity : AppCompatActivity() {
             ApplicationDetailsViewModel::class.java
         )
         model.getData().observe(this) { data ->
-            //val longPress = View.OnLongClickListener {
-            //    Toast.makeText(this, it.contentDescription, Toast.LENGTH_LONG).show()
-            //    false
-            //}
-
-            findViewById<TextView>(R.id.appName).text = data.name
-            findViewById<TextView>(R.id.appPackage).text = data.pkg
-            findViewById<TextView>(R.id.appVersionName).text = data.versionName
-            findViewById<TextView>(R.id.appVersionCode).text = data.versionCode.toString()
-            findViewById<TextView>(R.id.appSdkInfo).text = resources.getString(R.string.details_sdk, data.sdkMin, data.sdkTarget)
-            //findViewById<TextView>(R.id.appSignature).text = data.signature
-            findViewById<TextView>(R.id.appTime).text = resources.getString(
+            binding.appName.text = data.name
+            binding.appPackage.text = data.pkg
+            binding.appVersionName.text = data.versionName
+            binding.appVersionCode.text = data.versionCode.toString()
+            binding.appSdkInfo.text = resources.getString(R.string.details_sdk, data.sdkMin, data.sdkTarget)
+            binding.appTime.text = resources.getString(
                 R.string.details_time, DateTime.formatFull(data.timeInstall), DateTime.formatFull(
                     data.timeUpdate
                 )
             )
-            findViewById<TextView>(R.id.appInstallerPackage).text = data.installerPackage
+            binding.appInstallerPackage.text = data.installerPackage
+            
             when {
                 data.isDebuggable -> {
-                    findViewById<TextView>(R.id.appTypeInfo).apply {
+                    binding.appTypeInfo.apply {
                         visibility = View.VISIBLE
                         setText(R.string.app_type_debug)
                     }
                 }
                 data.isSystemApp -> {
-                    findViewById<TextView>(R.id.appTypeInfo).apply {
+                    binding.appTypeInfo.apply {
                         visibility = View.VISIBLE
                         setText(R.string.app_type_system)
                     }
 
                 }
                 else -> {
-                    findViewById<TextView>(R.id.appTypeInfo).visibility = View.GONE
+                    binding.appTypeInfo.visibility = View.GONE
                 }
             }
+            
             if (Utils.isTV(this)) {
-                findViewById<AppCompatTextView>(R.id.actionRun).visibility = if (data.launcherIntentTv == null) View.GONE else View.VISIBLE
+                binding.actionRun.visibility = if (data.launcherIntentTv == null) View.GONE else View.VISIBLE
             } else {
-                findViewById<AppCompatTextView>(R.id.actionRun).visibility = if (data.launcherIntent == null) View.GONE else View.VISIBLE
+                binding.actionRun.visibility = if (data.launcherIntent == null) View.GONE else View.VISIBLE
             }
-            findViewById<ImageView>(R.id.appLogo).apply {
-                ImageLoader.get(this.context).load(data.icon, this)
-            }
-
-            //actionCopy.setOnLongClickListener(longPress)
-            //actionInfo.setOnLongClickListener(longPress)
-            //actionRun.setOnLongClickListener(longPress)
+            
+            ImageLoader.get(binding.appLogo.context).load(data.icon, binding.appLogo)
 
             if (BuildConfig.BUILD_FOR_MARKET == AppBuildType.APK) {
-                findViewById<View>(R.id.actionShare).apply {
-                    //setOnLongClickListener(longPress)
+                binding.actionShare.apply {
+                    visibility = View.VISIBLE
                     setOnClickListener {
                         startActivity(Intent().apply {
                             component = ComponentName(packageName, "$packageName.activities.ApkListActivity")
@@ -122,14 +113,13 @@ class AppDetailsActivity : AppCompatActivity() {
                             putExtra("version_name", data.versionName)
                             putExtra("version_code", data.versionCode)
                         })
-
                     }
                 }
             } else {
-                findViewById<View>(R.id.actionShare).visibility = View.GONE
+                binding.actionShare.visibility = View.GONE
             }
 
-            findViewById<Toolbar>(R.id.toolbar)?.let { toolbar ->
+            binding.toolbar.toolbar.let { toolbar ->
                 toolbar.menu.findItem(1).setOnMenuItemClickListener {
                     copyToClipboard(
                         "Name: ${data.name.toString()}\nPackage: ${data.pkg.toString()}\nSignature: ${data.signature.toString()}\n" +
@@ -144,7 +134,7 @@ class AppDetailsActivity : AppCompatActivity() {
             }
 
             if (BuildConfig.BUILD_FOR_MARKET == AppBuildType.APK) {
-                findViewById<Toolbar>(R.id.toolbar).menu.findItem(2).setOnMenuItemClickListener {
+                binding.toolbar.toolbar.menu.findItem(2).setOnMenuItemClickListener {
                     startActivity(Intent().apply {
                         component = ComponentName(packageName, "$packageName.activities.ApkListActivity")
                         putExtra("pkg", data.pkg)
@@ -155,7 +145,7 @@ class AppDetailsActivity : AppCompatActivity() {
                 }
             }
 
-            findViewById<View>(R.id.actionInfo).setOnClickListener {
+            binding.actionInfo.setOnClickListener {
                 try {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -174,7 +164,7 @@ class AppDetailsActivity : AppCompatActivity() {
                     }
                 }
             }
-            findViewById<View>(R.id.actionRun).setOnClickListener { ar ->
+            binding.actionRun.setOnClickListener { ar ->
                 if (Utils.isTV(ar.context)) {
                     data.launcherIntentTv?.let {
                         ar.visibility = View.VISIBLE
@@ -209,15 +199,12 @@ class AppDetailsActivity : AppCompatActivity() {
                     }
                 }
             }
+            
             data.meta.let {
                 val title = resources.getString(R.string.details_metadata, it.size)
-                findViewById<AppCompatTextView>(R.id.moreMeta).apply {
+                binding.moreMeta.apply {
                     text = title
-                    visibility = if (it.size > 0) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
-                    }
+                    visibility = if (it.size > 0 && !Utils.isTV(context)) View.VISIBLE else View.GONE
                     setOnClickListener { _ ->
                         MaterialAlertDialogBuilder(context)
                             .setTitle(title)
@@ -227,21 +214,14 @@ class AppDetailsActivity : AppCompatActivity() {
                             })
                             .show()
                     }
-                    if (Utils.isTV(this.context)) {
-                        visibility = View.GONE
-                    }
                 }
-
             }
+            
             data.activities.let {
                 val title = resources.getString(R.string.details_activities, it.size)
-                findViewById<AppCompatTextView>(R.id.moreActivities).apply {
+                binding.moreActivities.apply {
                     text = title
-                    visibility = if (it.size > 0) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
-                    }
+                    visibility = if (it.size > 0 && !Utils.isTV(context)) View.VISIBLE else View.GONE
                     setOnClickListener { _ ->
                         MaterialAlertDialogBuilder(context)
                             .setTitle(title)
@@ -251,20 +231,14 @@ class AppDetailsActivity : AppCompatActivity() {
                             })
                             .show()
                     }
-                    if (Utils.isTV(this.context)) {
-                        visibility = View.GONE
-                    }
                 }
             }
+            
             data.services.let {
                 val title = resources.getString(R.string.details_services, it.size)
-                findViewById<AppCompatTextView>(R.id.moreServices).apply {
+                binding.moreServices.apply {
                     text = title
-                    visibility = if (it.size > 0) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
-                    }
+                    visibility = if (it.size > 0) View.VISIBLE else View.GONE
                     setOnClickListener { _ ->
                         MaterialAlertDialogBuilder(context)
                             .setTitle(title)
@@ -274,18 +248,14 @@ class AppDetailsActivity : AppCompatActivity() {
                             })
                             .show()
                     }
-
                 }
             }
+            
             data.providers.let {
                 val title = resources.getString(R.string.details_providers, it.size)
-                findViewById<AppCompatTextView>(R.id.moreProviders).apply {
+                binding.moreProviders.apply {
                     text = title
-                    visibility = if (it.size > 0) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
-                    }
+                    visibility = if (it.size > 0) View.VISIBLE else View.GONE
                     setOnClickListener { _ ->
                         MaterialAlertDialogBuilder(context)
                             .setTitle(title)
@@ -297,77 +267,12 @@ class AppDetailsActivity : AppCompatActivity() {
                     }
                 }
             }
+            
             data.receivers.let {
                 val title = resources.getString(R.string.details_receivers, it.size)
-                findViewById<AppCompatTextView>(R.id.moreReceivers).apply {
+                binding.moreReceivers.apply {
                     text = title
-                    visibility = if (it.size > 0) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
-                    }
-                    setOnClickListener { _ ->
-                        MaterialAlertDialogBuilder(context)
-                            .setTitle(title)
-                            .setView(RecyclerView(context).apply {
-                                layoutManager = LinearLayoutManager(context)
-                                adapter = PropertiesDialogAdapter(it)
-                            })
-                            .show()
-                    }
-                }
-            }
-            /*data.directories.let {
-                val title = resources.getString(R.string.details_directories, it.size)
-                findViewById<AppCompatTextView>(R.id.moreDirectories).apply {
-                    text = title
-                    visibility = if (it.size > 0) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
-                    }
-                    setOnClickListener { _ ->
-                        MaterialAlertDialogBuilder(context)
-                            .setTitle(title)
-                            .setView(RecyclerView(context).apply {
-                                layoutManager = LinearLayoutManager(context)
-                                adapter = PropertiesDialogAdapter(it)
-                            })
-                            .show()
-                    }
-                }
-            }
-             */
-            data.permissions.let {
-                val title = resources.getString(R.string.details_permissions, it.size)
-                findViewById<AppCompatTextView>(R.id.morePermissions).apply {
-                    text = title
-                    visibility = if (it.size > 0) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
-                    }
-                    setOnClickListener { _ ->
-                        MaterialAlertDialogBuilder(context)
-                            .setTitle(title)
-                            .setView(RecyclerView(context).apply {
-                                layoutManager = LinearLayoutManager(context)
-                                adapter = PropertiesDialogAdapter(it)
-                            })
-                            .show()
-                    }
-                }
-            }
-            /*
-            data.sharedLibraries.let {
-                val title = resources.getString(R.string.details_shared_libraries, it.size)
-                findViewById<AppCompatTextView>(R.id.moreSharedLibraries).apply {
-                    text = title
-                    visibility = if (it.size > 0) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
-                    }
+                    visibility = if (it.size > 0) View.VISIBLE else View.GONE
                     setOnClickListener { _ ->
                         MaterialAlertDialogBuilder(context)
                             .setTitle(title)
@@ -380,28 +285,22 @@ class AppDetailsActivity : AppCompatActivity() {
                 }
             }
 
-            data.nativeLibraries.let {
-                val title = resources.getString(R.string.details_native_libraries, it.size)
-                findViewById<AppCompatTextView>(R.id.moreNativeLibraries).apply {
-                    text = title
-                    visibility = if (it.size > 0) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
-                    }
-                    setOnClickListener { _ ->
-                        MaterialAlertDialogBuilder(context)
-                            .setTitle(title)
-                            .setView(RecyclerView(context).apply {
-                                layoutManager = LinearLayoutManager(context)
-                                adapter = PropertiesDialogAdapter(it)
-                            })
-                            .show()
-                    }
+            binding.morePermissions.let { view ->
+                val title = resources.getString(R.string.details_permissions, data.permissions.size)
+                view.text = title
+                view.visibility = if (data.permissions.size > 0) View.VISIBLE else View.GONE
+                view.setOnClickListener { _ ->
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle(title)
+                        .setView(RecyclerView(this).apply {
+                            layoutManager = LinearLayoutManager(this@AppDetailsActivity)
+                            adapter = PropertiesDialogAdapter(data.permissions)
+                        })
+                        .show()
                 }
             }
-             */
-            findViewById<View>(R.id.moreOtherProperties).setOnClickListener {
+
+            binding.moreOtherProperties.setOnClickListener {
                 val props = ArrayList<String>()
                 props.add(resources.getString(R.string.details_property_large_heap) + "\n" + data.isLargeHeap.toString())
                 props.add(resources.getString(R.string.details_property_hw_accelerated) + "\n" + data.isHwAccelerated.toString())
@@ -414,7 +313,8 @@ class AppDetailsActivity : AppCompatActivity() {
                     })
                     .show()
             }
-            findViewById<View>(R.id.loader).apply {
+            
+            binding.loader.apply {
                 val loader = this
                 alpha = 1f
                 animate()
@@ -433,14 +333,14 @@ class AppDetailsActivity : AppCompatActivity() {
 
             hideTvInterface()
         }
+        
         pkg?.let {
             model.fetchInfo(pkg)
         } ?: run {
-            // no package name
             finish()
         }
 
-        findViewById<View>(R.id.actionUninstall)?.apply {
+        binding.actionUninstall.apply {
             setOnClickListener{
                 try {
                     val intent = Intent(Intent.ACTION_DELETE)
@@ -456,29 +356,7 @@ class AppDetailsActivity : AppCompatActivity() {
             }
         }
 
-        findViewById<View>(R.id.actionInfo)?.apply {
-            setOnClickListener{
-                try {
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .setData(Uri.parse("package:${pkg}"))
-                    startActivity(intent)
-                } catch (e: Exception) {
-                    ERA.logException(e)
-                    try {
-                        startActivity(Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS))
-                    } catch (w2: Exception) {
-                        Toast.makeText(
-                            it.context,
-                            resources.getString(R.string.app_run_error, e.message),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            }
-        }
-
-        findViewById<Toolbar>(R.id.toolbar).apply {
+        binding.toolbar.toolbar.apply {
             setTitle(R.string.app_details)
             setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
             setNavigationOnClickListener {
@@ -550,26 +428,24 @@ class AppDetailsActivity : AppCompatActivity() {
 
     private fun hideTvInterface() {
         if (Utils.isTV(this) && BuildConfig.BUILD_FOR_MARKET != AppBuildType.APK) {
-            findViewById<View>(R.id.moreInfoHeader).visibility = View.GONE
-            findViewById<View>(R.id.moreMeta).visibility = View.GONE
-            findViewById<View>(R.id.morePermissions).visibility = View.GONE
-            findViewById<View>(R.id.moreActivities).visibility = View.GONE
-            findViewById<View>(R.id.moreServices).visibility = View.GONE
-            findViewById<View>(R.id.moreProviders).visibility = View.GONE
-            findViewById<View>(R.id.moreReceivers).visibility = View.GONE
-            findViewById<View>(R.id.moreDirectories).visibility = View.GONE
-            findViewById<View>(R.id.moreSharedLibraries).visibility = View.GONE
-            findViewById<View>(R.id.moreNativeLibraries).visibility = View.GONE
-            findViewById<View>(R.id.moreOtherProperties).visibility = View.GONE
+            binding.moreInfoHeader.visibility = View.GONE
+            binding.moreMeta.visibility = View.GONE
+            binding.morePermissions.visibility = View.GONE
+            binding.moreActivities.visibility = View.GONE
+            binding.moreServices.visibility = View.GONE
+            binding.moreProviders.visibility = View.GONE
+            binding.moreReceivers.visibility = View.GONE
+            binding.moreDirectories.visibility = View.GONE
+            binding.moreSharedLibraries.visibility = View.GONE
+            binding.moreNativeLibraries.visibility = View.GONE
+            binding.moreOtherProperties.visibility = View.GONE
         }
     }
 
     private fun copyToClipboard(text: String) {
-        //exec.execute {
-            val clipboard: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("ApkInfo", text)
-            clipboard.setPrimaryClip(clip)
-        //}
+        val clipboard: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("ApkInfo", text)
+        clipboard.setPrimaryClip(clip)
     }
 
     private fun logDetailsOpenCounter(pkg: String) {

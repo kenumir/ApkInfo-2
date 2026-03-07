@@ -8,14 +8,13 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.wt.apkinfo.base.R
+import com.wt.apkinfo.base.databinding.ActivityApkListBinding
 import com.wt.apkinfo.data.ApkFileEntryInfo
 import com.wt.apkinfo.data.models.ApkFilesViewModel
 import com.wt.apkinfo.data.models.ArchiveViewModel
@@ -26,25 +25,25 @@ import java.io.File
 class ApkListActivity : AppCompatActivity() {
 
     companion object {
-
         const val KEY_PKG = "pkg"
         const val KEY_VERSION_NAME = "version_name"
         const val KEY_VERSION_CODE = "version_code"
-
     }
 
     private var mApkListAdapter: ApkListAdapter? = null
     private var archiveMenuItem: MenuItem? = null
     private var mArchiveViewModel: ArchiveViewModel? = null
     private var mApkFilesViewModel: ApkFilesViewModel? = null
+    private lateinit var binding: ActivityApkListBinding
 
     @SuppressLint("InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_apk_list)
+        binding = ActivityApkListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainView)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.mainView) { v, insets ->
             val bars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
                         or WindowInsetsCompat.Type.displayCutout()
@@ -62,7 +61,8 @@ class ApkListActivity : AppCompatActivity() {
                 shareApkFile(item.fullPath)
             }
         })
-        findViewById<RecyclerView>(R.id.recycler).apply {
+        
+        binding.recycler.apply {
             layoutManager = LinearLayoutManager(this@ApkListActivity)
             itemAnimator = null
             adapter = mApkListAdapter
@@ -113,11 +113,10 @@ class ApkListActivity : AppCompatActivity() {
             }
 
         } ?: run {
-            // no package name
             finish()
         }
 
-        findViewById<Toolbar>(R.id.toolbar).apply {
+        binding.toolbar.toolbar.apply {
             setTitle(R.string.apk_list)
             setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
             setNavigationOnClickListener {

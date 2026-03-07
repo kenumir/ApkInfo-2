@@ -20,7 +20,7 @@ android {
         versionCode versions.versionCode
         versionName versions.versionName
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
+        // multidex natywny od API 21+
     }
 
     signingConfigs {
@@ -34,6 +34,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        viewBinding = true
     }
 
     buildTypes {

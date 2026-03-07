@@ -9,20 +9,22 @@ import androidx.core.view.ViewCompat
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
 import com.wt.apkinfo.App
-import com.wt.apkinfo.base.R
+import com.wt.apkinfo.base.databinding.ActivityMainBinding
 import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.fragments.AppListFragment
 
 class MainActivity : AppCompatActivity(), InstallReferrerStateListener {
 
     private var mReferrerClient: InstallReferrerClient? = null
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
-
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             insets
         }
 

@@ -2,20 +2,23 @@ package com.wt.apkinfo.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.wt.apkinfo.base.BuildConfig
-import com.wt.apkinfo.base.R
+import com.wt.apkinfo.base.databinding.ActivityStartBinding
 import com.wt.apkinfo.data.models.StartViewModel
 
 
 class StartActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityStartBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_start)
-        findViewById<TextView>(R.id.text1).text = BuildConfig.APP_VERSION_NAME
+        binding = ActivityStartBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        
+        binding.text1.text = BuildConfig.APP_VERSION_NAME
 
         val model = ViewModelProvider(this).get(StartViewModel::class.java)
         model.getData()
