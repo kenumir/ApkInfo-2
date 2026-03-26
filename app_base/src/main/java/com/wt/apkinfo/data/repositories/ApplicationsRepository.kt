@@ -16,15 +16,22 @@ import com.wt.apkinfo.proto.FilterInstaller
 import com.wt.apkinfo.proto.FilterTargetSdk
 import com.wt.apkinfo.proto.ListSortOrder
 import com.wt.apkinfo.proto.StringUtil
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.util.*
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
-class ApplicationsRepository(ctx: Context) {
+class ApplicationsRepository(private val context: Context) {
 
-    private var res = ctx.resources
+    private var res = context.resources
     private var pkg: PackageManager? = try {
-        ctx.applicationContext.packageManager
+        context.applicationContext.packageManager
     } catch (e: Exception) {
         null
     }
@@ -57,6 +64,59 @@ class ApplicationsRepository(ctx: Context) {
         return results
     }
 
+    fun createZipArchive(pkg: String, versionName: String?, versionCode: Int): File {
+        val versionNameFixed = versionName
+            ?.replace("[^\\p{ASCII}]", "")
+            ?.replace(" ", "") ?: "unknown"
+            
+        val dir = File(context.cacheDir, "archives").apply { mkdirs() }
+        val file = File(dir, "$pkg-$versionNameFixed-$versionCode.zip")
+        
+        val buffSize = 8192
+        val dest = FileOutputStream(file)
+        val out = ZipOutputStream(BufferedOutputStream(dest))
+        val buffer = ByteArray(buffSize)
+
+        // Add APKs
+        getApkFiles(pkg).forEach { singleApk ->
+            singleApk.fullPath?.let { fp ->
+                val f = File(fp)
+                if (f.exists()) {
+                    FileInputStream(f).use { fi ->
+                        val entry = ZipEntry(singleApk.name).apply { time = f.lastModified() }
+                        val origin = BufferedInputStream(fi, buffSize)
+                        out.putNextEntry(entry)
+                        var count: Int
+                        while (origin.read(buffer, 0, buffSize).also { count = it } != -1) {
+                            out.write(buffer, 0, count)
+                        }
+                        out.closeEntry()
+                    }
+                }
+            }
+        }
+
+        // Add info.txt
+        val appInfo = getApplicationDetailsInfo(pkg)
+        val infoText = "Package: ${appInfo.pkg}\n" +
+                "Name: ${appInfo.name}\n" +
+                "Version Name: ${appInfo.versionName}\n" +
+                "Version Code: ${appInfo.versionCode}\n" +
+                "Signature: ${appInfo.signature}\n" +
+                "Installer Package: ${appInfo.installerPackage}\n" +
+                "Min SDK: ${appInfo.sdkMin}\n" +
+                "Target SDK: ${appInfo.sdkTarget}"
+        
+        val entry = ZipEntry("info.txt").apply { time = System.currentTimeMillis() }
+        out.putNextEntry(entry)
+        val bytes = infoText.toByteArray(Charset.forName("UTF-8"))
+        out.write(bytes, 0, bytes.size)
+        out.closeEntry()
+
+        out.close()
+        return file
+    }
+
     @SuppressLint("DefaultLocale")
     fun getAppList(query: String?, appType: FilterAppType, sortOrder: ListSortOrder, installer: FilterInstaller, targetSdk: FilterTargetSdk): List<ApplicationEntryInfo> {
         val results: ArrayList<ApplicationEntryInfo> = ArrayList()
@@ -80,8 +140,6 @@ class ApplicationsRepository(ctx: Context) {
                 }
             }
 
-            //Log.i("aplinfo", "lang=" + Locale.getDefault().toString())
-            //pkg?.getInstalledApplications(0)?.forEach { it ->
             pkg?.getInstalledPackages(0)?.forEach { it ->
                 val launcher = pkg?.getLaunchIntentForPackage(it.packageName)
                 var appName: String? = null
@@ -150,7 +208,6 @@ class ApplicationsRepository(ctx: Context) {
                                 appName = ""
                             }
                         } catch (e: Exception) {
-                            //ERA.logException(e)
                             appName = ""
                         }
                     } else {
@@ -277,7 +334,6 @@ class ApplicationsRepository(ctx: Context) {
                     .sortedWith(compareBy { it2 -> it2.name })
             }
         }
-        //return results.sortedWith(compareBy { it2 -> it2.name })
     }
 
     @SuppressLint("DefaultLocale")

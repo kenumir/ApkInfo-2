@@ -12,6 +12,7 @@ import com.wt.apkinfo.data.models.StartViewModel
 class StartActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStartBinding
+    private lateinit var viewModel: StartViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,19 +21,19 @@ class StartActivity : AppCompatActivity() {
         
         binding.text1.text = BuildConfig.APP_VERSION_NAME
 
-        val model = ViewModelProvider(this).get(StartViewModel::class.java)
-        model.getData()
-            .observe(this) { intentData ->
-                startActivity(
-                    Intent(applicationContext, MainActivity::class.java).setData(
-                        intentData.data
-                    )
+        viewModel = ViewModelProvider(this).get(StartViewModel::class.java)
+        viewModel.data.observe(this) { intentData ->
+            startActivity(
+                Intent(applicationContext, MainActivity::class.java).setData(
+                    intentData.data
                 )
-                finish()
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-            }
+            )
+            finish()
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        }
+        
         runOnUiThread {
-            model.getData().value = intent
+            viewModel.setData(intent)
         }
     }
 }

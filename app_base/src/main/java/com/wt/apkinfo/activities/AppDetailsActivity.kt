@@ -9,7 +9,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -25,19 +24,20 @@ import com.wt.apkinfo.app.AppBuildType
 import com.wt.apkinfo.base.BuildConfig
 import com.wt.apkinfo.base.R
 import com.wt.apkinfo.base.databinding.ActivityAppDetailsBinding
+import com.wt.apkinfo.data.ApplicationDetailsInfo
 import com.wt.apkinfo.data.ApplicationEntryInfo
-import com.wt.apkinfo.data.Prefs
 import com.wt.apkinfo.data.images.ImageLoader
 import com.wt.apkinfo.data.models.ApplicationDetailsViewModel
+import com.wt.apkinfo.data.models.DetailsUiState
 import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.proto.DateTime
 import com.wt.apkinfo.proto.PropertiesDialogAdapter
 import com.wt.apkinfo.proto.Utils
 
-
 class AppDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAppDetailsBinding
+    private lateinit var viewModel: ApplicationDetailsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,82 +59,119 @@ class AppDetailsActivity : AppCompatActivity() {
             setCardBackgroundColor(SurfaceColors.SURFACE_1.getColor(context))
         }
 
-        val pkg = intent.getStringExtra("pkg")
-        val model = ViewModelProvider(this).get(
-            ApplicationDetailsViewModel::class.java
+        val pkg = intent.getStringExtra("pkg") ?: return finish()
+        viewModel = ViewModelProvider(this).get(ApplicationDetailsViewModel::class.java)
+        
+        viewModel.uiState.observe(this) { state ->
+            when (state) {
+                is DetailsUiState.Loading -> binding.loader.visibility = View.VISIBLE
+                is DetailsUiState.Success -> {
+                    hideLoader()
+                    updateUi(state.data)
+                }
+                is DetailsUiState.Error -> {
+                    hideLoader()
+                    Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
+                    finish()
+                }
+            }
+        }
+
+        viewModel.fetchInfo(pkg)
+        setupActions(pkg)
+    }
+
+    private fun updateUi(data: ApplicationDetailsInfo) {
+        binding.appName.text = data.name
+        binding.appPackage.text = data.pkg
+        binding.appVersionName.text = data.versionName
+        binding.appVersionCode.text = data.versionCode.toString()
+        binding.appSdkInfo.text = getString(R.string.details_sdk, data.sdkMin, data.sdkTarget)
+        binding.appTime.text = getString(
+            R.string.details_time, DateTime.formatFull(data.timeInstall), DateTime.formatFull(data.timeUpdate)
         )
-        model.getData().observe(this) { data ->
-            binding.appName.text = data.name
-            binding.appPackage.text = data.pkg
-            binding.appVersionName.text = data.versionName
-            binding.appVersionCode.text = data.versionCode.toString()
-            binding.appSdkInfo.text = resources.getString(R.string.details_sdk, data.sdkMin, data.sdkTarget)
-            binding.appTime.text = resources.getString(
-                R.string.details_time, DateTime.formatFull(data.timeInstall), DateTime.formatFull(
-                    data.timeUpdate
-                )
-            )
-            binding.appInstallerPackage.text = data.installerPackage
-            
-            when {
-                data.isDebuggable -> {
-                    binding.appTypeInfo.apply {
-                        visibility = View.VISIBLE
-                        setText(R.string.app_type_debug)
-                    }
-                }
-                data.isSystemApp -> {
-                    binding.appTypeInfo.apply {
-                        visibility = View.VISIBLE
-                        setText(R.string.app_type_system)
-                    }
+        binding.appInstallerPackage.text = data.installerPackage
+        
+        updateAppTypeLabel(data)
+        updateActionRunVisibility(data)
+        ImageLoader.get(binding.appLogo.context).load(data.icon, binding.appLogo)
+        setupShareAction(data)
+        setupToolbar(data)
+        setupDetailsSections(data)
+        hideTvInterface()
+    }
 
-                }
-                else -> {
-                    binding.appTypeInfo.visibility = View.GONE
-                }
-            }
-            
-            if (Utils.isTV(this)) {
-                binding.actionRun.visibility = if (data.launcherIntentTv == null) View.GONE else View.VISIBLE
-            } else {
-                binding.actionRun.visibility = if (data.launcherIntent == null) View.GONE else View.VISIBLE
-            }
-            
-            ImageLoader.get(binding.appLogo.context).load(data.icon, binding.appLogo)
-
-            if (BuildConfig.BUILD_FOR_MARKET == AppBuildType.APK) {
-                binding.actionShare.apply {
+    private fun updateAppTypeLabel(data: ApplicationDetailsInfo) {
+        when {
+            data.isDebuggable -> {
+                binding.appTypeInfo.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener {
-                        startActivity(Intent().apply {
-                            component = ComponentName(packageName, "$packageName.activities.ApkListActivity")
-                            putExtra("pkg", data.pkg)
-                            putExtra("version_name", data.versionName)
-                            putExtra("version_code", data.versionCode)
-                        })
-                    }
-                }
-            } else {
-                binding.actionShare.visibility = View.GONE
-            }
-
-            binding.toolbar.toolbar.let { toolbar ->
-                toolbar.menu.findItem(1).setOnMenuItemClickListener {
-                    copyToClipboard(
-                        "Name: ${data.name.toString()}\nPackage: ${data.pkg.toString()}\nSignature: ${data.signature.toString()}\n" +
-                            "Version name: ${data.versionName.toString()}\n Version Code: ${data.versionCode}"
-                    )
-                    Toast.makeText(applicationContext, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
-                    true
-                }
-                if (Utils.isTV(toolbar.context) && BuildConfig.BUILD_FOR_MARKET != AppBuildType.APK) {
-                    toolbar.visibility = View.GONE
+                    setText(R.string.app_type_debug)
                 }
             }
+            data.isSystemApp -> {
+                binding.appTypeInfo.apply {
+                    visibility = View.VISIBLE
+                    setText(R.string.app_type_system)
+                }
+            }
+            else -> binding.appTypeInfo.visibility = View.GONE
+        }
+    }
 
-            if (BuildConfig.BUILD_FOR_MARKET == AppBuildType.APK) {
-                binding.toolbar.toolbar.menu.findItem(2).setOnMenuItemClickListener {
+    private fun updateActionRunVisibility(data: ApplicationDetailsInfo) {
+        binding.actionRun.visibility = if (Utils.isTV(this)) {
+            if (data.launcherIntentTv == null) View.GONE else View.VISIBLE
+        } else {
+            if (data.launcherIntent == null) View.GONE else View.VISIBLE
+        }
+    }
+
+    private fun setupShareAction(data: ApplicationDetailsInfo) {
+        if (AppBuildType.APK == BuildConfig.BUILD_FOR_MARKET) {
+            binding.actionShare.apply {
+                visibility = View.VISIBLE
+                setOnClickListener {
+                    startActivity(Intent().apply {
+                        component = ComponentName(packageName, "$packageName.activities.ApkListActivity")
+                        putExtra("pkg", data.pkg)
+                        putExtra("version_name", data.versionName)
+                        putExtra("version_code", data.versionCode)
+                    })
+                }
+            }
+        } else {
+            binding.actionShare.visibility = View.GONE
+        }
+    }
+
+    private fun setupToolbar(data: ApplicationDetailsInfo) {
+        binding.toolbar.toolbar.apply {
+            title = getString(R.string.app_details)
+            setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            setNavigationOnClickListener { finish() }
+            
+            menu.clear()
+            setupToolbarMenu(this, data)
+        }
+    }
+
+    private fun setupToolbarMenu(toolbar: androidx.appcompat.widget.Toolbar, data: ApplicationDetailsInfo) {
+        toolbar.menu.apply {
+            add(R.string.find_in_market).setOnMenuItemClickListener {
+                handleMarketClick(data.pkg ?: "")
+                true
+            }
+            add(0, 1, 0, R.string.copy).setOnMenuItemClickListener {
+                copyToClipboard(
+                    "Name: ${data.name}\nPackage: ${data.pkg}\nSignature: ${data.signature}\n" +
+                    "Version name: ${data.versionName}\nVersion Code: ${data.versionCode}"
+                )
+                Toast.makeText(applicationContext, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+                true
+            }
+            if (AppBuildType.APK == BuildConfig.BUILD_FOR_MARKET) {
+                add(0, 2, 0, R.string.share).setOnMenuItemClickListener {
                     startActivity(Intent().apply {
                         component = ComponentName(packageName, "$packageName.activities.ApkListActivity")
                         putExtra("pkg", data.pkg)
@@ -144,327 +181,146 @@ class AppDetailsActivity : AppCompatActivity() {
                     true
                 }
             }
+        }
+        if (Utils.isTV(toolbar.context) && AppBuildType.APK != BuildConfig.BUILD_FOR_MARKET) {
+            toolbar.visibility = View.GONE
+        }
+    }
 
-            binding.actionInfo.setOnClickListener {
+    private fun setupActions(pkg: String) {
+        binding.actionUninstall.setOnClickListener {
+            try {
+                startActivity(Intent(Intent.ACTION_DELETE, Uri.parse("package:$pkg")))
+            } catch (e: Exception) {
+                Toast.makeText(this, getString(R.string.app_run_error, e.message), Toast.LENGTH_LONG).show()
+            }
+        }
+
+        binding.actionInfo.setOnClickListener {
+            try {
+                startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$pkg")))
+            } catch (e: Exception) {
+                ERA.logException(e)
                 try {
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .setData(Uri.parse("package:${data.pkg}"))
-                    startActivity(intent)
-                } catch (e: Exception) {
-                    ERA.logException(e)
+                    startActivity(Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS))
+                } catch (w2: Exception) {
+                    Toast.makeText(this, getString(R.string.app_run_error, e.message), Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        binding.actionRun.setOnClickListener {
+            val state = viewModel.uiState.value
+            if (state is DetailsUiState.Success) {
+                val intent = if (Utils.isTV(this)) state.data.launcherIntentTv else state.data.launcherIntent
+                intent?.let {
                     try {
-                        startActivity(Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS))
-                    } catch (w2: Exception) {
-                        Toast.makeText(
-                            this,
-                            resources.getString(R.string.app_run_error, e.message),
-                            Toast.LENGTH_LONG
-                        ).show()
+                        startActivity(it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                    } catch (e: Exception) {
+                        ERA.logException(e)
+                        Toast.makeText(this, getString(R.string.app_run_error, e.message), Toast.LENGTH_LONG).show()
                     }
                 }
             }
-            binding.actionRun.setOnClickListener { ar ->
-                if (Utils.isTV(ar.context)) {
-                    data.launcherIntentTv?.let {
-                        ar.visibility = View.VISIBLE
-                        try {
-                            startActivity(it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                        } catch (e: Exception) {
-                            ERA.logException(e)
-                            Toast.makeText(
-                                this,
-                                resources.getString(R.string.app_run_error, e.message),
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    } ?: run {
-                        ar.visibility = View.GONE
-                    }
-                } else {
-                    data.launcherIntent?.let {
-                        ar.visibility = View.VISIBLE
-                        try {
-                            startActivity(it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                        } catch (e: Exception) {
-                            ERA.logException(e)
-                            Toast.makeText(
-                                this,
-                                resources.getString(R.string.app_run_error, e.message),
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    } ?: run {
-                        ar.visibility = View.GONE
-                    }
-                }
-            }
-            
-            data.meta.let {
-                val title = resources.getString(R.string.details_metadata, it.size)
-                binding.moreMeta.apply {
-                    text = title
-                    visibility = if (it.size > 0 && !Utils.isTV(context)) View.VISIBLE else View.GONE
-                    setOnClickListener { _ ->
-                        MaterialAlertDialogBuilder(context)
-                            .setTitle(title)
-                            .setView(RecyclerView(context).apply {
-                                layoutManager = LinearLayoutManager(context)
-                                adapter = PropertiesDialogAdapter(it)
-                            })
-                            .show()
-                    }
-                }
-            }
-            
-            data.activities.let {
-                val title = resources.getString(R.string.details_activities, it.size)
-                binding.moreActivities.apply {
-                    text = title
-                    visibility = if (it.size > 0 && !Utils.isTV(context)) View.VISIBLE else View.GONE
-                    setOnClickListener { _ ->
-                        MaterialAlertDialogBuilder(context)
-                            .setTitle(title)
-                            .setView(RecyclerView(context).apply {
-                                layoutManager = LinearLayoutManager(context)
-                                adapter = PropertiesDialogAdapter(it)
-                            })
-                            .show()
-                    }
-                }
-            }
-            
-            data.services.let {
-                val title = resources.getString(R.string.details_services, it.size)
-                binding.moreServices.apply {
-                    text = title
-                    visibility = if (it.size > 0) View.VISIBLE else View.GONE
-                    setOnClickListener { _ ->
-                        MaterialAlertDialogBuilder(context)
-                            .setTitle(title)
-                            .setView(RecyclerView(context).apply {
-                                layoutManager = LinearLayoutManager(context)
-                                adapter = PropertiesDialogAdapter(it)
-                            })
-                            .show()
-                    }
-                }
-            }
-            
-            data.providers.let {
-                val title = resources.getString(R.string.details_providers, it.size)
-                binding.moreProviders.apply {
-                    text = title
-                    visibility = if (it.size > 0) View.VISIBLE else View.GONE
-                    setOnClickListener { _ ->
-                        MaterialAlertDialogBuilder(context)
-                            .setTitle(title)
-                            .setView(RecyclerView(context).apply {
-                                layoutManager = LinearLayoutManager(context)
-                                adapter = PropertiesDialogAdapter(it)
-                            })
-                            .show()
-                    }
-                }
-            }
-            
-            data.receivers.let {
-                val title = resources.getString(R.string.details_receivers, it.size)
-                binding.moreReceivers.apply {
-                    text = title
-                    visibility = if (it.size > 0) View.VISIBLE else View.GONE
-                    setOnClickListener { _ ->
-                        MaterialAlertDialogBuilder(context)
-                            .setTitle(title)
-                            .setView(RecyclerView(context).apply {
-                                layoutManager = LinearLayoutManager(context)
-                                adapter = PropertiesDialogAdapter(it)
-                            })
-                            .show()
-                    }
-                }
-            }
-
-            binding.morePermissions.let { view ->
-                val title = resources.getString(R.string.details_permissions, data.permissions.size)
-                view.text = title
-                view.visibility = if (data.permissions.size > 0) View.VISIBLE else View.GONE
-                view.setOnClickListener { _ ->
-                    MaterialAlertDialogBuilder(this)
-                        .setTitle(title)
-                        .setView(RecyclerView(this).apply {
-                            layoutManager = LinearLayoutManager(this@AppDetailsActivity)
-                            adapter = PropertiesDialogAdapter(data.permissions)
-                        })
-                        .show()
-                }
-            }
-
-            binding.moreOtherProperties.setOnClickListener {
-                val props = ArrayList<String>()
-                props.add(resources.getString(R.string.details_property_large_heap) + "\n" + data.isLargeHeap.toString())
-                props.add(resources.getString(R.string.details_property_hw_accelerated) + "\n" + data.isHwAccelerated.toString())
-                props.add(resources.getString(R.string.details_property_rtl_supported) + "\n" + data.isSupportRtl.toString())
-                MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.details_other_properties)
-                    .setView(RecyclerView(this).apply {
-                        layoutManager = LinearLayoutManager(this@AppDetailsActivity)
-                        adapter = PropertiesDialogAdapter(props)
-                    })
-                    .show()
-            }
-            
-            binding.loader.apply {
-                val loader = this
-                alpha = 1f
-                animate()
-                    .setDuration(250)
-                    .alpha(0f)
-                    .setListener(object : Animator.AnimatorListener {
-                        override fun onAnimationRepeat(animation: Animator) {}
-                        override fun onAnimationEnd(animation: Animator) {
-                            loader.visibility = View.GONE
-                        }
-                        override fun onAnimationCancel(animation: Animator) {}
-                        override fun onAnimationStart(animation: Animator) {}
-                    })
-                    .start()
-            }
-
-            hideTvInterface()
         }
+    }
+
+    private fun setupDetailsSections(data: ApplicationDetailsInfo) {
+        setupSection(binding.moreMeta, R.string.details_metadata, data.meta)
+        setupSection(binding.moreActivities, R.string.details_activities, data.activities)
+        setupSection(binding.moreServices, R.string.details_services, data.services)
+        setupSection(binding.moreProviders, R.string.details_providers, data.providers)
+        setupSection(binding.moreReceivers, R.string.details_receivers, data.receivers)
+        setupSection(binding.morePermissions, R.string.details_permissions, data.permissions)
         
-        pkg?.let {
-            model.fetchInfo(pkg)
-        } ?: run {
-            finish()
+        binding.moreOtherProperties.setOnClickListener {
+            val props = arrayListOf(
+                getString(R.string.details_property_large_heap) + "\n" + data.isLargeHeap,
+                getString(R.string.details_property_hw_accelerated) + "\n" + data.isHwAccelerated,
+                getString(R.string.details_property_rtl_supported) + "\n" + data.isSupportRtl
+            )
+            showListDialog(getString(R.string.details_other_properties), props)
         }
+    }
 
-        binding.actionUninstall.apply {
-            setOnClickListener{
-                try {
-                    val intent = Intent(Intent.ACTION_DELETE)
-                    intent.data = Uri.parse("package:$pkg")
-                    startActivity(intent)
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        it.context,
-                        resources.getString(R.string.app_run_error, e.message),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+    private fun setupSection(view: androidx.appcompat.widget.AppCompatTextView, titleRes: Int, items: List<String>) {
+        val title = getString(titleRes, items.size)
+        view.text = title
+        val isTv = Utils.isTV(this)
+        view.visibility = if (items.isNotEmpty() && (!isTv || titleRes != R.string.details_metadata && titleRes != R.string.details_activities)) View.VISIBLE else View.GONE
+        view.setOnClickListener { showListDialog(title, items) }
+    }
+
+    private fun showListDialog(title: String, items: List<String>) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(title)
+            .setView(RecyclerView(this).apply {
+                layoutManager = LinearLayoutManager(this@AppDetailsActivity)
+                adapter = PropertiesDialogAdapter(ArrayList(items))
+            })
+            .show()
+    }
+
+    private fun handleMarketClick(pkg: String) {
+        val uri = if (AppBuildType.HUAWEI == BuildConfig.BUILD_FOR_MARKET) {
+            Uri.parse("appmarket://details?id=$pkg")
+        } else {
+            Uri.parse("market://details?id=$pkg")
+        }
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, uri).apply {
+                if (AppBuildType.GOOGLE == BuildConfig.BUILD_FOR_MARKET) setPackage("com.android.vending")
+            })
+        } catch (e: Exception) {
+            val webUri = if (AppBuildType.HUAWEI == BuildConfig.BUILD_FOR_MARKET) {
+                Uri.parse("https://appgallery.huawei.com/app/C101754683")
+            } else {
+                Uri.parse("https://play.google.com/store/apps/details?id=$pkg")
+            }
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, webUri))
+            } catch (e2: Exception) {
+                ERA.logException(Exception("No Market app and WebBrowser"))
             }
         }
+    }
 
-        binding.toolbar.toolbar.apply {
-            setTitle(R.string.app_details)
-            setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-            setNavigationOnClickListener {
-                finish()
-            }
-            navigationContentDescription = resources.getString(R.string.back)
-            menu.apply {
-                add(R.string.find_in_market).setOnMenuItemClickListener {
-                    if (AppBuildType.HUAWEI == BuildConfig.BUILD_FOR_MARKET) {
-                        val hwAppId = "101754683"
-                        try {
-                            startActivity(
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("appmarket://details?id=$pkg")
-                                )
-                            )
-                        } catch (e1: java.lang.Exception) {
-                            try {
-                                startActivity(
-                                    Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://appgallery.cloud.huawei.com/marketshare/app/C$hwAppId")
-                                    )
-                                )
-                            } catch (e2: java.lang.Exception) {
-                                ERA.logException(java.lang.Exception("No App Gallery and WebBrowser"))
-                            }
-                        }
-                    } else {
-                        try {
-                            startActivity(
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("market://details?id=$pkg")
-                                ).setPackage("com.android.vending")
-                            )
-                        } catch (e: java.lang.Exception) {
-                            try {
-                                startActivity(
-                                    Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://play.google.com/store/apps/details?id=$pkg")
-                                    )
-                                )
-                            } catch (e2: java.lang.Exception) {
-                                ERA.logException(java.lang.Exception("No Play Store app and WebBrowser"))
-                            }
-                        }
-                    }
-                    true
-                }
-                add(0, 1, 0, R.string.copy)
-                if (BuildConfig.BUILD_FOR_MARKET == AppBuildType.APK) {
-                    add(0, 2, 0, R.string.share)
-                }
-            }
-        }
-
-
-        if (savedInstanceState == null) {
-            pkg?.let {
-                logDetailsOpenCounter(it)
-            }
-        }
-
-        hideTvInterface()
+    private fun hideLoader() {
+        binding.loader.animate()
+            .alpha(0f)
+            .setDuration(250)
+            .setListener(object : Animator.AnimatorListener {
+                override fun onAnimationEnd(animation: Animator) { binding.loader.visibility = View.GONE }
+                override fun onAnimationRepeat(animation: Animator) {}
+                override fun onAnimationCancel(animation: Animator) {}
+                override fun onAnimationStart(animation: Animator) {}
+            })
     }
 
     private fun hideTvInterface() {
-        if (Utils.isTV(this) && BuildConfig.BUILD_FOR_MARKET != AppBuildType.APK) {
-            binding.moreInfoHeader.visibility = View.GONE
-            binding.moreMeta.visibility = View.GONE
-            binding.morePermissions.visibility = View.GONE
-            binding.moreActivities.visibility = View.GONE
-            binding.moreServices.visibility = View.GONE
-            binding.moreProviders.visibility = View.GONE
-            binding.moreReceivers.visibility = View.GONE
-            binding.moreDirectories.visibility = View.GONE
-            binding.moreSharedLibraries.visibility = View.GONE
-            binding.moreNativeLibraries.visibility = View.GONE
-            binding.moreOtherProperties.visibility = View.GONE
+        if (Utils.isTV(this) && AppBuildType.APK != BuildConfig.BUILD_FOR_MARKET) {
+            val views = listOf(
+                binding.moreInfoHeader, binding.moreMeta, binding.morePermissions,
+                binding.moreActivities, binding.moreServices, binding.moreProviders,
+                binding.moreReceivers, binding.moreDirectories, binding.moreSharedLibraries,
+                binding.moreNativeLibraries, binding.moreOtherProperties
+            )
+            views.forEach { it.visibility = View.GONE }
         }
     }
 
     private fun copyToClipboard(text: String) {
-        val clipboard: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("ApkInfo", text)
-        clipboard.setPrimaryClip(clip)
-    }
-
-    private fun logDetailsOpenCounter(pkg: String) {
-        try {
-            val value = Prefs(applicationContext).appDetailsOpenCounter
-            if (BuildConfig.DEBUG) {
-                Log.i("AppDetailsActivity", "logDetailsOpenCounter: pkg=$pkg, counter=$value")
-            }
-        } catch (e: Exception) {
-            ERA.logException(e)
-        }
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        clipboard.setPrimaryClip(ClipData.newPlainText("ApkInfo", text))
     }
 
     companion object {
         @JvmStatic
-        fun show(ctx: Context, appInfo: ApplicationEntryInfo?)  {
-            val it = Intent(ctx, AppDetailsActivity::class.java)
-            it.putExtra("pkg", appInfo?.pkg)
-            ctx.startActivity(it)
+        fun show(ctx: Context, appInfo: ApplicationEntryInfo?) {
+            val intent = Intent(ctx, AppDetailsActivity::class.java).apply {
+                putExtra("pkg", appInfo?.pkg)
+            }
+            ctx.startActivity(intent)
         }
     }
 }
