@@ -1,264 +1,245 @@
 package com.wt.apkinfo.activities
 
-import android.animation.Animator
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.view.View
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.elevation.SurfaceColors
 import com.wt.apkinfo.app.AppBuildType
 import com.wt.apkinfo.base.BuildConfig
 import com.wt.apkinfo.base.R
-import com.wt.apkinfo.base.databinding.ActivityAppDetailsBinding
 import com.wt.apkinfo.data.ApplicationDetailsInfo
 import com.wt.apkinfo.data.ApplicationEntryInfo
-import com.wt.apkinfo.data.images.ImageLoader
 import com.wt.apkinfo.data.models.ApplicationDetailsViewModel
 import com.wt.apkinfo.data.models.DetailsUiState
 import com.wt.apkinfo.era.ERA
-import com.wt.apkinfo.proto.DateTime
-import com.wt.apkinfo.proto.PropertiesDialogAdapter
-import com.wt.apkinfo.proto.Utils
 
 class AppDetailsActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityAppDetailsBinding
     private lateinit var viewModel: ApplicationDetailsViewModel
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityAppDetailsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            v.setPadding(
-                insets.getInsets(WindowInsetsCompat.Type.statusBars()).left,
-                insets.getInsets(WindowInsetsCompat.Type.statusBars()).top,
-                insets.getInsets(WindowInsetsCompat.Type.navigationBars()).right,
-                insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
-            )
-            insets
-        }
-
-        binding.actionsCard.apply {
-            setCardBackgroundColor(SurfaceColors.SURFACE_1.getColor(context))
-        }
-
         val pkg = intent.getStringExtra("pkg") ?: return finish()
         viewModel = ViewModelProvider(this).get(ApplicationDetailsViewModel::class.java)
         
-        viewModel.uiState.observe(this) { state ->
-            when (state) {
-                is DetailsUiState.Loading -> binding.loader.visibility = View.VISIBLE
-                is DetailsUiState.Success -> {
-                    hideLoader()
-                    updateUi(state.data)
-                }
-                is DetailsUiState.Error -> {
-                    hideLoader()
-                    Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
-                    finish()
+        setContent {
+            MaterialTheme {
+                val uiState by viewModel.uiState.observeAsState(DetailsUiState.Loading)
+
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text(stringResource(R.string.app_details)) },
+                            navigationIcon = {
+                                IconButton(onClick = { finish() }) {
+                                    Icon(Icons.Default.ArrowBack, contentDescription = null)
+                                }
+                            }
+                        )
+                    }
+                ) { padding ->
+                    Box(modifier = Modifier.fillMaxSize().padding(padding)) {
+                        when (val state = uiState) {
+                            is DetailsUiState.Loading -> {
+                                CircularProgressIndicator(Modifier.align(Alignment.Center))
+                            }
+                            is DetailsUiState.Success -> {
+                                AppDetailsContent(state.data)
+                            }
+                            is DetailsUiState.Error -> {
+                                ErrorView(state.message) { finish() }
+                            }
+                        }
+                    }
                 }
             }
         }
 
         viewModel.fetchInfo(pkg)
-        setupActions(pkg)
     }
 
-    private fun updateUi(data: ApplicationDetailsInfo) {
-        binding.appName.text = data.name
-        binding.appPackage.text = data.pkg
-        binding.appVersionName.text = data.versionName
-        binding.appVersionCode.text = data.versionCode.toString()
-        binding.appSdkInfo.text = getString(R.string.details_sdk, data.sdkMin, data.sdkTarget)
-        binding.appTime.text = getString(
-            R.string.details_time, DateTime.formatFull(data.timeInstall), DateTime.formatFull(data.timeUpdate)
-        )
-        binding.appInstallerPackage.text = data.installerPackage
-        
-        updateAppTypeLabel(data)
-        updateActionRunVisibility(data)
-        ImageLoader.get(binding.appLogo.context).load(data.icon, binding.appLogo)
-        setupShareAction(data)
-        setupToolbar(data)
-        setupDetailsSections(data)
-        hideTvInterface()
-    }
-
-    private fun updateAppTypeLabel(data: ApplicationDetailsInfo) {
-        when {
-            data.isDebuggable -> {
-                binding.appTypeInfo.apply {
-                    visibility = View.VISIBLE
-                    setText(R.string.app_type_debug)
-                }
-            }
-            data.isSystemApp -> {
-                binding.appTypeInfo.apply {
-                    visibility = View.VISIBLE
-                    setText(R.string.app_type_system)
-                }
-            }
-            else -> binding.appTypeInfo.visibility = View.GONE
-        }
-    }
-
-    private fun updateActionRunVisibility(data: ApplicationDetailsInfo) {
-        binding.actionRun.visibility = if (Utils.isTV(this)) {
-            if (data.launcherIntentTv == null) View.GONE else View.VISIBLE
-        } else {
-            if (data.launcherIntent == null) View.GONE else View.VISIBLE
-        }
-    }
-
-    private fun setupShareAction(data: ApplicationDetailsInfo) {
-        if (AppBuildType.APK == BuildConfig.BUILD_FOR_MARKET) {
-            binding.actionShare.apply {
-                visibility = View.VISIBLE
-                setOnClickListener {
-                    startActivity(Intent().apply {
-                        component = ComponentName(packageName, "$packageName.activities.ApkListActivity")
-                        putExtra("pkg", data.pkg)
-                        putExtra("version_name", data.versionName)
-                        putExtra("version_code", data.versionCode)
-                    })
-                }
-            }
-        } else {
-            binding.actionShare.visibility = View.GONE
-        }
-    }
-
-    private fun setupToolbar(data: ApplicationDetailsInfo) {
-        binding.toolbar.toolbar.apply {
-            title = getString(R.string.app_details)
-            setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-            setNavigationOnClickListener { finish() }
+    @Composable
+    fun AppDetailsContent(data: ApplicationDetailsInfo) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            AppDetailsHeader(data)
             
-            menu.clear()
-            setupToolbarMenu(this, data)
+            // Sekcja Akcji (do implementacji)
+            ActionsSection(data)
+            
+            // Tutaj dodasz kolejne sekcje (SDK, Czas instalacji itd.)
         }
     }
 
-    private fun setupToolbarMenu(toolbar: androidx.appcompat.widget.Toolbar, data: ApplicationDetailsInfo) {
-        toolbar.menu.apply {
-            add(R.string.find_in_market).setOnMenuItemClickListener {
-                handleMarketClick(data.pkg ?: "")
-                true
-            }
-            add(0, 1, 0, R.string.copy).setOnMenuItemClickListener {
-                copyToClipboard(
-                    "Name: ${data.name}\nPackage: ${data.pkg}\nSignature: ${data.signature}\n" +
-                    "Version name: ${data.versionName}\nVersion Code: ${data.versionCode}"
-                )
-                Toast.makeText(applicationContext, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
-                true
-            }
-            if (AppBuildType.APK == BuildConfig.BUILD_FOR_MARKET) {
-                add(0, 2, 0, R.string.share).setOnMenuItemClickListener {
-                    startActivity(Intent().apply {
-                        component = ComponentName(packageName, "$packageName.activities.ApkListActivity")
-                        putExtra("pkg", data.pkg)
-                        putExtra("version_name", data.versionName)
-                        putExtra("version_code", data.versionCode)
-                    })
-                    true
+    @Composable
+    fun AppDetailsHeader(data: ApplicationDetailsInfo) {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+            )
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Placeholder dla ikony (zastąp Coilem jak będziesz gotowy)
+                Surface(
+                    modifier = Modifier.size(72.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Text("LOGO", style = MaterialTheme.typography.labelSmall)
+                    }
                 }
-            }
-        }
-        if (Utils.isTV(toolbar.context) && AppBuildType.APK != BuildConfig.BUILD_FOR_MARKET) {
-            toolbar.visibility = View.GONE
-        }
-    }
 
-    private fun setupActions(pkg: String) {
-        binding.actionUninstall.setOnClickListener {
-            try {
-                startActivity(Intent(Intent.ACTION_DELETE, Uri.parse("package:$pkg")))
-            } catch (e: Exception) {
-                Toast.makeText(this, getString(R.string.app_run_error, e.message), Toast.LENGTH_LONG).show()
-            }
-        }
+                Spacer(modifier = Modifier.width(16.dp))
 
-        binding.actionInfo.setOnClickListener {
-            try {
-                startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$pkg")))
-            } catch (e: Exception) {
-                ERA.logException(e)
-                try {
-                    startActivity(Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS))
-                } catch (w2: Exception) {
-                    Toast.makeText(this, getString(R.string.app_run_error, e.message), Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-
-        binding.actionRun.setOnClickListener {
-            val state = viewModel.uiState.value
-            if (state is DetailsUiState.Success) {
-                val intent = if (Utils.isTV(this)) state.data.launcherIntentTv else state.data.launcherIntent
-                intent?.let {
-                    try {
-                        startActivity(it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                    } catch (e: Exception) {
-                        ERA.logException(e)
-                        Toast.makeText(this, getString(R.string.app_run_error, e.message), Toast.LENGTH_LONG).show()
+                Column {
+                    Text(
+                        text = data.name ?: "",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = data.pkg ?: "",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    
+                    if (data.isDebuggable || data.isSystemApp) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        SuggestionChip(
+                            onClick = { },
+                            label = { 
+                                Text(
+                                    if (data.isDebuggable) stringResource(R.string.app_type_debug) 
+                                    else stringResource(R.string.app_type_system)
+                                ) 
+                            }
+                        )
                     }
                 }
             }
+            
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), thickness = 0.5.dp)
+            
+            Column(modifier = Modifier.padding(16.dp)) {
+                InfoRow(label = stringResource(R.string.version_code), value = "${data.versionName} (${data.versionCode})")
+                InfoRow(label = stringResource(R.string.installer), value = data.installerPackage ?: "None")
+            }
         }
     }
 
-    private fun setupDetailsSections(data: ApplicationDetailsInfo) {
-        setupSection(binding.moreMeta, R.string.details_metadata, data.meta)
-        setupSection(binding.moreActivities, R.string.details_activities, data.activities)
-        setupSection(binding.moreServices, R.string.details_services, data.services)
-        setupSection(binding.moreProviders, R.string.details_providers, data.providers)
-        setupSection(binding.moreReceivers, R.string.details_receivers, data.receivers)
-        setupSection(binding.morePermissions, R.string.details_permissions, data.permissions)
-        
-        binding.moreOtherProperties.setOnClickListener {
-            val props = arrayListOf(
-                getString(R.string.details_property_large_heap) + "\n" + data.isLargeHeap,
-                getString(R.string.details_property_hw_accelerated) + "\n" + data.isHwAccelerated,
-                getString(R.string.details_property_rtl_supported) + "\n" + data.isSupportRtl
-            )
-            showListDialog(getString(R.string.details_other_properties), props)
+    @Composable
+    fun ActionsSection(data: ApplicationDetailsInfo) {
+        // Tu na razie puste, ale możesz tu dodać Row z przyciskami
+        // wywołującymi np. handleUninstallClick(data.pkg)
+    }
+
+    @Composable
+    fun InfoRow(label: String, value: String) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+            Text(text = value, style = MaterialTheme.typography.bodySmall)
         }
     }
 
-    private fun setupSection(view: androidx.appcompat.widget.AppCompatTextView, titleRes: Int, items: List<String>) {
-        val title = getString(titleRes, items.size)
-        view.text = title
-        val isTv = Utils.isTV(this)
-        view.visibility = if (items.isNotEmpty() && (!isTv || titleRes != R.string.details_metadata && titleRes != R.string.details_activities)) View.VISIBLE else View.GONE
-        view.setOnClickListener { showListDialog(title, items) }
+    @Composable
+    fun ErrorView(message: String, onClose: () -> Unit) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(32.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = message, color = MaterialTheme.colorScheme.error)
+            Button(onClick = onClose, modifier = Modifier.padding(top = 16.dp)) {
+                Text(stringResource(android.R.string.ok))
+            }
+        }
     }
 
-    private fun showListDialog(title: String, items: List<String>) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(title)
-            .setView(RecyclerView(this).apply {
-                layoutManager = LinearLayoutManager(this@AppDetailsActivity)
-                adapter = PropertiesDialogAdapter(ArrayList(items))
-            })
-            .show()
+    // --- Metody pomocnicze zachowane do użycia w Compose ---
+
+    private fun handleUninstallClick(pkg: String?) {
+        pkg ?: return
+        try {
+            startActivity(Intent(Intent.ACTION_DELETE, Uri.parse("package:$pkg")))
+        } catch (e: Exception) {
+            Toast.makeText(this, getString(R.string.app_run_error, e.message), Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun handleAppInfoClick(pkg: String?) {
+        pkg ?: return
+        try {
+            startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$pkg")))
+        } catch (e: Exception) {
+            ERA.logException(e)
+            try {
+                startActivity(Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS))
+            } catch (w2: Exception) {
+                Toast.makeText(this, getString(R.string.app_run_error, e.message), Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun handleMarketClick(pkg: String) {
@@ -282,30 +263,6 @@ class AppDetailsActivity : AppCompatActivity() {
             } catch (e2: Exception) {
                 ERA.logException(Exception("No Market app and WebBrowser"))
             }
-        }
-    }
-
-    private fun hideLoader() {
-        binding.loader.animate()
-            .alpha(0f)
-            .setDuration(250)
-            .setListener(object : Animator.AnimatorListener {
-                override fun onAnimationEnd(animation: Animator) { binding.loader.visibility = View.GONE }
-                override fun onAnimationRepeat(animation: Animator) {}
-                override fun onAnimationCancel(animation: Animator) {}
-                override fun onAnimationStart(animation: Animator) {}
-            })
-    }
-
-    private fun hideTvInterface() {
-        if (Utils.isTV(this) && AppBuildType.APK != BuildConfig.BUILD_FOR_MARKET) {
-            val views = listOf(
-                binding.moreInfoHeader, binding.moreMeta, binding.morePermissions,
-                binding.moreActivities, binding.moreServices, binding.moreProviders,
-                binding.moreReceivers, binding.moreDirectories, binding.moreSharedLibraries,
-                binding.moreNativeLibraries, binding.moreOtherProperties
-            )
-            views.forEach { it.visibility = View.GONE }
         }
     }
 
