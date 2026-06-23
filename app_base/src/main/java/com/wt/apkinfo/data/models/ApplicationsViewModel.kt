@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -67,7 +68,15 @@ class ApplicationsViewModel(application: Application) : AndroidViewModel(applica
                 refreshData()
             }
         }
-        getApplication<Application>().registerReceiver(packageReceiver, intentFilter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getApplication<Application>().registerReceiver(
+                packageReceiver, 
+                intentFilter, 
+                Context.RECEIVER_NOT_EXPORTED
+            )
+        } else {
+            getApplication<Application>().registerReceiver(packageReceiver, intentFilter)
+        }
     }
 
     fun refreshData() {

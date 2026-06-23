@@ -3,6 +3,7 @@ package com.wt.apkinfo.activities
 import android.os.Bundle
 import android.os.RemoteException
 import android.text.TextUtils
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -28,6 +29,21 @@ class MainActivity : AppCompatActivity(), InstallReferrerStateListener {
             insets
         }
 
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                supportFragmentManager.findFragmentByTag("AppListFragment_Tag")?.let {
+                    if (it is AppListFragment) {
+                        if (it.onBackAction()) {
+                            return
+                        }
+                    }
+                }
+                isEnabled = false
+                onBackPressedDispatcher.onBackPressed()
+                isEnabled = true
+            }
+        })
+
         if (savedInstanceState == null) {
             val ir = (application as App).getUserInfo().installReferrer
             if (TextUtils.isEmpty(ir)) {
@@ -39,17 +55,6 @@ class MainActivity : AppCompatActivity(), InstallReferrerStateListener {
                 }
             }
         }
-    }
-
-    override fun onBackPressed() {
-        supportFragmentManager.findFragmentByTag("AppListFragment_Tag")?.let {
-            if (it is AppListFragment) {
-                if (it.onBackAction()) {
-                    return
-                }
-            }
-        }
-        super.onBackPressed()
     }
 
     override fun onInstallReferrerSetupFinished(responseCode: Int) {

@@ -33,6 +33,7 @@ import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.proto.DateTime
 import com.wt.apkinfo.proto.PropertiesDialogAdapter
 import com.wt.apkinfo.proto.Utils
+import com.wt.apkinfo.proto.getParcelableExtraCompat
 
 class AppDetailsActivity : AppCompatActivity() {
 
@@ -59,7 +60,8 @@ class AppDetailsActivity : AppCompatActivity() {
             setCardBackgroundColor(SurfaceColors.SURFACE_1.getColor(context))
         }
 
-        val pkg = intent.getStringExtra("pkg") ?: return finish()
+        val appData = intent.getParcelableExtraCompat<ApplicationEntryInfo>("app_data")
+        val pkg = appData?.pkg ?: intent.getStringExtra("pkg") ?: return finish()
         viewModel = ViewModelProvider(this).get(ApplicationDetailsViewModel::class.java)
         
         viewModel.uiState.observe(this) { state ->
@@ -318,7 +320,8 @@ class AppDetailsActivity : AppCompatActivity() {
         @JvmStatic
         fun show(ctx: Context, appInfo: ApplicationEntryInfo?) {
             val intent = Intent(ctx, AppDetailsActivity::class.java).apply {
-                putExtra("pkg", appInfo?.pkg)
+                putExtra("app_data", appInfo)
+                putExtra("pkg", appInfo?.pkg) // Zapasowo dla kompatybilności
             }
             ctx.startActivity(intent)
         }

@@ -8,7 +8,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:9.2.0'
+        classpath 'com.android.tools.build:gradle:9.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:4.4.4'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.6'
@@ -26,11 +26,11 @@ allprojects {
 }
 
 ext.versions = [
-    compileSdkVersion: 36,
+    compileSdkVersion: 37,
     minSdkVersion: 23,
-    targetSdkVersion: 36,
-    versionName: "2.6.2",
-    versionCode: 262,
+    targetSdkVersion: 37,
+    versionName: "2.6.3",
+    versionCode: 263,
     appId: 'com.wt.apkinfo',
     libs: [
         androidx: [
