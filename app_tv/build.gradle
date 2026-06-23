@@ -38,13 +38,7 @@ android {
 		release {
 			shrinkResources true
 			minifyEnabled true
-			proguardFiles  getDefaultProguardFile('proguard-android-optimize.txt'),
-				'proguard-rules.pro',
-				'proguard/proguard-rules.pro',
-				'proguard/okio.pro',
-				'proguard/crashlytics.pro',
-				'proguard/picasso.pro',
-				'proguard/android.pro'
+			proguardFiles  getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 		}
 		android.applicationVariants.all { variant ->
 			variant.outputs.all {
