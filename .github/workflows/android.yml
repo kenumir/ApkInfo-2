@@ -28,7 +28,7 @@ jobs:
       run: |
         mkdir -p app/src/gms
         mkdir -p app/src/hms
-        echo '{"project_info":{"project_number":"123","project_id":"dummy"},"client":[{"client_info":{"mobilesdk_app_id":"1:123:android:123","android_client_info":{"package_name":"com.wt.apkinfo"}}}],"configuration_version":"1"}' > app/google-services.json
+        echo '{"project_info":{"project_number":"1234567890","project_id":"dummy-id"},"client":[{"client_info":{"mobilesdk_app_id":"1:1234567890:android:123","android_client_info":{"package_name":"com.wt.apkinfo"}},"api_key":[{"current_key":"dummy-key"}],"services":{}}],"configuration_version":"1"}' > app/google-services.json
         echo '{"client":{"cp_id":"dummy","product_id":"dummy","app_id":"dummy"},"service":{"analytics":{"status":0}}}' > app/src/hms/agconnect-services.json
 
     - name: Run Lint
