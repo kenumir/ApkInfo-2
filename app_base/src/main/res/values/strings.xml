@@ -64,8 +64,8 @@
     <string name="action_uninstall">Uninstall</string>
     <string name="filter_target_sdk">Target SDK</string>
     <string name="filter_target_sdk_all">All</string>
-    <string name="filter_target_sdk_36">36</string>
-    <string name="filter_target_sdk_35">35</string>
-    <string name="filter_target_sdk_34">34</string>
-    <string name="filter_target_sdk_33">33</string>
+    <string name="filter_target_sdk_36" translatable="false">36</string>
+    <string name="filter_target_sdk_35" translatable="false">35</string>
+    <string name="filter_target_sdk_34" translatable="false">34</string>
+    <string name="filter_target_sdk_33" translatable="false">33</string>
 </resources>

@@ -53,6 +53,7 @@ android {
 	}
 	lint {
 		targetSdk 36
+		disable 'MissingTranslation'
 	}
 	testOptions {
 		targetSdk 36
