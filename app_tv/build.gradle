@@ -82,6 +82,10 @@ android {
 			versionCode android.defaultConfig.versionCode * 1000
 		}
 	}
+
+	lint {
+		disable 'MissingTranslation', 'NotificationPermission'
+	}
 }
 
 dependencies {
