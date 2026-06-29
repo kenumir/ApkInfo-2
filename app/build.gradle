@@ -52,12 +52,10 @@ android {
                 'proguard/picasso.pro',
                 'proguard/android.pro'
         }
-        android.applicationVariants.all { variant ->
-            variant.outputs.all {
-                outputFileName = outputFileName.replace("app-", "ApkInfo-" + defaultConfig.versionName + "-").replace(".apk", "-[" + defaultConfig.versionCode + "].apk")
-            }
-        }
     }
+
+    // Usunieto problematyczny blok android.applicationVariants.all, ktory powodowal bledy w nowym AGP
+
 
     bugsnag {
         uploadNdkMappings = false
