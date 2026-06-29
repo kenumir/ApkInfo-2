@@ -8,6 +8,7 @@
     <string name="copied_to_clipboard">クリップボードにコピーしました</string>
     <string name="back">バック</string>
     <string name="share">共有</string>
+    <string name="share_as_zip">すべてをZIPとして共有</string>
     <string name="copy">コピー</string>
     <string name="app_system_details">システムの詳細</string>
     <string name="launch">起動</string>

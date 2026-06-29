@@ -8,6 +8,7 @@
     <string name="copied_to_clipboard">Skopírované do schránky</string>
     <string name="back">späť</string>
     <string name="share">zdieľam</string>
+    <string name="share_as_zip">Zdieľať všetko ako ZIP</string>
     <string name="copy">kópie</string>
     <string name="app_system_details">Detaily systému</string>
     <string name="launch">odpálenie</string>

@@ -8,6 +8,7 @@
     <string name="copied_to_clipboard">Скопировано в буфер обмена</string>
     <string name="back">назад</string>
     <string name="share">Поделиться</string>
+    <string name="share_as_zip">Поделиться всем как ZIP</string>
     <string name="copy">копия</string>
     <string name="app_system_details">Сведения о системе</string>
     <string name="launch">запуск</string>

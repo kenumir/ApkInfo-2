@@ -8,6 +8,7 @@
     <string name="copied_to_clipboard">Copiato negli appunti</string>
     <string name="back">Indietro</string>
     <string name="share">Condividere</string>
+    <string name="share_as_zip">Condividi tutto come ZIP</string>
     <string name="copy">copia</string>
     <string name="app_system_details">Dettagli di sistema</string>
     <string name="launch">Lanciare</string>

@@ -8,6 +8,7 @@
     <string name="copied_to_clipboard">क्लिपबोर्ड पर नकल</string>
     <string name="back">वापस</string>
     <string name="share">शेयर</string>
+    <string name="share_as_zip">सभी को ZIP के रूप में साझा करें</string>
     <string name="copy">प्रतिलिपि</string>
     <string name="app_system_details">सिस्टम विवरण</string>
     <string name="launch">प्रक्षेपण</string>

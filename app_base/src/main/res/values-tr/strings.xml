@@ -8,6 +8,7 @@
     <string name="copied_to_clipboard">Panoya kopyala</string>
     <string name="back">Dönüş</string>
     <string name="share">Paylaş</string>
+    <string name="share_as_zip">Tümünü ZIP olarak paylaş</string>
     <string name="copy">Kopyala</string>
     <string name="app_system_details">Sistem Ayrıntıları</string>
     <string name="launch">Çalıştır</string>

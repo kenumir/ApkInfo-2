@@ -8,6 +8,7 @@
     <string name="copied_to_clipboard">Disalin ke papan klip</string>
     <string name="back">Kembali</string>
     <string name="share">Bagikan</string>
+    <string name="share_as_zip">Bagikan semua sebagai ZIP</string>
     <string name="copy">Salinan</string>
     <string name="app_system_details">Detail Sistem</string>
     <string name="launch">Meluncurkan</string>
