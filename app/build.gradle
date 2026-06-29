@@ -1,17 +1,12 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-//apply plugin: 'kotlin-android-extensions'
-//if (getGradle().getStartParameter().getTaskRequests().toString().contains("Hms")) {
-//    // nothing
-//} else {
-//    // nothing for now
-//}
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: "com.bugsnag.android.gradle"
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+    id 'com.bugsnag.android.gradle'
+}
 
 android {
-    compileSdkVersion versions.compileSdkVersion
+    compileSdk versions.compileSdkVersion
 
     defaultConfig {
         applicationId versions.appId
@@ -20,7 +15,6 @@ android {
         versionCode versions.versionCode
         versionName versions.versionName
         vectorDrawables.useSupportLibrary = true
-        // multidex natywny od API 21+
     }
 
     signingConfigs {
@@ -54,12 +48,8 @@ android {
         }
     }
 
-    // Usunieto problematyczny blok android.applicationVariants.all, ktory powodowal bledy w nowym AGP
-
-
     bugsnag {
         uploadNdkMappings = false
-        // uploadJvmMappings = false // nie wysyla mapping - testowe build
     }
 
     compileOptions {
@@ -67,19 +57,11 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
-    bundle {
-        language {
-            enableSplit = true
-        }
-        density {
-            enableSplit = true
-        }
-        abi {
-            enableSplit = true
+    // W AGP 9.0+ z wbudowanym Kotlinem, jvmTarget jest zazwyczaj 
+    // dziedziczony z compileOptions lub ustawiany w ten sposób:
+    kotlin {
+        compilerOptions {
+            jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
         }
     }
 
@@ -103,11 +85,6 @@ android {
     }
 
     namespace versions.appId
-    //compileOptions {
-    //    sourceCompatibility = 1.8
-    //}
-
-
 }
 
 dependencies {
@@ -118,6 +95,3 @@ dependencies {
 if (getGradle().getStartParameter().getTaskRequests().toString().contains("Hms")) {
     apply plugin: 'com.huawei.agconnect'
 }
-
-
-//apply plugin: 'com.google.gms.google-services'
