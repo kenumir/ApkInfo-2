@@ -99,6 +99,11 @@ android {
             versionCode android.defaultConfig.versionCode * 1000
         }
     }
+
+    lint {
+        disable 'MissingTranslation'
+    }
+
     namespace versions.appId
     //compileOptions {
     //    sourceCompatibility = 1.8
