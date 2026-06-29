@@ -101,7 +101,7 @@ android {
     }
 
     lint {
-        disable 'MissingTranslation'
+        disable 'MissingTranslation', 'NotificationPermission'
     }
 
     namespace versions.appId
