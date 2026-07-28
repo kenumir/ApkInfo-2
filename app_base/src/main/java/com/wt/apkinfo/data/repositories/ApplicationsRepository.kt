@@ -255,6 +255,11 @@ class ApplicationsRepository(private val context: Context) {
                             appName = ""
                         }
                     }
+                    FilterTargetSdk.API_37 -> {
+                        if (targetSdkRes != 37) {
+                            appName = ""
+                        }
+                    }
                 }
 
                 if (installer != FilterInstaller.ALL) {

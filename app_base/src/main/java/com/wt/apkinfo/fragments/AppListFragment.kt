@@ -79,7 +79,7 @@ class AppListFragment : Fragment() {
                 FilterType.SORT -> intArrayOf(R.string.sort_name, R.string.sort_date, R.string.sort_package)
                 FilterType.TYPE -> intArrayOf(R.string.type_all, R.string.type_user, R.string.type_debug, R.string.type_system)
                 FilterType.INSTALLER -> intArrayOf(R.string.installer_all, R.string.installer_vending, R.string.installer_huawei, R.string.installer_empty)
-                FilterType.TARGET_SDK -> intArrayOf(R.string.filter_target_sdk_all, R.string.filter_target_sdk_36, R.string.filter_target_sdk_35, R.string.filter_target_sdk_34, R.string.filter_target_sdk_33)
+                FilterType.TARGET_SDK -> intArrayOf(R.string.filter_target_sdk_all, R.string.filter_target_sdk_37, R.string.filter_target_sdk_36, R.string.filter_target_sdk_35, R.string.filter_target_sdk_34, R.string.filter_target_sdk_33)
             }
             
             val uiState = viewModel.uiState.value ?: return
@@ -103,10 +103,11 @@ class AppListFragment : Fragment() {
                 }
                 FilterType.TARGET_SDK -> when (uiState.filterTargetSdk) {
                     FilterTargetSdk.ALL -> 0
-                    FilterTargetSdk.API_36 -> 1
-                    FilterTargetSdk.API_35 -> 2
-                    FilterTargetSdk.API_34 -> 3
-                    FilterTargetSdk.API_33 -> 4
+                    FilterTargetSdk.API_37 -> 1
+                    FilterTargetSdk.API_36 -> 2
+                    FilterTargetSdk.API_35 -> 3
+                    FilterTargetSdk.API_34 -> 4
+                    FilterTargetSdk.API_33 -> 5
                 }
             }
             
@@ -312,10 +313,11 @@ class AppListFragment : Fragment() {
                 }
                 FilterType.TARGET_SDK.ordinal -> {
                     val ts = when(resultId) {
-                        1 -> FilterTargetSdk.API_36
-                        2 -> FilterTargetSdk.API_35
-                        3 -> FilterTargetSdk.API_34
-                        4 -> FilterTargetSdk.API_33
+                        1 -> FilterTargetSdk.API_37
+                        2 -> FilterTargetSdk.API_36
+                        3 -> FilterTargetSdk.API_35
+                        4 -> FilterTargetSdk.API_34
+                        5 -> FilterTargetSdk.API_33
                         else -> FilterTargetSdk.ALL
                     }
                     viewModel.setTargetSdk(ts)
@@ -351,6 +353,7 @@ class AppListFragment : Fragment() {
         binding.filterTargetSdk.text = getString(R.string.filter_placeholder, getString(R.string.filter_target_sdk),
             when (state.filterTargetSdk) {
                 FilterTargetSdk.ALL -> getString(R.string.filter_target_sdk_all)
+                FilterTargetSdk.API_37 -> getString(R.string.filter_target_sdk_37)
                 FilterTargetSdk.API_36 -> getString(R.string.filter_target_sdk_36)
                 FilterTargetSdk.API_35 -> getString(R.string.filter_target_sdk_35)
                 FilterTargetSdk.API_34 -> getString(R.string.filter_target_sdk_34)
