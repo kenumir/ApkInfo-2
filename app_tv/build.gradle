@@ -69,10 +69,10 @@ android {
 			buildConfigField "String", "BUILD_FOR_MARKET", "\"google\""
 			versionCode android.defaultConfig.versionCode * 10000
 		}
-		hms {
-			buildConfigField "String", "BUILD_FOR_MARKET", "\"huawei\""
-			versionCode android.defaultConfig.versionCode * 10000
-		}
+		//hms {
+		//	buildConfigField "String", "BUILD_FOR_MARKET", "\"huawei\""
+		//	versionCode android.defaultConfig.versionCode * 10000
+		//}
 		apk {
 			buildConfigField "String", "BUILD_FOR_MARKET", "\"apk\""
 			versionCode android.defaultConfig.versionCode * 1000

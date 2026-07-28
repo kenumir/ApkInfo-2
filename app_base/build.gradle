@@ -42,10 +42,10 @@ android {
 			buildConfigField "String", "BUILD_FOR_MARKET", "\"google\""
 			buildConfigField "String", "APP_VERSION_NAME", "\"" + versions.versionName + "\""
 		}
-		hms {
-			buildConfigField "String", "BUILD_FOR_MARKET", "\"huawei\""
-			buildConfigField "String", "APP_VERSION_NAME", "\"" + versions.versionName + "\""
-		}
+		//hms {
+		//	buildConfigField "String", "BUILD_FOR_MARKET", "\"huawei\""
+		//	buildConfigField "String", "APP_VERSION_NAME", "\"" + versions.versionName + "\""
+		//}
 		apk {
 			buildConfigField "String", "BUILD_FOR_MARKET", "\"apk\""
 			buildConfigField "String", "APP_VERSION_NAME", "\"" + versions.versionName + "\""

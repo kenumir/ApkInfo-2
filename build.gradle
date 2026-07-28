@@ -29,8 +29,8 @@ ext.versions = [
     compileSdkVersion: 37,
     minSdkVersion: 23,
     targetSdkVersion: 37,
-    versionName: "2.6.4",
-    versionCode: 264,
+    versionName: "2.6.5",
+    versionCode: 265,
     appId: 'com.wt.apkinfo',
     libs: [
         androidx: [
