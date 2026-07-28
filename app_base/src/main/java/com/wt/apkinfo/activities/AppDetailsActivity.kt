@@ -151,7 +151,7 @@ class AppDetailsActivity : AppCompatActivity() {
         binding.toolbar.toolbar.apply {
             title = getString(R.string.app_details)
             setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-            setNavigationOnClickListener { finish() }
+            setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
             
             menu.clear()
             setupToolbarMenu(this, data)

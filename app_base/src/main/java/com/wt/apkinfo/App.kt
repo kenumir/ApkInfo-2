@@ -3,6 +3,7 @@ package com.wt.apkinfo
 import android.app.Application
 import android.os.StrictMode
 import com.bugsnag.android.Bugsnag
+import com.google.android.material.color.DynamicColors
 import com.wt.apkinfo.base.BuildConfig
 import com.wt.apkinfo.era.ERA
 import com.wt.apkinfo.proto.Themes
@@ -22,6 +23,7 @@ class App : Application () {
             )
         }
         super.onCreate()
+        DynamicColors.applyToActivitiesIfAvailable(this)
         Bugsnag.start(this);
         ERA.setString("Build For Market", BuildConfig.BUILD_FOR_MARKET)
 

@@ -123,7 +123,7 @@ class ApkListActivity : AppCompatActivity() {
         binding.toolbar.toolbar.apply {
             setTitle(R.string.apk_list)
             setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-            setNavigationOnClickListener { finish() }
+            setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
             navigationContentDescription = resources.getString(R.string.back)
             
             archiveMenuItem = menu.add(R.string.share_as_zip)
