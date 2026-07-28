@@ -26,7 +26,7 @@ fun Activity.applyFadeTransition() {
  * Type-safe way to get Parcelable extra across different Android versions.
  */
 inline fun <reified T : android.os.Parcelable> Intent.getParcelableExtraCompat(key: String): T? {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         getParcelableExtra(key, T::class.java)
     } else {
         @Suppress("DEPRECATION")
@@ -38,7 +38,7 @@ inline fun <reified T : android.os.Parcelable> Intent.getParcelableExtraCompat(k
  * Type-safe way to get Serializable extra across different Android versions.
  */
 inline fun <reified T : Serializable> Intent.getSerializableExtraCompat(key: String): T? {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         getSerializableExtra(key, T::class.java)
     } else {
         @Suppress("DEPRECATION")
