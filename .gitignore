@@ -98,3 +98,5 @@ lint/tmp/
 /app/src/hms/agconnect-services.json
 
 .artifacts
+
+claude.md
